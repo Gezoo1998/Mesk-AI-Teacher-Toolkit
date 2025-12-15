@@ -1,0 +1,178 @@
+'use client';
+
+import { useState, useTransition } from 'react';
+import { generateToolOutput } from '@/app/actions';
+import { OutputDisplay } from './OutputDisplay';
+import { useUserPreferences } from '@/hooks/useUserPreferences';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { motion } from 'framer-motion';
+
+interface GenericField {
+    name: string;
+    label: string;
+    type?: 'text' | 'number' | 'textarea' | 'select';
+    placeholder?: string;
+    options?: string[]; // for select
+    required?: boolean;
+}
+
+interface ToolFormProps {
+    toolId: string;
+    fields: GenericField[];
+}
+
+export function ToolForm({ toolId, fields }: ToolFormProps) {
+    const [isPending, startTransition] = useTransition();
+    const [output, setOutput] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const { preferences, updatePreference, isLoaded } = useUserPreferences();
+    const { language } = useLanguage();
+
+    const handleSubmit = (formData: FormData) => {
+        setError(null);
+
+        // Save preferences if fields exist
+        const subject = formData.get('subject') as string;
+        const grade = formData.get('grade') as string;
+        if (subject) updatePreference('subject', subject);
+        if (grade) updatePreference('grade', grade);
+
+        // Inject language
+        formData.append('language', language);
+
+        startTransition(async () => {
+            const result = await generateToolOutput(formData);
+            if (result.success && result.content) {
+                setOutput(result.content);
+            } else {
+                setError(result.error || 'Something went wrong');
+            }
+        });
+    };
+
+    // Animation variants
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        show: { opacity: 1, y: 0 }
+    };
+
+    // Don't render until preferences are loaded to ensure defaultValues work
+    if (!isLoaded) return <div className="p-10 text-center text-sm text-zinc-400">Loading settings...</div>;
+
+    return (
+        <div className="w-full max-w-2xl mx-auto">
+            <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="show"
+                className="bg-white/40 backdrop-blur-xl rounded-[2.5rem] p-8 shadow-2xl border border-white/50 relative overflow-hidden"
+            >
+                {/* Decorative gradients */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-amber-100/30 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2"></div>
+
+                <form action={handleSubmit} className="space-y-6 relative z-10">
+                    <input type="hidden" name="toolId" value={toolId} />
+
+                    {fields.map((field) => {
+                        // Auto-fill logic
+                        let defaultValue = '';
+                        if (field.name === 'subject') defaultValue = preferences.subject;
+                        if (field.name === 'grade') defaultValue = preferences.grade;
+
+                        return (
+                            <motion.div key={field.name} variants={itemVariants}>
+                                <label htmlFor={field.name} className="block text-sm font-bold text-zinc-700 mb-2 ml-1">
+                                    {field.label}
+                                    {field.required && <span className="text-rose-500 ml-1">*</span>}
+                                </label>
+
+                                {field.type === 'select' ? (
+                                    <div className="relative">
+                                        <select
+                                            id={field.name}
+                                            name={field.name}
+                                            required={field.required}
+                                            defaultValue={defaultValue || ""}
+                                            className="w-full appearance-none rounded-2xl border-0 bg-white/60 px-5 py-4 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-200 transition-all focus:ring-2 focus:ring-amber-500 hover:bg-white/80"
+                                        >
+                                            <option value="">Select...</option>
+                                            {field.options?.map(opt => (
+                                                <option key={opt} value={opt}>{opt}</option>
+                                            ))}
+                                        </select>
+                                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-zinc-500">
+                                            <svg className="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg>
+                                        </div>
+                                    </div>
+                                ) : field.type === 'textarea' ? (
+                                    <textarea
+                                        id={field.name}
+                                        name={field.name}
+                                        placeholder={field.placeholder}
+                                        required={field.required}
+                                        rows={4}
+                                        defaultValue={defaultValue}
+                                        className="w-full rounded-2xl border-0 bg-white/60 px-5 py-4 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-200 transition-all focus:ring-2 focus:ring-amber-500 hover:bg-white/80 placeholder:text-zinc-400 resize-none"
+                                    />
+                                ) : (
+                                    <input
+                                        id={field.name}
+                                        type={field.type || 'text'}
+                                        name={field.name}
+                                        placeholder={field.placeholder}
+                                        required={field.required}
+                                        defaultValue={defaultValue}
+                                        className="w-full rounded-2xl border-0 bg-white/60 px-5 py-4 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-200 transition-all focus:ring-2 focus:ring-amber-500 hover:bg-white/80 placeholder:text-zinc-400"
+                                    />
+                                )}
+                            </motion.div>
+                        );
+                    })}
+
+                    <motion.button
+                        variants={itemVariants}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        type="submit"
+                        disabled={isPending}
+                        className="w-full rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-amber-500/20 transition-all hover:shadow-amber-500/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                        {isPending ? (
+                            <>
+                                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                                <span>Generating Magic...</span>
+                            </>
+                        ) : (
+                            <>
+                                <span className="text-lg">✨</span>
+                                <span>Generate Content</span>
+                            </>
+                        )}
+                    </motion.button>
+                </form>
+
+                {error && (
+                    <div className="mt-6 rounded-xl border border-red-100 bg-red-50 p-4 text-sm text-red-600 animate-fadeIn">
+                        {error}
+                    </div>
+                )}
+            </motion.div>
+
+            {output && (
+                <div className="mt-8 animate-slide-up">
+                    <OutputDisplay content={output} />
+                </div>
+            )}
+        </div>
+    );
+}
