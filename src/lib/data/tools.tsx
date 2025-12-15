@@ -1,4 +1,4 @@
-import { Lightbulb, Calendar, FileText, Calculator, BookA, Gamepad2, HelpCircle, Globe, Zap, MessageCircle, BookOpen } from 'lucide-react';
+import { Lightbulb, Calendar, FileText, Calculator, BookA, Gamepad2, HelpCircle, Globe, Zap, MessageCircle, BookOpen, ClipboardCheck, Signal, Magnet, Map, PartyPopper, Scale, ShieldAlert, Trophy, Feather } from 'lucide-react';
 
 export interface Tool {
     id: string;
@@ -109,5 +109,86 @@ export const TOOLS: Tool[] = [
         icon: <BookOpen />,
         color: 'indigo',
         tags: ['Grammar']
+    },
+    {
+        id: 'smart-rubric',
+        title: 'Smart Rubric Generator',
+        description: 'Create detailed grading criteria with scoring levels for any assignment.',
+        href: '/tools/smart-rubric',
+        icon: <ClipboardCheck />,
+        color: 'rose',
+        tags: ['Assessment']
+    },
+    {
+        id: 'reading-leveler',
+        title: 'Reading Level Adjuster',
+        description: 'Rewrite text to suit different reading abilities (Easy, Medium, Hard).',
+        href: '/tools/reading-leveler',
+        icon: <Signal />,
+        color: 'sky',
+        tags: ['Differentiation']
+    },
+    {
+        id: 'hook-generator',
+        title: 'Hook Generator',
+        description: 'Exciting ways to start your lesson and grab student attention immediately.',
+        href: '/tools/hook-generator',
+        icon: <Magnet />,
+        color: 'amber',
+        tags: ['Engagement']
+    },
+    {
+        id: 'pbl-planner',
+        title: 'PBL Planner',
+        description: 'Plan comprehensive Project-Based Learning units with milestones and driving questions.',
+        href: '/tools/pbl-planner',
+        icon: <Map />,
+        color: 'emerald',
+        tags: ['Planning']
+    },
+    {
+        id: 'icebreakers',
+        title: 'Classroom Icebreakers',
+        description: 'Fun, low-stakes activities to build community and warm up the class.',
+        href: '/tools/icebreakers',
+        icon: <PartyPopper />,
+        color: 'purple',
+        tags: ['Community']
+    },
+    {
+        id: 'debate-spark',
+        title: 'Debate Topic Spark',
+        description: 'Generate controversial but appropriate topics to fuel constructive class debates.',
+        href: '/tools/debate-spark',
+        icon: <Scale />,
+        color: 'indigo',
+        tags: ['Critical Thinking']
+    },
+    {
+        id: 'lab-safety',
+        title: 'Lab Safety Checker',
+        description: 'Identify hazards and safety precautions for any science experiment.',
+        href: '/tools/lab-safety',
+        icon: <ShieldAlert />,
+        color: 'rose',
+        tags: ['Science', 'Safety']
+    },
+    {
+        id: 'gamify-lesson',
+        title: 'Gamify This Lesson',
+        description: 'Turn any lesson content into an engaging classroom game structure.',
+        href: '/tools/gamify-lesson',
+        icon: <Trophy />,
+        color: 'amber',
+        tags: ['Gamification']
+    },
+    {
+        id: 'vocab-story',
+        title: 'Vocabulary Story Weaver',
+        description: 'Weave a list of vocabulary words into a coherent, creative story.',
+        href: '/tools/vocab-story',
+        icon: <Feather />,
+        color: 'purple',
+        tags: ['Literacy']
     }
 ];

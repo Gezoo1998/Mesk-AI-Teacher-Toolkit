@@ -219,7 +219,175 @@ Output Structure:
 1. (Question about the story)
 2. (Question about the grammar usage)
 `,
-    // Add other templates as needed based on tool IDs
+    'smart-rubric': `
+Generate a grading rubric for the following assignment:
+
+Title: {{title}}
+Grade: {{grade}}
+Description: {{description}}
+
+Output Structure:
+## Rubric Table
+| Criteria | Excellent (4) | Good (3) | Needs Improvement (2) | Unsatisfactory (1) |
+|----------|---------------|----------|-----------------------|--------------------|
+(Fill the table with 4-5 key criteria like Content, Organization, Grammar, etc. and specific descriptors for each level.)
+`,
+    'reading-leveler': `
+Rewrite the following text for 3 different reading levels:
+
+Target Audience Grade: {{grade}}
+Original Text: {{text}}
+
+Output Structure:
+## Level 1: Simplified (Easy)
+(Short sentences, simple vocabulary, focus on main idea.)
+
+## Level 2: Standard (Medium)
+(Appropriate for the target grade level, balanced complexity.)
+
+## Level 3: Advanced (Hard)
+(Complex sentence structures, advanced vocabulary, deeper analysis.)
+`,
+    'hook-generator': `
+Generate 5 creative "Hooks" to start a lesson on:
+
+Topic: {{topic}}
+Subject: {{subject}}
+Grade: {{grade}}
+
+Output Structure:
+## 1. The Mystery/Puzzle
+(A riddle or object lesson to spark curiosity)
+
+## 2. The Real-World Connection
+(Relating the topic to something students love, like games/sports/trends)
+
+## 3. The Visual/Video Intro
+(Description of a video clip or image to show)
+
+## 4. The Provocative Question
+(A deep or controversial question to discuss)
+
+## 5. The Active Challenge
+(A quick physical or interactive challenge)
+`,
+    'pbl-planner': `
+Design a Project-Based Learning (PBL) unit for:
+
+Topic: {{topic}}
+Subject: {{subject}}
+Grade: {{grade}}
+Duration: {{duration}}
+
+Output Structure:
+## Project Title & Driving Question
+- **Title**: (Catchy title)
+- **Driving Question**: (Open-ended question students must answer)
+
+## Project Overview
+(Brief description of the real-world problem students will solve)
+
+## Milestones & Timeline
+- **Week 1**: (Research/Planning)
+- **Week 2**: (Drafting/Building)
+- **Week 3**: (Refining/Presenting)
+
+## Final Product
+(What exactly will students create? e.g., A model, a video, a proposal)
+`,
+    'icebreakers': `
+Suggest 3 classroom icebreakers/activities:
+
+Class Size: {{class_size}}
+Time Available: {{time}}
+Goal: {{goal}} (e.g., Get to know each other, Energy, Teamwork)
+
+Output Structure:
+## 1. Activity Name
+- **Time**:
+- **Consumables**: (Any materials needed)
+- **Instructions**: (Step-by-step guide)
+
+## 2. Activity Name
+- **Time**:
+- **Consumables**:
+- **Instructions**:
+
+## 3. Activity Name
+- **Time**:
+- **Consumables**:
+- **Instructions**:
+`,
+    'debate-spark': `
+Generate 5 debate topics/motions for:
+
+Subject/Topic: {{topic}}
+Grade: {{grade}}
+
+Output Structure:
+(List 5 topics. For each, provide a "Pro" hint and a "Con" hint)
+
+## 1. (Motion Statement)
+- **Pro**: (One strong argument for)
+- **Con**: (One strong argument against)
+
+... (repeat for 5)
+`,
+    'lab-safety': `
+Analyze the safety hazards for this experiment:
+
+Experiment: {{experiment}}
+Grade: {{grade}}
+
+Output Structure:
+## Potential Hazards
+(List physical, chemical, or biological hazards)
+
+## Safety Precautions
+- **PPE**: (Goggles, gloves, etc.)
+- **Before Lab**: (What to check)
+- **During Lab**: (Rules to follow)
+- **Emergency**: (What to do if something spills/breaks)
+`,
+    'gamify-lesson': `
+Turn this lesson content into a game:
+
+Lesson Topic: {{topic}}
+Grade: {{grade}}
+Game Style: {{style}} (e.g., Jeopardy, Escape Room, Bingo, Relay Race)
+
+Output Structure:
+## Game Title
+(Catchy name)
+
+## Objective
+(How to win)
+
+## Materials Needed
+(List of items)
+
+## Rules of Play
+1. (Step 1)
+2. (Step 2)
+...
+
+## Content Integration
+(Explain how the lesson questions/content fit into the game mechanic)
+`,
+    'vocab-story': `
+Write a short creative story using these words:
+
+Vocabulary List: {{words}}
+Grade Level: {{grade}}
+Story Theme: {{theme}}
+
+Output Structure:
+## The Story
+(A coherent, fun story. **Bold** the vocabulary words from the list when they appear.)
+
+## Word Usage Check
+(List the words and a brief definition contextually used in the story)
+`,
 };
 
 export function buildPrompt(toolId: string, data: Record<string, unknown>, language: 'en' | 'ar' = 'en'): { system: string, user: string } {

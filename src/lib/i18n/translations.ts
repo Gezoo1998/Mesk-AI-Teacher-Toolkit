@@ -71,6 +71,42 @@ export const translations = {
             'language-grammar': {
                 title: 'Grammar in Context',
                 description: 'Create short stories that naturally weave in specific grammar rules for contextual learning.'
+            },
+            'smart-rubric': {
+                title: 'Smart Rubric Generator',
+                description: 'Create detailed grading criteria with scoring levels for any assignment.'
+            },
+            'reading-leveler': {
+                title: 'Reading Level Adjuster',
+                description: 'Rewrite text to suit different reading abilities (Easy, Medium, Hard).'
+            },
+            'hook-generator': {
+                title: 'Hook Generator',
+                description: 'Exciting ways to start your lesson and grab student attention immediately.'
+            },
+            'pbl-planner': {
+                title: 'PBL Planner',
+                description: 'Plan comprehensive Project-Based Learning units with milestones and driving questions.'
+            },
+            'icebreakers': {
+                title: 'Classroom Icebreakers',
+                description: 'Fun, low-stakes activities to build community and warm up the class.'
+            },
+            'debate-spark': {
+                title: 'Debate Topic Spark',
+                description: 'Generate controversial but appropriate topics to fuel constructive class debates.'
+            },
+            'lab-safety': {
+                title: 'Lab Safety Checker',
+                description: 'Identify hazards and safety precautions for any science experiment.'
+            },
+            'gamify-lesson': {
+                title: 'Gamify This Lesson',
+                description: 'Turn any lesson content into an engaging classroom game structure.'
+            },
+            'vocab-story': {
+                title: 'Vocabulary Story Weaver',
+                description: 'Weave a list of vocabulary words into a coherent, creative story.'
             }
         },
         common: {
@@ -152,6 +188,42 @@ export const translations = {
             'language-grammar': {
                 title: 'النحو في سياق',
                 description: 'إنشاء قصص قصيرة تدمج قواعد نحوية محددة بشكل طبيعي للتعلم من خلال السياق.'
+            },
+            'smart-rubric': {
+                title: 'مولد معايير التقييم',
+                description: 'إنشاء جداول تقييم مفصلة (Rubric) مع مستويات الدرجات لأي واجب مدرسي.'
+            },
+            'reading-leveler': {
+                title: 'معدل مستويات القراءة',
+                description: 'إعادة كتابة النصوص لتناسب مستويات القراءة المختلفة (سهل، متوسط، صعب) في وقت واحد.'
+            },
+            'hook-generator': {
+                title: 'خاطف الانتباه (The Hook)',
+                description: 'طرق مثيرة لبدء حصتك وجذب انتباه الطلاب فوراً (لغز، نكتة، عرض عملي).'
+            },
+            'pbl-planner': {
+                title: 'مخطط التعلم القائم على المشاريع',
+                description: 'تخطيط وحدات تعليمية كاملة قائمة على المشاريع مع المحطات والأسئلة المحركة.'
+            },
+            'icebreakers': {
+                title: 'كسر الجمود',
+                description: 'أنشطة ممتعة وسريعة لبناء مجتمع الفصل وتنشيط الطلاب.'
+            },
+            'debate-spark': {
+                title: 'محفز المناظرات',
+                description: 'توليد مواضيع جدلية مثيرة ولكن مناسبة لإشعال مناظرات بناءة في الفصل.'
+            },
+            'lab-safety': {
+                title: 'فاحص أمان المعمل',
+                description: 'تحديد المخاطر واحتياطات السلامة لأي تجربة علمية.'
+            },
+            'gamify-lesson': {
+                title: 'لعبة الدرس',
+                description: 'تحويل محتوى أي درس إلى هيكل لعبة ممتعة وتفاعلية.'
+            },
+            'vocab-story': {
+                title: 'حكواتي المفردات',
+                description: 'نسج قائمة من الكلمات الجديدة في قصة إبداعية متماسكة ومضحكة.'
             }
         },
         common: {
