@@ -2,14 +2,86 @@
 
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { useLanguage } from '@/contexts/LanguageContext';
 
-export function OutputDisplay({ content }: { content: string }) {
+export function OutputDisplay({ content, onRefine }: { content: string; onRefine?: (type: string) => void }) {
     const [copied, setCopied] = useState(false);
+    const [showRefine, setShowRefine] = useState(false);
+    const { t } = useLanguage();
 
     const handleCopy = () => {
         navigator.clipboard.writeText(content);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
+    };
+
+    const handleExportPDF = async () => {
+        const element = document.getElementById('output-document');
+        if (!element) return;
+
+        // Dynamic import for performance
+        const jsPDF = (await import('jspdf')).default;
+
+        // Use text-based PDF export to avoid html2canvas CSS parsing issues with lab() colors
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const margin = 15;
+        const maxWidth = pageWidth - margin * 2;
+        let yPosition = margin;
+
+        // Extract text content
+        const textContent = element.innerText || content;
+        const paragraphs = textContent.split('\n').filter(p => p.trim());
+
+        pdf.setFontSize(12);
+
+        paragraphs.forEach((paragraph) => {
+            const trimmed = paragraph.trim();
+            if (!trimmed) return;
+
+            // Detect headers (lines that are shorter and likely titles)
+            const isHeader = trimmed.length < 60 && !trimmed.endsWith('.') && !trimmed.includes(':');
+
+            if (isHeader) {
+                pdf.setFontSize(14);
+                pdf.setFont('helvetica', 'bold');
+            } else {
+                pdf.setFontSize(11);
+                pdf.setFont('helvetica', 'normal');
+            }
+
+            const lines = pdf.splitTextToSize(trimmed, maxWidth);
+
+            // Check if we need a new page
+            const lineHeight = isHeader ? 7 : 5;
+            const blockHeight = lines.length * lineHeight + 3;
+
+            if (yPosition + blockHeight > pageHeight - margin) {
+                pdf.addPage();
+                yPosition = margin;
+            }
+
+            lines.forEach((line: string) => {
+                pdf.text(line, margin, yPosition);
+                yPosition += lineHeight;
+            });
+
+            yPosition += 2; // Extra spacing between paragraphs
+        });
+
+        pdf.save('lesson.pdf');
+    };
+
+    const handleExportDOCX = async () => {
+        // Dynamic imports for performance
+        const { marked } = await import('marked');
+        const htmlDocx = (await import('html-docx-js-typescript')).default;
+        const { saveAs } = await import('file-saver');
+
+        const html = await marked(content) as string;
+        const docx = await htmlDocx.asBlob(html) as Blob;
+        saveAs(docx, 'lesson.docx');
     };
 
     if (!content) return null;
@@ -23,66 +95,120 @@ export function OutputDisplay({ content }: { content: string }) {
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /></svg>
                     </div>
                     <div>
-                        <h3 className="text-sm font-bold text-zinc-900">Generated Lesson Plan</h3>
-                        <p className="text-[11px] font-medium text-zinc-500 uppercase tracking-wide">Ready to use</p>
+                        <h3 className="text-sm font-bold text-zinc-900">{t('common.generatedTitle')}</h3>
+                        <p className="text-[11px] font-medium text-zinc-500 uppercase tracking-wide">{t('common.readyToUse')}</p>
                     </div>
                 </div>
-                <button
-                    onClick={handleCopy}
-                    className="group inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-2 text-xs font-bold text-zinc-700 shadow-sm transition-all hover:border-amber-400 hover:bg-amber-50 hover:text-amber-800 focus:outline-none focus:ring-4 focus:ring-amber-100 active:scale-[0.98]"
-                >
-                    {copied ? (
-                        <>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600"><path d="M20 6 9 17l-5-5" /></svg>
-                            <span className="text-emerald-700">Copied!</span>
-                        </>
-                    ) : (
-                        <>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-400 decoration-clone group-hover:text-amber-600"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></svg>
-                            <span>Copy Text</span>
-                        </>
+                <div className="flex gap-2">
+                    <button
+                        onClick={handleCopy}
+                        className="group inline-flex items-center gap-2 min-h-10 rounded-xl border border-zinc-200 bg-white px-4 py-2 text-xs font-bold text-zinc-700 shadow-sm transition-all hover:border-amber-400 hover:bg-amber-50 hover:text-amber-800 focus:outline-none focus:ring-4 focus:ring-amber-100 active:scale-[0.98]"
+                    >
+                        {copied ? (
+                            <>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600"><path d="M20 6 9 17l-5-5" /></svg>
+                                <span className="text-emerald-700">{t('common.copied')}</span>
+                            </>
+                        ) : (
+                            <>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-400 decoration-clone group-hover:text-amber-600"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></svg>
+                                <span>{t('common.copyText')}</span>
+                            </>
+                        )}
+                    </button>
+                    <button
+                        onClick={handleExportPDF}
+                        className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-2 text-xs font-bold text-zinc-700 shadow-sm transition-all hover:border-amber-400 hover:bg-amber-50 hover:text-amber-800 focus:outline-none focus:ring-4 focus:ring-amber-100 active:scale-[0.98]"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /><path d="M10 12H4" /><path d="M10 16H4" /><path d="M10 20H4" /></svg>
+                        <span>{t('common.pdf')}</span>
+                    </button>
+                    <button
+                        onClick={handleExportDOCX}
+                        className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-2 text-xs font-bold text-zinc-700 shadow-sm transition-all hover:border-amber-400 hover:bg-amber-50 hover:text-amber-800 focus:outline-none focus:ring-4 focus:ring-amber-100 active:scale-[0.98]"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /></svg>
+                        <span>{t('common.docx')}</span>
+                    </button>
+                    {onRefine && (
+                        <button
+                            onClick={() => setShowRefine(!showRefine)}
+                            className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-2 text-xs font-bold text-zinc-700 shadow-sm transition-all hover:border-amber-400 hover:bg-amber-50 hover:text-amber-800 focus:outline-none focus:ring-4 focus:ring-amber-100 active:scale-[0.98]"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M3 21v-5h5" /></svg>
+                            <span>{t('common.refine')}</span>
+                        </button>
                     )}
-                </button>
+                </div>
             </div>
 
+            {showRefine && onRefine && (
+                <div className="flex gap-2 mt-4 animate-fade-in-soft">
+                    <button
+                        onClick={() => { onRefine('making it simpler'); setShowRefine(false); }}
+                        className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs font-bold text-zinc-700 shadow-sm transition-all hover:border-amber-400 hover:bg-amber-50 hover:text-amber-800 focus:outline-none focus:ring-2 focus:ring-amber-100 active:scale-[0.98]"
+                    >
+                        {t('common.refineSimplify')}
+                    </button>
+                    <button
+                        onClick={() => { onRefine('adding more details'); setShowRefine(false); }}
+                        className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs font-bold text-zinc-700 shadow-sm transition-all hover:border-amber-400 hover:bg-amber-50 hover:text-amber-800 focus:outline-none focus:ring-2 focus:ring-amber-100 active:scale-[0.98]"
+                    >
+                        {t('common.refineAddDetails')}
+                    </button>
+                    <button
+                        onClick={() => { onRefine('making it shorter'); setShowRefine(false); }}
+                        className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs font-bold text-zinc-700 shadow-sm transition-all hover:border-amber-400 hover:bg-amber-50 hover:text-amber-800 focus:outline-none focus:ring-2 focus:ring-amber-100 active:scale-[0.98]"
+                    >
+                        {t('common.refineShorten')}
+                    </button>
+                    <button
+                        onClick={() => { onRefine('adding more activities'); setShowRefine(false); }}
+                        className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs font-bold text-zinc-700 shadow-sm transition-all hover:border-amber-400 hover:bg-amber-50 hover:text-amber-800 focus:outline-none focus:ring-2 focus:ring-amber-100 active:scale-[0.98]"
+                    >
+                        {t('common.refineAddActivities')}
+                    </button>
+                </div>
+            )}
+
             {/* Document Content */}
-            <div className="bg-white px-8 py-8 md:px-12 md:py-10">
+            <div id="output-document" className="bg-white px-5 py-6 md:px-12 md:py-10">
                 <ReactMarkdown
                     components={{
                         // H1 - Major Title
-                        h1: ({ node, ...props }) => (
+                        h1: (props) => (
                             <h1 className="mb-6 border-b-2 border-amber-100 pb-2 text-3xl font-extrabold tracking-tight text-zinc-900" {...props} />
                         ),
                         // H2 - Section Header (The main sections like "Objectives", "Activities")
-                        h2: ({ node, ...props }) => (
+                        h2: (props) => (
                             <div className="mb-4 mt-8 flex items-center gap-3">
                                 <span className="h-6 w-1 rounded-full bg-amber-500" />
                                 <h2 className="text-xl font-bold text-zinc-900" {...props} />
                             </div>
                         ),
                         // H3 - Subsections
-                        h3: ({ node, ...props }) => (
+                        h3: (props) => (
                             <h3 className="mb-3 mt-6 text-lg font-bold text-amber-800" {...props} />
                         ),
                         // Paragraphs - High Contrast, Comfortable Reading
-                        p: ({ node, ...props }) => (
+                        p: (props) => (
                             <p className="mb-4 text-base leading-7 text-zinc-800" {...props} />
                         ),
                         // Lists - Custom bullets
-                        ul: ({ node, ...props }) => (
+                        ul: (props) => (
                             <ul className="mb-4 space-y-2 pl-4" {...props} />
                         ),
-                        ol: ({ node, ...props }) => (
+                        ol: (props) => (
                             <ol className="mb-4 space-y-2 pl-4 list-decimal marker:text-amber-600 marker:font-bold" {...props} />
                         ),
-                        li: ({ node, children, ...props }) => (
+                        li: ({ children, ...props }) => (
                             <li className="flex items-start gap-2 text-base text-zinc-800" {...props}>
                                 <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" />
                                 <span>{children}</span>
                             </li>
                         ),
                         // Bold text
-                        strong: ({ node, ...props }) => (
+                        strong: (props) => (
                             <strong className="font-bold text-zinc-900" {...props} />
                         ),
                     }}
@@ -93,7 +219,7 @@ export function OutputDisplay({ content }: { content: string }) {
 
             {/* Footer Watermark */}
             <div className="flex justify-center border-t border-dashed border-zinc-200 bg-zinc-50/50 py-4">
-                <p className="text-xs font-medium text-zinc-400">Generated by Mesk AI Toolkit</p>
+                <p className="text-xs font-medium text-zinc-400">{t('common.generatedBy')}</p>
             </div>
         </div>
     );

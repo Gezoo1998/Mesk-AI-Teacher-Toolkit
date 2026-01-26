@@ -26,28 +26,48 @@ export function ToolForm({ toolId, fields }: ToolFormProps) {
     const [output, setOutput] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const { preferences, updatePreference, isLoaded } = useUserPreferences();
-    const { language } = useLanguage();
+    const { language, t } = useLanguage();
 
-    const handleSubmit = (formData: FormData) => {
+    const handleSubmit = async (formData?: FormData, refineType?: string, currentContent?: string) => {
         setError(null);
 
+        let data: FormData;
+        if (formData) {
+            data = formData;
+        } else {
+            const form = document.querySelector('form') as HTMLFormElement;
+            data = new FormData(form);
+        }
+
         // Save preferences if fields exist
-        const subject = formData.get('subject') as string;
-        const grade = formData.get('grade') as string;
+        const subject = data.get('subject') as string;
+        const grade = data.get('grade') as string;
         if (subject) updatePreference('subject', subject);
         if (grade) updatePreference('grade', grade);
 
         // Inject language
-        formData.append('language', language);
+        data.append('language', language);
+
+        if (refineType) {
+            data.append('refineType', refineType);
+        }
+        if (currentContent) {
+            data.append('currentContent', currentContent);
+        }
 
         startTransition(async () => {
-            const result = await generateToolOutput(formData);
+            const result = await generateToolOutput(data);
             if (result.success && result.content) {
                 setOutput(result.content);
             } else {
-                setError(result.error || 'Something went wrong');
+                setError(result.error || t('common.somethingWentWrong'));
             }
         });
+    };
+
+    const handleRefine = (refineType: string) => {
+        if (!output) return;
+        handleSubmit(undefined, refineType, output);
     };
 
     // Animation variants
@@ -67,7 +87,7 @@ export function ToolForm({ toolId, fields }: ToolFormProps) {
     };
 
     // Don't render until preferences are loaded to ensure defaultValues work
-    if (!isLoaded) return <div className="p-10 text-center text-sm text-zinc-400">Loading settings...</div>;
+    if (!isLoaded) return <div className="p-10 text-center text-sm text-zinc-400">{t('common.loading')}</div>;
 
     return (
         <div className="w-full max-w-2xl mx-auto">
@@ -75,7 +95,7 @@ export function ToolForm({ toolId, fields }: ToolFormProps) {
                 variants={containerVariants}
                 initial="hidden"
                 animate="show"
-                className="bg-white/40 backdrop-blur-xl rounded-[2.5rem] p-8 shadow-2xl border border-white/50 relative overflow-hidden"
+                className="bg-white/40 backdrop-blur-xl rounded-[2rem] md:rounded-[2.5rem] p-5 md:p-8 shadow-2xl border border-white/50 relative overflow-hidden"
             >
                 {/* Decorative gradients */}
                 <div className="absolute top-0 right-0 w-64 h-64 bg-amber-100/30 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2"></div>
@@ -105,7 +125,7 @@ export function ToolForm({ toolId, fields }: ToolFormProps) {
                                             defaultValue={defaultValue || ""}
                                             className="w-full appearance-none rounded-2xl border-0 bg-white/60 px-5 py-4 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-200 transition-all focus:ring-2 focus:ring-amber-500 hover:bg-white/80"
                                         >
-                                            <option value="">Select...</option>
+                                            <option value="">{t('common.select')}</option>
                                             {field.options?.map(opt => (
                                                 <option key={opt} value={opt}>{opt}</option>
                                             ))}
@@ -145,17 +165,17 @@ export function ToolForm({ toolId, fields }: ToolFormProps) {
                         whileTap={{ scale: 0.98 }}
                         type="submit"
                         disabled={isPending}
-                        className="w-full rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-amber-500/20 transition-all hover:shadow-amber-500/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        className="w-full min-h-11 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-amber-500/20 transition-all hover:shadow-amber-500/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                         {isPending ? (
                             <>
                                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                                <span>Generating Magic...</span>
+                                <span>{t('common.generatingMagic')}</span>
                             </>
                         ) : (
                             <>
                                 <span className="text-lg">✨</span>
-                                <span>Generate Content</span>
+                                <span>{t('common.generateContent')}</span>
                             </>
                         )}
                     </motion.button>
@@ -170,7 +190,7 @@ export function ToolForm({ toolId, fields }: ToolFormProps) {
 
             {output && (
                 <div className="mt-8 animate-slide-up">
-                    <OutputDisplay content={output} />
+                    <OutputDisplay content={output} onRefine={handleRefine} />
                 </div>
             )}
         </div>

@@ -1,241 +1,110 @@
-1️⃣ System Prompt (يتحط مرة واحدة)
+# 🏫 Mesk AI Teacher Toolkit
 
-ده أهم برومبت — أي Tool هتشتغل تحته
+> **Your Intelligent Teaching Companion** – Turn ideas into classroom-ready resources in seconds.
 
-You are an AI Teaching Assistant designed specifically for teachers at Mesk Language School.
+The **Mesk AI Teacher Toolkit** is a specialized, AI-powered platform designed specifically for educators at **Mesk Language School**. It leverages cutting-edge Large Language Models (LLMs) to automate time-consuming preparations, allowing teachers to focus on what matters most: **teaching and student engagement.**
 
-Target users:
-- Teachers of all subjects
-- All grades (Primary, Prep, Secondary)
+---
 
-Language:
-- Default output language: Arabic (Egyptian dialect for explanations)
-- Scientific and academic terms should be written in English with Arabic explanation when needed
-- If user selects English mode, respond fully in clear professional English
+## ✨ Key Features
 
-Response style:
-- Detailed, clear, and practical
-- Teacher-friendly tone
-- Step-by-step explanations
-- Ready-to-use classroom content
-- No emojis in educational content
+The toolkit provides **24+ specialized AI tools** categorized for maximum efficiency:
 
-Rules:
-- Always adapt content to the specified Grade
-- Content must be age-appropriate
-- Avoid unnecessary complexity
-- No references to curriculum names unless explicitly asked
-- No markdown titles larger than H3
+### 📝 Planning & Ideas
+- **Lesson Ideas Generator**: Strategic pedagogical approaches for any topic.
+- **Complete Lesson Planner**: Structured plans including objectives, warm-ups, and assessments.
+- **PBL Planner**: Comprehensive Project-Based Learning unit designer.
+- **Reading Level Adjuster**: Rewrite content for Easy, Medium, or Hard reading abilities.
 
-Formatting:
-- Use clear sections
-- Use bullet points when helpful
-- Outputs must be easy to copy and paste
+### 🎨 Content Creation
+- **Text Summarizer**: Teacher-friendly summaries with key bullet points.
+- **Math & Science Problems**: Story-based problems with step-by-step solutions.
+- **Vocabulary Story Weaver**: Contextualize word lists into engaging narratives.
+- **Dialogue Crafter**: Natural situational dialogues for language practice.
 
-You are not a chatbot.
-You are a professional educational tool.
+### ⚡ Engagement & Focus
+- **Hook Generator**: Exciting lesson starters to grab immediate attention.
+- **Gamify This Lesson**: Transform academic content into interactive games.
+- **Real-World Math Connector**: Link abstract concepts to sports, gaming, and lifestyle.
+- **Debate Topic Spark**: Generate age-appropriate controversial topics for discussion.
 
-2️⃣ UI & Theme Prompt (ثابت لكل Tool)
+### 📊 Assessment & Feedback
+- **Question Generator**: MCQs, short answers, and critical thinking prompts with keys.
+- **Smart Rubric Generator**: Objective grading criteria for any assignment.
+- **Lab Safety Checker**: Hazard identification and precautions for experiments.
+- **Peer Review Framework**: Structured feedback templates for students.
 
-ممكن تضيفه في بداية كل prompt أو تحطه كـ instruction ثابتة في السيستم
+---
 
-When generating content, structure the output to be displayed inside a clean educational dashboard UI.
+## 🛠️ Tech Stack
 
-UI theme:
-- Background: White
-- Accent color: Gold
-- Use soft gold gradients when suggesting visual hierarchy
-- Layout-friendly sections suitable for cards
-- Clear separation between sections
+- **Framework**: [Next.js 15 (App Router)](https://nextjs.org/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **AI Engine**: [Groq SDK](https://groq.com/) (LLaMA 3.3 models)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Exporting**: `jsPDF` for PDFs and `html-docx-js` for Word documents.
 
-Do NOT describe the UI.
-Just structure the content cleanly so it fits a white & gold gradient dashboard.
+---
 
-3️⃣ Tool Prompts (واحد واحد)
-🟡 1️⃣ Lesson Ideas Generator – Prompt
-Generate teaching ideas for the following lesson:
+## 🚀 Getting Started
 
-Lesson Title: {{lesson_title}}
-Subject: {{subject}}
-Grade: {{grade}}
+### Prerequisites
 
-Output the result in the following structure:
+- Node.js 18.x or later
+- A Groq API Key (get one at [console.groq.com](https://console.groq.com/))
 
-1. Lesson Overview
-- Brief explanation of the lesson idea in simple teacher-friendly language
+### Installation
 
-2. Teaching Ideas (3–5 ideas)
-- Each idea should include:
-  - What the teacher does
-  - What students do
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Gezoo1998/Mesk-AI-Teacher-Toolkit.git
+   cd Mesk-AI-Teacher-Toolkit
+   ```
 
-3. In-Class Activities
-- At least 2 activities
-- Explain how to run each activity step by step
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-4. Home Activities
-- Practical homework ideas related to real life
+3. **Set up Environment Variables:**
+   Create a `.env.local` file in the root directory:
+   ```env
+   GROQ_API_KEY=your_api_key_here
+   ```
 
-5. Real-Life Examples
-- Examples that students can relate to easily
+4. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000) with your browser to see the toolkit.
 
-6. Teacher Tips
-- Classroom management tips
-- Common mistakes to avoid
-- Engagement tips
+---
 
-Make the content detailed, practical, and immediately usable in class.
+## 📁 Project Structure
 
-🟡 2️⃣ Lesson Planner – Prompt
-Create a detailed lesson plan using the following information:
+```text
+src/
+├── app/            # Next.js App Router (Routes & Pages)
+├── components/     # Reusable UI Components
+├── contexts/       # React Contexts (Language, etc.)
+├── lib/            # Utilities, AI Services, & Translations
+│   ├── ai/         # AI Prompt logic & API service
+│   ├── i18n/       # Internationalization (Ar/En)
+│   └── data/       # Static tool metadata
+└── public/         # Static assets (Logos, Icons)
+```
 
-Lesson Title: {{lesson_title}}
-Subject: {{subject}}
-Grade: {{grade}}
-Lesson Duration: {{duration}} (if not provided, assume a standard lesson)
+---
 
-Output structure:
+## 🌍 Internationalization
 
-1. Lesson Objectives
-- Clear and measurable objectives
+The toolkit fully supports **English** and **Arabic (Egyptian)**. It uses a custom `LanguageContext` and a robust translation dictionary in `src/lib/i18n/translations.ts` to provide a seamless RTL (Right-to-Left) and LTR experience.
 
-2. Warm-Up (5–10 minutes)
-- Activity description
-- Purpose of the warm-up
+---
 
-3. Main Explanation
-- Step-by-step explanation
-- Teaching flow
-- Key questions to ask students
+## 📄 License & Ownership
 
-4. Activities
-- Individual activity
-- Pair or group activity
-- Explain instructions clearly
-
-5. Assessment
-- How the teacher checks understanding during the lesson
-
-6. Homework
-- Meaningful homework related to the lesson
-
-Make the plan realistic for a real classroom.
-
-🟡 3️⃣ Text Summarizer (Teacher Mode) – Prompt
-Summarize the following educational text for a teacher:
-
-Text:
-{{input_text}}
-
-Provide the output in three sections:
-
-1. Short Summary
-- 3–4 clear sentences
-
-2. Bullet Points
-- Key ideas only
-- Easy to revise before class
-
-3. Teacher-Friendly Explanation
-- Simplified explanation
-- How a teacher can explain this to students
-
-Keep the language simple and classroom-ready.
-
-🟡 4️⃣ Math Word Problems Generator – Prompt
-Generate a math word problem based on the following:
-
-Math Topic: {{math_topic}}
-Grade: {{grade}}
-
-Output structure:
-
-1. Word Problem
-- Story-based and realistic
-- Appropriate for the grade level
-
-2. Given
-- List of given information
-
-3. Required
-- What the student needs to find
-
-4. Solution Steps
-- Step-by-step solution
-- Clear reasoning
-
-5. Final Answer
-- Final numerical answer
-
-6. Teaching Hint
-- Tip for explaining the problem in class
-
-Do not make the problem too long.
-Focus on clarity and understanding.
-
-🟡 5️⃣ Vocabulary List Generator – Prompt
-Generate a vocabulary list for the following topic:
-
-Topic: {{topic}}
-Grade: {{grade}}
-
-Output structure:
-
-1. Vocabulary List
-For each word include:
-- Word
-- Simple definition (student-friendly)
-- Example sentence
-- Classroom usage tip for the teacher
-
-Ensure the vocabulary matches the students’ level.
-
-🟡 6️⃣ Activity Generator – Prompt
-Create classroom activities for the following topic:
-
-Topic: {{topic}}
-Grade: {{grade}}
-
-Output structure:
-
-1. Individual Activity
-- Instructions
-- Learning goal
-
-2. Pair Work Activity
-- Instructions
-- Expected outcome
-
-3. Group Activity
-- Instructions
-- Role of each student
-
-4. Fun Game Idea
-- Game rules
-- Why it helps learning
-
-Activities should be engaging and easy to apply.
-
-🟡 7️⃣ Question Generator – Prompt
-Generate assessment questions for the following:
-
-Topic: {{topic}}
-Grade: {{grade}}
-Difficulty Level: {{difficulty}}
-
-Output structure:
-
-1. Multiple Choice Questions (MCQs)
-- 3–5 questions
-- Include correct answers
-
-2. Short Answer Questions
-- 2–3 questions
-
-3. Thinking Questions
-- Open-ended questions to encourage reasoning
-
-4. Answer Key
-- Clear and accurate answers
-
-Ensure questions match the difficulty level exactly.
+Developed for **Mesk Language School**. All rights reserved.  
+Built with ❤️ by **Abdelrahman ElGezawy**.

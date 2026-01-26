@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { translations, Language } from '@/lib/i18n/translations';
 
 type LanguageContextType = {
@@ -13,15 +13,13 @@ type LanguageContextType = {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-    const [language, setLanguageState] = useState<Language>('en');
-
-    useEffect(() => {
-        // Load preference
-        const stored = localStorage.getItem('mesk-lang') as Language;
-        if (stored === 'en' || stored === 'ar') {
-            setLanguageState(stored);
+    const [language, setLanguageState] = useState<Language>(() => {
+        if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem('mesk-lang') as Language;
+            return stored === 'en' || stored === 'ar' ? stored : 'en';
         }
-    }, []);
+        return 'en';
+    });
 
     const setLanguage = (lang: Language) => {
         setLanguageState(lang);
@@ -34,10 +32,12 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     // Helper to access nested keys like 'sidebar.title'
     const t = (path: string): string => {
         const keys = path.split('.');
-        let current: any = translations[language];
+        let current: Record<string, unknown> = translations[language];
         for (const key of keys) {
-            if (current[key] === undefined) return path;
-            current = current[key];
+            if (!(key in current) || typeof current[key] !== 'object' || current[key] === null) {
+                return typeof current[key] === 'string' ? current[key] as string : path;
+            }
+            current = current[key] as Record<string, unknown>;
         }
         return typeof current === 'string' ? current : path;
     };

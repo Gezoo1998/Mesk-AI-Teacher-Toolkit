@@ -1,8 +1,10 @@
 'use client';
 
 import { ToolForm } from "@/components/ToolForm";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Page() {
+    const { t } = useLanguage();
     return (
         <div className="flex flex-col gap-6">
             <header className="border-b border-yellow-100 pb-4">
@@ -13,9 +15,9 @@ export default function Page() {
             <ToolForm
                 toolId="lesson-ideas"
                 fields={[
-                    { name: 'lesson_title', label: 'Lesson Title', placeholder: 'e.g. Present Simple Tense', required: true },
-                    { name: 'subject', label: 'Subject', placeholder: 'e.g. English', required: true },
-                    { name: 'grade', label: 'Grade', type: 'select', options: ['Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6', 'Prep 1', 'Prep 2', 'Prep 3', 'Secondary 1', 'Secondary 2', 'Secondary 3'], required: true },
+                    { name: 'lesson_title', label: t('common.lessonTitleLabel'), type: 'text', placeholder: t('common.topicPlaceholder'), required: true },
+                    { name: 'subject', label: t('common.subjectLabel'), type: 'select', options: ['English', 'Math', 'Science', 'History', 'Geography', 'Arabic', 'Religion'], required: true },
+                    { name: 'grade', label: t('common.gradeLabel'), type: 'select', options: ['Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6', 'Prep 1', 'Prep 2', 'Prep 3', 'Secondary 1', 'Secondary 2', 'Secondary 3'], required: true },
                 ]}
             />
         </div>

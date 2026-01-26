@@ -1,4 +1,4 @@
-import { Lightbulb, Calendar, FileText, Calculator, BookA, Gamepad2, HelpCircle, Globe, Zap, MessageCircle, BookOpen, ClipboardCheck, Signal, Magnet, Map, PartyPopper, Scale, ShieldAlert, Trophy, Feather } from 'lucide-react';
+import { Lightbulb, Calendar, FileText, Calculator, BookA, Gamepad2, HelpCircle, Globe, Zap, MessageCircle, BookOpen, ClipboardCheck, Signal, Magnet, Map, PartyPopper, Scale, ShieldAlert, Trophy, Feather, Clock, ScrollText } from 'lucide-react';
 
 export interface Tool {
     id: string;
@@ -8,35 +8,39 @@ export interface Tool {
     icon?: React.ReactNode;
     color: 'amber' | 'emerald' | 'sky' | 'purple' | 'rose' | 'indigo' | 'slate';
     tags: string[];
+    category: 'planning' | 'engagement' | 'content' | 'assessment';
 }
 
 export const TOOLS: Tool[] = [
     {
         id: 'lesson-ideas',
-        title: 'Lesson ideas',
-        description: 'Generate different ways to teach the same lesson with teacher and student actions.',
+        title: 'Lesson Ideas Generator',
+        description: 'AI-powered tool to generate multiple creative teaching approaches for any lesson topic, including teacher actions and student activities.',
         href: '/tools/lesson-ideas',
         icon: <Lightbulb />,
         color: 'amber',
-        tags: ['3–5 ideas']
+        tags: ['3–5 ideas', 'Lesson Planning'],
+        category: 'planning'
     },
     {
         id: 'lesson-planner',
-        title: 'Lesson planner',
-        description: 'Objectives, warm-up, explanation, activities, assessment, and homework in one structure.',
+        title: 'Complete Lesson Planner',
+        description: 'Create comprehensive lesson plans with objectives, warm-up activities, explanations, student activities, assessment strategies, and homework assignments.',
         href: '/tools/lesson-planner',
         icon: <Calendar />,
         color: 'emerald',
-        tags: ['Full lesson']
+        tags: ['Full lesson', 'Curriculum Integration'],
+        category: 'planning'
     },
     {
         id: 'text-summarizer',
-        title: 'Text summarizer',
-        description: 'Turn long texts into short summary, bullet points, and teacher-friendly explanation.',
+        title: 'Educational Text Summarizer',
+        description: 'Transform lengthy educational texts into concise summaries, bullet-point key points, and clear teacher explanations for better student comprehension.',
         href: '/tools/text-summarizer',
         icon: <FileText />,
         color: 'sky',
-        tags: ['3-part output']
+        tags: ['3-part output', 'Reading Comprehension'],
+        category: 'content'
     },
     {
         id: 'math-problems',
@@ -45,7 +49,8 @@ export const TOOLS: Tool[] = [
         href: '/tools/math-problems',
         icon: <Calculator />,
         color: 'purple',
-        tags: ['Story-based']
+        tags: ['Story-based'],
+        category: 'content'
     },
     {
         id: 'vocab-list',
@@ -54,7 +59,8 @@ export const TOOLS: Tool[] = [
         href: '/tools/vocab-list',
         icon: <BookA />,
         color: 'rose',
-        tags: ['Word banks']
+        tags: ['Word banks'],
+        category: 'content'
     },
     {
         id: 'activities',
@@ -63,16 +69,18 @@ export const TOOLS: Tool[] = [
         href: '/tools/activities',
         icon: <Gamepad2 />,
         color: 'indigo',
-        tags: ['Practice']
+        tags: ['Practice'],
+        category: 'assessment'
     },
     {
         id: 'question-generator',
-        title: 'Question Generator',
-        description: 'Generate MCQs, short answer, and thinking questions with answer keys.',
+        title: 'Assessment Question Generator',
+        description: 'Automatically create multiple-choice questions, short answers, and critical thinking prompts with complete answer keys for classroom assessment.',
         href: '/tools/question-generator',
         icon: <HelpCircle />,
         color: 'slate',
-        tags: ['Assessment']
+        tags: ['Assessment', 'MCQs', 'Answer Keys'],
+        category: 'assessment'
     },
     {
         id: 'math-real-world',
@@ -81,7 +89,8 @@ export const TOOLS: Tool[] = [
         href: '/tools/math-real-world',
         icon: <Globe />,
         color: 'amber',
-        tags: ['Engagement']
+        tags: ['Engagement'],
+        category: 'engagement'
     },
     {
         id: 'science-misconception',
@@ -90,7 +99,8 @@ export const TOOLS: Tool[] = [
         href: '/tools/science-misconception',
         icon: <Zap />,
         color: 'rose',
-        tags: ['Critical Thinking']
+        tags: ['Critical Thinking'],
+        category: 'content'
     },
     {
         id: 'language-dialogue',
@@ -99,7 +109,8 @@ export const TOOLS: Tool[] = [
         href: '/tools/language-dialogue',
         icon: <MessageCircle />,
         color: 'sky',
-        tags: ['Speaking']
+        tags: ['Speaking'],
+        category: 'content'
     },
     {
         id: 'language-grammar',
@@ -108,7 +119,8 @@ export const TOOLS: Tool[] = [
         href: '/tools/language-grammar',
         icon: <BookOpen />,
         color: 'indigo',
-        tags: ['Grammar']
+        tags: ['Grammar'],
+        category: 'content'
     },
     {
         id: 'smart-rubric',
@@ -117,7 +129,8 @@ export const TOOLS: Tool[] = [
         href: '/tools/smart-rubric',
         icon: <ClipboardCheck />,
         color: 'rose',
-        tags: ['Assessment']
+        tags: ['Assessment'],
+        category: 'assessment'
     },
     {
         id: 'reading-leveler',
@@ -126,7 +139,8 @@ export const TOOLS: Tool[] = [
         href: '/tools/reading-leveler',
         icon: <Signal />,
         color: 'sky',
-        tags: ['Differentiation']
+        tags: ['Differentiation'],
+        category: 'planning'
     },
     {
         id: 'hook-generator',
@@ -135,7 +149,8 @@ export const TOOLS: Tool[] = [
         href: '/tools/hook-generator',
         icon: <Magnet />,
         color: 'amber',
-        tags: ['Engagement']
+        tags: ['Engagement'],
+        category: 'engagement'
     },
     {
         id: 'pbl-planner',
@@ -144,7 +159,8 @@ export const TOOLS: Tool[] = [
         href: '/tools/pbl-planner',
         icon: <Map />,
         color: 'emerald',
-        tags: ['Planning']
+        tags: ['Planning'],
+        category: 'planning'
     },
     {
         id: 'icebreakers',
@@ -153,7 +169,8 @@ export const TOOLS: Tool[] = [
         href: '/tools/icebreakers',
         icon: <PartyPopper />,
         color: 'purple',
-        tags: ['Community']
+        tags: ['Community'],
+        category: 'engagement'
     },
     {
         id: 'debate-spark',
@@ -162,7 +179,8 @@ export const TOOLS: Tool[] = [
         href: '/tools/debate-spark',
         icon: <Scale />,
         color: 'indigo',
-        tags: ['Critical Thinking']
+        tags: ['Critical Thinking'],
+        category: 'engagement'
     },
     {
         id: 'lab-safety',
@@ -171,7 +189,8 @@ export const TOOLS: Tool[] = [
         href: '/tools/lab-safety',
         icon: <ShieldAlert />,
         color: 'rose',
-        tags: ['Science', 'Safety']
+        tags: ['Science', 'Safety'],
+        category: 'assessment'
     },
     {
         id: 'gamify-lesson',
@@ -180,7 +199,8 @@ export const TOOLS: Tool[] = [
         href: '/tools/gamify-lesson',
         icon: <Trophy />,
         color: 'amber',
-        tags: ['Gamification']
+        tags: ['Gamification'],
+        category: 'engagement'
     },
     {
         id: 'vocab-story',
@@ -189,6 +209,47 @@ export const TOOLS: Tool[] = [
         href: '/tools/vocab-story',
         icon: <Feather />,
         color: 'purple',
-        tags: ['Literacy']
+        tags: ['Literacy'],
+        category: 'content'
+    },
+    {
+        id: 'historical-perspective',
+        title: 'Historical Perspective Simulator',
+        description: 'Create immersive historical learning experiences by generating diary entries and viewpoints from multiple figures involved in key events.',
+        href: '/tools/historical-perspective',
+        icon: <Clock />,
+        color: 'slate',
+        tags: ['Multiple viewpoints', 'History Education'],
+        category: 'content'
+    },
+    {
+        id: 'arabic-literature',
+        title: 'Arabic Literature Analyzer',
+        description: 'Summarize and analyze Arabic literary texts with themes and questions.',
+        href: '/tools/arabic-literature',
+        icon: <BookOpen />,
+        color: 'rose',
+        tags: ['Arabic texts'],
+        category: 'content'
+    },
+    {
+        id: 'math-proof-assistant',
+        title: 'Advanced Math Proof Assistant',
+        description: 'Guide through step-by-step mathematical proofs and derivations.',
+        href: '/tools/math-proof-assistant',
+        icon: <Calculator />,
+        color: 'purple',
+        tags: ['Step-by-step'],
+        category: 'content'
+    },
+    {
+        id: 'peer-review',
+        title: 'Peer Review Framework Creator',
+        description: 'Generate structured peer review checklists and feedback templates.',
+        href: '/tools/peer-review',
+        icon: <ClipboardCheck />,
+        color: 'emerald',
+        tags: ['Collaboration'],
+        category: 'assessment'
     }
 ];

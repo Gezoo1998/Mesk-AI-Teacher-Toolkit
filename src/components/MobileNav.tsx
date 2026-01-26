@@ -7,15 +7,15 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 export function MobileNav() {
     const [isOpen, setIsOpen] = useState(false);
-    const { dir } = useLanguage();
+    const { dir, t } = useLanguage();
 
     return (
         <div className="md:hidden sticky top-0 z-50">
             {/* Mobile Header Bar */}
             <div className="relative flex items-center justify-end bg-white/80 backdrop-blur-xl border-b border-white/20 px-6 py-4 shadow-sm min-h-[70px]">
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-3">
-                    <img src="/mesk.png" alt="Logo" className="h-10 w-10 object-contain drop-shadow-sm" />
-                    <span className="text-base font-bold text-zinc-900 tracking-tight">Mesk AI Toolkit</span>
+                    <img src="/mesk.png" alt={t('common.logoAlt')} className="h-10 w-10 object-contain drop-shadow-sm" />
+                    <span className="text-base font-bold text-zinc-900 tracking-tight">{t('sidebar.appName')}</span>
                 </div>
                 <button
                     onClick={() => setIsOpen(true)}

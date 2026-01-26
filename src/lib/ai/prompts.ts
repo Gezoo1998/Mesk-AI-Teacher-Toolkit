@@ -81,11 +81,12 @@ Lesson Title: {{lesson_title}}
 Subject: {{subject}}
 Grade: {{grade}}
 Lesson Duration: {{duration}}
+Curriculum Standard: {{curriculum_standard}}
 
 Output structure:
 
 1. Lesson Objectives
-- Clear and measurable objectives
+- Clear and measurable objectives aligned with curriculum standards
 
 2. Warm-Up (5–10 minutes)
 - Activity description
@@ -107,7 +108,9 @@ Output structure:
 6. Homework
 - Meaningful homework related to the lesson
 
-Make the plan realistic for a real classroom.
+Learning Objectives Tags: [List 3-5 key learning objectives this lesson addresses, tagged with curriculum codes if available]
+
+Make the plan realistic for a real classroom and aligned with Egyptian curriculum where applicable.
 `,
     'question-generator': `
 Generate a set of questions for the following topic:
@@ -153,6 +156,8 @@ Output Structure:
 (List the solutions here numbered 1, 2, 3...)
 - Show the step-by-step solution for each.
 - Provide the final answer clearly.
+
+Learning Objectives Tags: [List 3-5 key learning objectives these problems address, aligned with curriculum standards]
 `,
     'math-real-world': `
 Generate 3 distinct real-world scenarios that use the following math concept:
@@ -388,20 +393,108 @@ Output Structure:
 ## Word Usage Check
 (List the words and a brief definition contextually used in the story)
 `,
+    'historical-perspective': `
+Generate multiple historical perspectives for immersive learning:
+
+Historical Event: {{event}}
+Grade Level: {{grade}}
+Number of Perspectives: {{perspectives}}
+
+Output Structure:
+
+## Historical Context
+(Brief overview of the event)
+
+## Perspectives
+(Generate {{perspectives}} different viewpoints, each as a diary entry, letter, or first-person account from different figures involved. Label each as "Perspective 1: [Figure Name]", etc.)
+
+## Teacher Notes
+(Discussion questions and learning objectives for this activity)
+`,
+    'arabic-literature': `
+Analyze Arabic literary text:
+
+Text: {{text}}
+Grade Level: {{grade}}
+Analysis Type: {{type}}
+
+Output Structure:
+
+## Summary
+(Concise summary of the text in Arabic and English)
+
+## Key Themes
+(List and explain main themes)
+
+## Vocabulary & Language Features
+(Important words, literary devices used)
+
+## Comprehension Questions
+(5-10 questions with answers, appropriate for grade level)
+`,
+    'math-proof-assistant': `
+Guide through a mathematical proof:
+
+Math Concept: {{concept}}
+Grade Level: {{grade}}
+Proof Type: {{type}}
+
+Output Structure:
+
+## Problem Statement
+(Clearly state what needs to be proven)
+
+## Step-by-Step Proof
+(Guide through each logical step, with explanations and common pitfalls to avoid)
+
+## Verification
+(How to check if the proof is correct)
+
+## Applications
+(Real-world examples where this proof is used)
+`,
+    'peer-review': `
+Create a peer review framework:
+
+Assignment Type: {{assignment}}
+Grade Level: {{grade}}
+Subject: {{subject}}
+
+Output Structure:
+
+## Peer Review Checklist
+(Bullet points of criteria for students to evaluate)
+
+## Feedback Prompts
+(Open-ended questions to guide constructive comments)
+
+## Rubric Integration
+(How this ties into grading rubrics)
+
+## Teacher Moderation Tips
+(How to facilitate and ensure positive peer feedback)
+`,
 };
 
 export function buildPrompt(toolId: string, data: Record<string, unknown>, language: 'en' | 'ar' = 'en'): { system: string, user: string } {
-    let template = TEMPLATES[toolId];
+    let userPrompt: string;
 
-    if (!template) {
-        // Fallback or generic prompt if specific template missing
-        template = `Generate content for tool: ${toolId}. Data: ${JSON.stringify(data)}`;
-    }
+    if (data.refineType && data.currentContent) {
+        // Refine mode
+        userPrompt = `Refine the following content by ${data.refineType}:\n\n${data.currentContent}\n\nProvide the refined version maintaining the same structure and style.`;
+    } else {
+        let template = TEMPLATES[toolId];
 
-    // Replace placeholders
-    let userPrompt = template;
-    for (const [key, value] of Object.entries(data)) {
-        userPrompt = userPrompt.replace(new RegExp(`{{\\s*${key}\\s*}}`, 'g'), String(value || ''));
+        if (!template) {
+            // Fallback or generic prompt if specific template missing
+            template = `Generate content for tool: ${toolId}. Data: ${JSON.stringify(data)}`;
+        }
+
+        // Replace placeholders
+        userPrompt = template;
+        for (const [key, value] of Object.entries(data)) {
+            userPrompt = userPrompt.replace(new RegExp(`{{\\s*${key}\\s*}}`, 'g'), String(value || ''));
+        }
     }
 
     // Append Language Instructions

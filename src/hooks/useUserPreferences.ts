@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const PREF_KEYS = {
     grade: 'mesk-pref-grade',
@@ -9,19 +9,16 @@ const PREF_KEYS = {
 };
 
 export function useUserPreferences() {
-    const [preferences, setPreferences] = useState<Record<string, string>>({});
-    const [isLoaded, setIsLoaded] = useState(false);
-
-    // Load on mount
-    useEffect(() => {
-        const loaded: Record<string, string> = {};
+    const [preferences, setPreferences] = useState<Record<string, string>>(() => {
         if (typeof window !== 'undefined') {
-            loaded.grade = localStorage.getItem(PREF_KEYS.grade) || '';
-            loaded.subject = localStorage.getItem(PREF_KEYS.subject) || '';
+            return {
+                grade: localStorage.getItem(PREF_KEYS.grade) || '',
+                subject: localStorage.getItem(PREF_KEYS.subject) || ''
+            };
         }
-        setPreferences(loaded);
-        setIsLoaded(true);
-    }, []);
+        return { grade: '', subject: '' };
+    });
+
 
     const updatePreference = (key: 'grade' | 'subject', value: string) => {
         if (typeof window !== 'undefined') {
@@ -30,5 +27,5 @@ export function useUserPreferences() {
         }
     };
 
-    return { preferences, updatePreference, isLoaded };
+    return { preferences, updatePreference, isLoaded: true };
 }

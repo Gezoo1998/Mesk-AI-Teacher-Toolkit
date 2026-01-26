@@ -27,9 +27,9 @@ body {
     radial-gradient(at 100% 100%, hsla(45, 100%, 96%, 1) 0px, transparent 50%),
     radial-gradient(at 0% 100%, hsla(38, 100%, 96%, 1) 0px, transparent 50%);
   background-attachment: fixed;
-  /* Ensures gradient stays while scrolling */
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
 }
 
 /* Glass Utility (Optional if we don't use Tailwind classes only) */

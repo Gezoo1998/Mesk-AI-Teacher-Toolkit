@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesk AI Teacher Toolkit - Project Report</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+Arabic:wght@400;500;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-gold: #D4AF37;
+            --dark-gold: #B8860B;
+            --light-gold: #FBF7E9;
+            --zinc-900: #18181b;
+            --zinc-600: #52525b;
+            --zinc-100: #f4f4f5;
+            --white: #ffffff;
+        }
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
+            color: var(--zinc-900);
+            line-height: 1.6;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: 10mm auto;
+            background: var(--white);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            box-sizing: border-box;
+            page-break-after: always;
+            overflow: hidden;
+        }
+
+        @media print {
+            body {
+                background: none;
+            }
+
+            .page {
+                margin: 0;
+                box-shadow: none;
+            }
+        }
+
+        /* Branding Elements */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            height: 120px;
+            object-contain: contain;
+        }
+
+        /* Header Styles */
+        .report-header {
+            text-align: center;
+            border-bottom: 2px solid var(--primary-gold);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 900;
+            margin: 0;
+            color: var(--zinc-900);
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--dark-gold);
+            margin-top: 30px;
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--zinc-900);
+            border-right: 4px solid var(--primary-gold);
+            padding-right: 12px;
+            margin-top: 20px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: var(--zinc-600);
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        /* Content Sections */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .bilingual-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .en-title {
+            font-family: 'Inter';
+            font-weight: 800;
+            font-size: 16px;
+            color: var(--zinc-600);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .ar-title {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--dark-gold);
+        }
+
+        .description {
+            background: var(--light-gold);
+            padding: 15px;
+            border-radius: 12px;
+            border-right: 4px solid var(--primary-gold);
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .tool-card {
+            padding: 15px;
+            border: 1px solid var(--zinc-100);
+            border-radius: 12px;
+            page-break-inside: avoid;
+        }
+
+        .tool-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--zinc-100);
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+        }
+
+        .tool-en-name {
+            font-weight: 800;
+            font-size: 14px;
+            color: var(--zinc-900);
+        }
+
+        .tool-ar-name {
+            font-weight: 900;
+            font-size: 16px;
+            color: var(--dark-gold);
+        }
+
+        .tool-desc {
+            font-size: 13px;
+            color: var(--zinc-600);
+            margin: 0;
+        }
+
+        /* Footer */
+        .page-footer {
+            position: absolute;
+            bottom: 15mm;
+            left: 20mm;
+            right: 20mm;
+            text-align: center;
+            font-size: 12px;
+            color: var(--zinc-600);
+            border-top: 1px solid var(--zinc-100);
+            padding-top: 10px;
+        }
+
+        /* Cover Page */
+        .cover-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 100%;
+        }
+
+        .cover-title {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--zinc-900);
+            margin-top: 40px;
+        }
+
+        .cover-subtitle {
+            font-size: 24px;
+            color: var(--dark-gold);
+            font-weight: 700;
+            margin-bottom: 60px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 10px 25px;
+            background: var(--primary-gold);
+            color: white;
+            border-radius: 50px;
+            font-weight: 900;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Cover Page -->
+    <div class="page">
+        <div class="cover-page">
+            <div class="logo-container">
+                <img src="public/mesk.png" alt="Mesk Logo" class="logo">
+            </div>
+            <div class="badge">تقرير فني شامل | Technical Report</div>
+            <h1 class="cover-title">مساعد مسك للذكاء الاصطناعي</h1>
+            <h2 class="cover-subtitle">Mesk AI Teacher Toolkit</h2>
+
+            <div style="margin-top: 100px; text-align: center;">
+                <p style="font-size: 18px; font-weight: 700;">مقدم إلى الأستاذة الفاضلة/ داليا فهمي</p>
+                <p style="font-size: 16px; font-weight: 700; color: var(--dark-gold);">المدير الأكاديمي لمدارس مسك للغات
+                </p>
+                <p style="font-size: 14px; color: var(--zinc-600); margin-top: 10px;">Prepared for Ms. Dalia
+                    Fahmy<br>Academic Director of Mesk Language Schools</p>
+            </div>
+
+            <div class="page-footer">
+                2026 Mesk AI Teacher Toolkit • © جميع الحقوق محفوظة
+            </div>
+        </div>
+    </div>
+
+    <!-- Introduction Page -->
+    <div class="page">
+        <div class="report-header">
+            <h1>رؤية وأهداف المشروع</h1>
+            <div class="subtitle">Project Vision & Objectives</div>
+        </div>
+
+        <div class="section">
+            <div class="bilingual-title">
+                <span class="ar-title">عن المبادرة</span>
+                <span class="en-title">About the Initiative</span>
+            </div>
+            <div class="description">
+                مشروع "مساعد مسك للذكاء الاصطناعي" هو منصة تعليمية متطورة صُممت خصيصاً لدعم معلمي مدارس مسك. تهدف المنصة
+                إلى تحويل العمليات التعليمية التقليدية إلى تجارب رقمية ذكية وفعالة، مما يوفر الوقت والجهد ويضمن جودة
+                مخرجات تعليمية عالمية المستوى.
+                <br><br>
+                The "Mesk AI Teacher Toolkit" is an advanced educational platform tailored to support Mesk School
+                teachers. It transforms traditional teaching processes into smart digital experiences, saving time and
+                ensuring world-class educational outcomes.
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="bilingual-title">
+                <span class="ar-title">المميزات الرئيسية</span>
+                <span class="en-title">Core Features</span>
+            </div>
+            <ul>
+                <li><strong>دقة المحتوى (Accuracy):</strong> ربط المصطلحات العلمية باللغة الإنجليزية مع شروحات مبسطة
+                    بلهجة مصرية قريبة من الطلاب.</li>
+                <li><strong>توفير الوقت (Efficiency):</strong> إنشاء خطط دروس وأنشطة متكاملة في ثوانٍ بدلاً من ساعات.
+                </li>
+                <li><strong>التخصيص (Personalization):</strong> أدوات مخصصة لكل مرحلة دراسية (Primary, Prep, Secondary).
+                </li>
+                <li><strong>دعم اللغات (Bilingualism):</strong> واجهة وبرمجيات تدعم العربية والإنجليزية بذكاء فائق.</li>
+            </ul>
+        </div>
+
+        <div class="page-footer">
+            صفحة 2 | Page 2
+        </div>
+    </div>
+
+    <!-- Tools Catalog Page 1 -->
+    <div class="page">
+        <div class="report-header">
+            <h1>دليل الأدوات الذكية (1)</h1>
+            <div class="subtitle">AI Tools Catalog (Part 1)</div>
+        </div>
+
+        <div class="tool-grid">
+            <!-- Planning -->
+            <div class="section">
+                <h3>تخطيط الدروس والأفكار | Planning & Ideas</h3>
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-ar-name">أفكار للدروس</span>
+                        <span class="tool-en-name">Lesson Ideas Generator</span>
+                    </div>
+                    <p class="tool-desc">توليد طرق ابتكارية لتدريس المواضيع مع تحديد أدوار المعلم والطالب بالتفصيل.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-ar-name">مخطط الدروس الشامل</span>
+                        <span class="tool-en-name">Complete Lesson Planner</span>
+                    </div>
+                    <p class="tool-desc">هيكلة كاملة للدرس تشمل الأهداف، التمهيد، الشرح، الأنشطة الصفية والمنزلية.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-ar-name">مخطط PBL</span>
+                        <span class="tool-en-name">PBL Planner</span>
+                    </div>
+                    <p class="tool-desc">تخطيط وحدات التعلم القائمة على المشاريع مع تحديد المعالم والأسئلة الجوهرية.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-ar-name">معدل مستويات القراءة</span>
+                        <span class="tool-en-name">Reading Level Adjuster</span>
+                    </div>
+                    <p class="tool-desc">إعادة صياغة النصوص التعليمية لتناسب مستويات الطلاب المختلفة (سهل، متوسط، صعب).
+                    </p>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="section">
+                <h3>إنشاء المحتوى التعليمي | Content Creation</h3>
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-ar-name">ملخص النصوص للمعلم</span>
+                        <span class="tool-en-name">Text Summarizer</span>
+                    </div>
+                    <p class="tool-desc">تحويل النصوص الطويلة إلى نقاط مفتاحية وشروحات تيسر عرضها للطلاب.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-ar-name">مسائل الرياضيات والعلوم</span>
+                        <span class="tool-en-name">Math & Science Problems</span>
+                    </div>
+                    <p class="tool-desc">توليد مسائل قصصية واقعية مع خطوات الحل النموذجية وتلميحات تربوية للمعلم.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-ar-name">قوائم المفردات الذكية</span>
+                        <span class="tool-en-name">Vocabulary Lists</span>
+                    </div>
+                    <p class="tool-desc">بناء قوائم كلمات مدعمة بالتعريفات وأمثلة الاستخدام ونصائح التدريس.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            صفحة 3 | Page 3
+        </div>
+    </div>
+
+    <!-- Tools Catalog Page 2 -->
+    <div class="page">
+        <div class="report-header">
+            <h1>دليل الأدوات الذكية (2)</h1>
+            <div class="subtitle">AI Tools Catalog (Part 2)</div>
+        </div>
+
+        <div class="tool-grid">
+            <!-- Engagement -->
+            <div class="section">
+                <h3>التفاعل وتحفيز الطلاب | Engagement & Motivation</h3>
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-ar-name">خاطف الانتباه</span>
+                        <span class="tool-en-name">Hook Generator</span>
+                    </div>
+                    <p class="tool-desc">ابتكار مقدمات مثيرة للحصة تضمن انخراط الطلاب منذ الدقيقة الأولى.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-ar-name">ألعاب تعليمية</span>
+                        <span class="tool-en-name">Gamify This Lesson</span>
+                    </div>
+                    <p class="tool-desc">تحويل أي محتوى أكاديمي إلى هيكل لعبة تفاعلية تزيد من الحماس داخل الفصل.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-ar-name">رابط الرياضيات بالواقع</span>
+                        <span class="tool-en-name">Real-World Math</span>
+                    </div>
+                    <p class="tool-desc">ربط المفاهيم المجردة بسيناريوهات يومية (مثل الرياضة أو الألعاب).</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-ar-name">كسر الجمود</span>
+                        <span class="tool-en-name">Classroom Icebreakers</span>
+                    </div>
+                    <p class="tool-desc">أنشطة سريعة لبناء روح الجماعة وتجديد طاقة الطلاب.</p>
+                </div>
+            </div>
+
+            <!-- Assessment -->
+            <div class="section">
+                <h3>التقييم والملاحظات | Assessment & Feedback</h3>
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-ar-name">مولد الأسئلة والاختبارات</span>
+                        <span class="tool-en-name">Question Generator</span>
+                    </div>
+                    <p class="tool-desc">إنشاء أسئلة متنوعة (MCQs, Critical Thinking) مع نماذج الإجابة الدقيقة.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-ar-name">مولد معايير التقييم</span>
+                        <span class="tool-en-name">Smart Rubrics</span>
+                    </div>
+                    <p class="tool-desc">بناء جداول وصفية لتقييم أداء الطلاب بوضوح وموضوعية.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-ar-name">فاحص السلامة المعملية</span>
+                        <span class="tool-en-name">Lab Safety Checker</span>
+                    </div>
+                    <p class="tool-desc">تحديد المخاطر والاحتياطات اللازمة لأي تجربة علمية لحماية الطلاب.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            صفحة 4 | Page 4
+        </div>
+    </div>
+
+    <!-- Specialized Tools & Tech -->
+    <div class="page">
+        <div class="report-header">
+            <h1>أدوات متخصصة ونظرة تقنية</h1>
+            <div class="subtitle">Specialized Tools & Tech Overview</div>
+        </div>
+
+        <div class="section">
+            <h3>أدوات اللغات والعلوم المتقدمة | Advanced Academic Tools</h3>
+            <div class="tool-grid">
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-ar-name">صانع الحوارات اللغوية</span>
+                        <span class="tool-en-name">Dialogue Crafter</span>
+                    </div>
+                    <p class="tool-desc">توليد حوارات طبيعية لممارسة المحادثة مع ملاحظات ثقافية هامة.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-ar-name">كاشف المفاهيم الخاطئة</span>
+                        <span class="tool-en-name">Misconception Buster</span>
+                    </div>
+                    <p class="tool-desc">تصحيح المفاهيم العلمية الخاطئة الشائعة من خلال تجارب وحقائق موثقة.</p>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <span class="tool-ar-name">مساعد البراهين الرياضية</span>
+                        <span class="tool-en-name">Advanced Math Proof</span>
+                    </div>
+                    <p class="tool-desc">توجيه الطلاب عبر خطوات البراهين المعقدة بشكل منطقي وسلس.</p>
+                </div>
+                <div class="tool-card" style="background: var(--light-gold);">
+                    <div class="tool-header">
+                        <span class="tool-ar-name" style="color: var(--dark-gold);">مساعد المحادثة الذكي</span>
+                        <span class="tool-en-name">AI Chat Assistant</span>
+                    </div>
+                    <p class="tool-desc">تطبيق متكامل للدردشة التفاعلية مع الذكاء الاصطناعي للتخطيط والعصف الذهني الحر.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="bilingual-title">
+                <span class="ar-title">التقنيات المستخدمة</span>
+                <span class="en-title">Technology Stack</span>
+            </div>
+            <div class="description" style="font-size: 14px;">
+                يعتمد النظام على أحدث تقنيات الويب (Next.js 15) ومحركات الذكاء الاصطناعي الفائقة (Llama 3.3). يتميز
+                النظام بالسرعة القصوى، التوافق التام مع اللغة العربية (RTL)، وإمكانية تصدير المخرجات بصيغ PDF و DOCX
+                لتسهيل الطباعة والاستخدام المباشر.
+                <br><br>
+                Powered by Next.js 15 and Llama 3.3, featuring high speed, full RTL support, and multi-format export
+                (PDF/DOCX).
+            </div>
+        </div>
+
+        <div class="page-footer">
+            صفحة 5 | Page 5
+        </div>
+    </div>
+
+</body>
+
+</html>
