@@ -1,6 +1,6 @@
 import Groq from 'groq-sdk';
 import { GenerateRequest, GenerateResponse, ChatMessage } from './types';
-import { buildPrompt } from './prompts';
+import { buildPrompt, SYSTEM_PROMPT } from './prompts';
 
 let groqInstance: Groq | null = null;
 
@@ -46,8 +46,13 @@ export async function generateContent(request: GenerateRequest): Promise<Generat
 
 export async function generateChatResponse(messages: ChatMessage[]): Promise<GenerateResponse> {
     try {
+        const fullMessages = [
+            { role: 'system', content: SYSTEM_PROMPT },
+            ...messages
+        ];
+
         const completion = await getGroq().chat.completions.create({
-            messages: messages,
+            messages: fullMessages as any,
             model: 'llama-3.3-70b-versatile',
             temperature: 0.7,
             max_tokens: 2048,

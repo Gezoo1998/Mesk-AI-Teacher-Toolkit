@@ -120,9 +120,11 @@ export function ToolCard({ tool }: { tool: Tool }) {
                     <h3 className={cn("text-xl md:text-2xl font-black leading-tight tracking-tight scale-x-95 origin-left", styles.text)}>
                         {t(`tools.${tool.id}.title`)}
                     </h3>
-                    <p className="text-[15px] font-semibold leading-relaxed text-zinc-500/80 line-clamp-2 group-hover:text-zinc-600/90 transition-colors duration-300">
-                        {t(`tools.${tool.id}.description`)}
-                    </p>
+                    <div className="min-h-[4.5rem] flex flex-col justify-start">
+                        <p className="text-[15px] font-semibold leading-relaxed text-zinc-500/90 group-hover:text-zinc-700 transition-colors duration-300">
+                            {t(`tools.${tool.id}.description`)}
+                        </p>
+                    </div>
                 </div>
 
                 <div className="mt-auto pt-6 flex items-center justify-between">

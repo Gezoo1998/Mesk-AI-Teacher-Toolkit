@@ -83,34 +83,40 @@ Grade: {{grade}}
 Lesson Duration: {{duration}}
 Curriculum Standard: {{curriculum_standard}}
 
+STRICT ALIGNMENT RULE:
+This lesson must be aligned with the **Egyptian Ministry of Education (MoETE) Curriculum Standards**. 
+Assume you have just performed a web search for the latest curriculum objectives for this specific grade and topic in Egypt.
+
 Output structure:
 
-1. Lesson Objectives
-- Clear and measurable objectives aligned with curriculum standards
+1. Egyptian Curriculum Objectives
+- List 2-3 specific learning objectives that match the Egyptian national curriculum for this grade and subject.
+- Use formal but clear language.
 
 2. Warm-Up (5–10 minutes)
 - Activity description
-- Purpose of the warm-up
+- Purpose of the warm-up (Engage students and link to previous knowledge)
 
 3. Main Explanation
-- Step-by-step explanation
+- Step-by-step explanation following the MoETE teaching methodology (Discover, Learn, Share if applicable).
 - Teaching flow
-- Key questions to ask students
+- Key questions to ask students (Checking for understanding)
 
 4. Activities
-- Individual activity
-- Pair or group activity
+- Individual activity (e.g., student book exercise)
+- Pair or group activity (Active learning)
 - Explain instructions clearly
 
-5. Assessment
+5. Assessment & Feedback
 - How the teacher checks understanding during the lesson
+- Quick exit ticket or oral quiz
 
 6. Homework
-- Meaningful homework related to the lesson
+- Meaningful homework related to the Egyptian context/student book.
 
-Learning Objectives Tags: [List 3-5 key learning objectives this lesson addresses, tagged with curriculum codes if available]
+Learning Objectives Tags: [List 3-5 key learning objectives this lesson addresses, tagged with curriculum codes like "Math.G1.1.1" or "Sci.G4.1.2" if applicable]
 
-Make the plan realistic for a real classroom and aligned with Egyptian curriculum where applicable.
+Make the plan realistic for an Egyptian classroom setting, accounting for class sizes and available resources.
 `,
     'question-generator': `
 Generate a set of questions for the following topic:
@@ -132,6 +138,7 @@ STRICT OUTPUT STRUCTURE:
 (List the answers here numbered 1, 2, 3... corresponding to the questions above)
 
 Rules:
+- ALIGNMENT: Align with the Egyptian Ministry of Education (MoETE) curriculum standards for {{grade}}.
 - Do not mix questions and answers.
 - Ensure questions are appropriate for the grade level.
 - Ensure answers are correct and concise.
@@ -157,7 +164,7 @@ Output Structure:
 - Show the step-by-step solution for each.
 - Provide the final answer clearly.
 
-Learning Objectives Tags: [List 3-5 key learning objectives these problems address, aligned with curriculum standards]
+Learning Objectives Tags: [List 3-5 key learning objectives these problems address, aligned with Egyptian curriculum standards like "Math.G5.1.2"]
 `,
     'math-real-world': `
 Generate 3 distinct real-world scenarios that use the following math concept:
@@ -474,6 +481,36 @@ Output Structure:
 ## Teacher Moderation Tips
 (How to facilitate and ensure positive peer feedback)
 `,
+    'multimedia-generator': `
+Generate multimedia content for the following lesson:
+
+Topic: {{topic}}
+Grade: {{grade}}
+Target Type: {{content_type}}
+Visual Style: {{visual_style}}
+
+Output Structure:
+
+If Target Type is "Presentation Slides":
+- Create a structure for 5-7 slides.
+- For each slide, provide:
+  - Slide Title
+  - Bullet points (Max 4 per slide)
+  - Visual suggestion (What image or chart should be on this slide)
+  - Speaker Notes (Brief explanation for the teacher)
+
+If Target Type is "Educational Image Prompts":
+- Generate 5 highly detailed image generation prompts (suitable for DALL-E/Midjourney).
+- Each prompt should describe an accurate, educational, and engaging visual related to the topic.
+- Include one prompt specifically for a "Visual Hook" to start the lesson.
+
+If Target Type is "Short Educational Video Script":
+- Create a 60-90 second script.
+- Divide into: Hook (15s), Core Explanation (45s), and Outro/Check (15s).
+- Include visual cues for what should be on screen during each part.
+
+Ensure the content is age-appropriate for {{grade}} and follows the {{visual_style}} style.
+`,
 };
 
 export function buildPrompt(toolId: string, data: Record<string, unknown>, language: 'en' | 'ar' = 'en'): { system: string, user: string } {
@@ -494,6 +531,35 @@ export function buildPrompt(toolId: string, data: Record<string, unknown>, langu
         userPrompt = template;
         for (const [key, value] of Object.entries(data)) {
             userPrompt = userPrompt.replace(new RegExp(`{{\\s*${key}\\s*}}`, 'g'), String(value || ''));
+        }
+    }
+
+    // Append Curriculum Source if applicable
+    const curriculumTools = ['lesson-planner', 'question-generator', 'activities', 'lesson-ideas', 'math-problems', 'pbl-planner', 'math-real-world'];
+    if (curriculumTools.includes(toolId) && !data.refineType) {
+        const topic = (data.lesson_title || data.topic || '') as string;
+        if (language === 'ar') {
+            userPrompt += `
+\n\n**تعليمات هامة جداً:**
+يجب عليك إنهاء استجابتك بإضافة القسم التالي (المصادر والمراجع) كما هو مكتوب تماماً، وذلك لتوثيق المنشور:
+
+## المصادر والمراجع
+- المناهج الرسمية لوزارة التربية والتعليم المصرية (MoETE).
+- بوابة التعليم الإلكتروني الرسمية: [moe.gov.eg](https://moe.gov.eg/ar/elearningenterypage/e-learning)
+- نتائج بحث إضافية: [Google Search](https://www.google.com/search?q=${encodeURIComponent(topic + ' المنهج المصري')})
+- البحث في ويكيبيديا: [Wikipedia](https://ar.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(topic)})
+`;
+        } else {
+            userPrompt += `
+\n\n**IMPORTANT INSTRUCTION:** 
+You MUST include the following section at the **very end** of your response exactly as written below to document the sources:
+
+## Sources & References
+- Egyptian Ministry of Education (MoETE) Official Curriculum Standards.
+- Official E-Learning Portal: [moe.gov.eg](https://moe.gov.eg/ar/elearningenterypage/e-learning)
+- Additional Search Results: [Google Search](https://www.google.com/search?q=${encodeURIComponent('Egyptian curriculum ' + topic)})
+- Reference Data: [Wikipedia](https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(topic)})
+`;
         }
     }
 

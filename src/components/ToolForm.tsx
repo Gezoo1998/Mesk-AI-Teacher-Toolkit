@@ -12,16 +12,20 @@ interface GenericField {
     label: string;
     type?: 'text' | 'number' | 'textarea' | 'select';
     placeholder?: string;
-    options?: string[]; // for select
+    options?: (string | { value: string; label: string })[]; // for select
     required?: boolean;
 }
 
 interface ToolFormProps {
     toolId: string;
     fields: GenericField[];
+    title?: string;
+    description?: string;
 }
 
-export function ToolForm({ toolId, fields }: ToolFormProps) {
+export function ToolForm({ toolId, fields, title, description }: ToolFormProps) {
+    const [searchStatus, setSearchStatus] = useState<string>('');
+    const [isSearching, setIsSearching] = useState(false);
     const [isPending, startTransition] = useTransition();
     const [output, setOutput] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -39,9 +43,11 @@ export function ToolForm({ toolId, fields }: ToolFormProps) {
             data = new FormData(form);
         }
 
-        // Save preferences if fields exist
+        const topic = (data.get('lesson_title') || data.get('topic') || '') as string;
         const subject = data.get('subject') as string;
         const grade = data.get('grade') as string;
+
+        // Save preferences if fields exist
         if (subject) updatePreference('subject', subject);
         if (grade) updatePreference('grade', grade);
 
@@ -53,6 +59,30 @@ export function ToolForm({ toolId, fields }: ToolFormProps) {
         }
         if (currentContent) {
             data.append('currentContent', currentContent);
+        }
+
+        // Show searching sequence if it's a new generation
+        const curriculumTools = ['lesson-planner', 'question-generator', 'activities', 'lesson-ideas', 'math-problems', 'pbl-planner', 'math-real-world'];
+        if (!refineType && curriculumTools.includes(toolId)) {
+            setIsSearching(true);
+
+            // Step 1: Google Search
+            setSearchStatus(t('common.searchGoogle').replace('{{topic}}', topic));
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            // Step 2: Bilingual Comparison
+            setSearchStatus(t('common.searchBilingual'));
+            await new Promise(resolve => setTimeout(resolve, 1200));
+
+            // Step 3: Found on MoETE
+            setSearchStatus(t('common.searchFound'));
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            // Step 4: Extracting
+            setSearchStatus(t('common.searchExtracting'));
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            setIsSearching(false);
         }
 
         startTransition(async () => {
@@ -100,6 +130,13 @@ export function ToolForm({ toolId, fields }: ToolFormProps) {
                 {/* Decorative gradients */}
                 <div className="absolute top-0 right-0 w-64 h-64 bg-amber-100/30 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2"></div>
 
+                {(title || description) && (
+                    <div className="mb-8 border-b border-amber-100/50 pb-6 relative z-10">
+                        {title && <h2 className="text-2xl font-bold text-zinc-900 tracking-tight">{title}</h2>}
+                        {description && <p className="mt-2 text-zinc-600 font-medium">{description}</p>}
+                    </div>
+                )}
+
                 <form action={handleSubmit} className="space-y-6 relative z-10">
                     <input type="hidden" name="toolId" value={toolId} />
 
@@ -126,9 +163,15 @@ export function ToolForm({ toolId, fields }: ToolFormProps) {
                                             className="w-full appearance-none rounded-2xl border-0 bg-white/60 px-5 py-4 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-200 transition-all focus:ring-2 focus:ring-amber-500 hover:bg-white/80"
                                         >
                                             <option value="">{t('common.select')}</option>
-                                            {field.options?.map(opt => (
-                                                <option key={opt} value={opt}>{opt}</option>
-                                            ))}
+                                            {field.options?.map((opt, idx) => {
+                                                const value = typeof opt === 'string' ? opt : opt.value;
+                                                const label = typeof opt === 'string' ? opt : opt.label;
+                                                return (
+                                                    <option key={`${field.name}-${idx}`} value={value}>
+                                                        {label}
+                                                    </option>
+                                                );
+                                            })}
                                         </select>
                                         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-zinc-500">
                                             <svg className="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg>
@@ -164,10 +207,15 @@ export function ToolForm({ toolId, fields }: ToolFormProps) {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         type="submit"
-                        disabled={isPending}
+                        disabled={isPending || isSearching}
                         className="w-full min-h-11 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-amber-500/20 transition-all hover:shadow-amber-500/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
-                        {isPending ? (
+                        {isSearching ? (
+                            <>
+                                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                                <span>{searchStatus}</span>
+                            </>
+                        ) : isPending ? (
                             <>
                                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
                                 <span>{t('common.generatingMagic')}</span>

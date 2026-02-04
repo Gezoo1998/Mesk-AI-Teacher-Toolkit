@@ -1,4 +1,4 @@
-import { Lightbulb, Calendar, FileText, Calculator, BookA, Gamepad2, HelpCircle, Globe, Zap, MessageCircle, BookOpen, ClipboardCheck, Signal, Magnet, Map, PartyPopper, Scale, ShieldAlert, Trophy, Feather, Clock, ScrollText } from 'lucide-react';
+import { Lightbulb, Calendar, FileText, Calculator, BookA, Gamepad2, HelpCircle, Globe, Zap, MessageCircle, BookOpen, ClipboardCheck, Signal, Magnet, Map, PartyPopper, Scale, ShieldAlert, Trophy, Feather, Clock, ScrollText, Video } from 'lucide-react';
 
 export interface Tool {
     id: string;
@@ -251,5 +251,15 @@ export const TOOLS: Tool[] = [
         color: 'emerald',
         tags: ['Collaboration'],
         category: 'assessment'
+    },
+    {
+        id: 'multimedia-generator',
+        title: 'Multimedia Content Generator',
+        description: 'Create presentation slide structures, visual hooks, and image prompts for your lessons.',
+        href: '/tools/multimedia-generator',
+        icon: <Video />,
+        color: 'sky',
+        tags: ['Slides', 'Images', 'Visuals'],
+        category: 'content'
     }
 ];

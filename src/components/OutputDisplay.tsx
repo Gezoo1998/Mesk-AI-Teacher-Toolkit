@@ -19,58 +19,33 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
         const element = document.getElementById('output-document');
         if (!element) return;
 
-        // Dynamic import for performance
+        // Dynamic imports for performance
         const jsPDF = (await import('jspdf')).default;
+        const html2canvas = (await import('html2canvas')).default;
 
-        // Use text-based PDF export to avoid html2canvas CSS parsing issues with lab() colors
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const pageHeight = pdf.internal.pageSize.getHeight();
-        const margin = 15;
-        const maxWidth = pageWidth - margin * 2;
-        let yPosition = margin;
-
-        // Extract text content
-        const textContent = element.innerText || content;
-        const paragraphs = textContent.split('\n').filter(p => p.trim());
-
-        pdf.setFontSize(12);
-
-        paragraphs.forEach((paragraph) => {
-            const trimmed = paragraph.trim();
-            if (!trimmed) return;
-
-            // Detect headers (lines that are shorter and likely titles)
-            const isHeader = trimmed.length < 60 && !trimmed.endsWith('.') && !trimmed.includes(':');
-
-            if (isHeader) {
-                pdf.setFontSize(14);
-                pdf.setFont('helvetica', 'bold');
-            } else {
-                pdf.setFontSize(11);
-                pdf.setFont('helvetica', 'normal');
-            }
-
-            const lines = pdf.splitTextToSize(trimmed, maxWidth);
-
-            // Check if we need a new page
-            const lineHeight = isHeader ? 7 : 5;
-            const blockHeight = lines.length * lineHeight + 3;
-
-            if (yPosition + blockHeight > pageHeight - margin) {
-                pdf.addPage();
-                yPosition = margin;
-            }
-
-            lines.forEach((line: string) => {
-                pdf.text(line, margin, yPosition);
-                yPosition += lineHeight;
+        try {
+            const canvas = await html2canvas(element, {
+                scale: 2, // Higher quality
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#ffffff'
             });
 
-            yPosition += 2; // Extra spacing between paragraphs
-        });
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
+            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+            const imgX = (pdfWidth - imgWidth * ratio) / 2;
+            const imgY = 10; // Margin top
 
-        pdf.save('lesson.pdf');
+            pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+            pdf.save('lesson.pdf');
+        } catch (e) {
+            console.error('Error generating PDF:', e);
+        }
     };
 
     const handleExportDOCX = async () => {
@@ -79,7 +54,8 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
         const htmlDocx = (await import('html-docx-js-typescript')).default;
         const { saveAs } = await import('file-saver');
 
-        const html = await marked(content) as string;
+        const brandedContent = `# ${t('common.schoolName')}\n\n${content}`;
+        const html = await marked(brandedContent) as string;
         const docx = await htmlDocx.asBlob(html) as Blob;
         saveAs(docx, 'lesson.docx');
     };
@@ -173,6 +149,21 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
 
             {/* Document Content */}
             <div id="output-document" className="bg-white px-5 py-6 md:px-12 md:py-10">
+                {/* School Header for Exports */}
+                <div className="mb-10 flex items-center gap-6 border-b border-amber-100 pb-8">
+                    <img
+                        src="/mesk.png"
+                        alt={t('common.logoAlt')}
+                        className="h-16 w-auto object-contain"
+                    />
+                    <div className="flex flex-col">
+                        <h2 className="text-2xl font-black tracking-tight text-amber-600 uppercase">
+                            {t('common.schoolName')}
+                        </h2>
+                        <div className="mt-1 h-1 w-20 rounded-full bg-amber-400" />
+                    </div>
+                </div>
+
                 <ReactMarkdown
                     components={{
                         // H1 - Major Title
