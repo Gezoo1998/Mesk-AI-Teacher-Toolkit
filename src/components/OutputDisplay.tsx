@@ -22,48 +22,45 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
 
         setIsExporting('pdf');
 
-        // Dynamic imports for performance
         try {
             const jsPDF = (await import('jspdf')).default;
             const html2canvas = (await import('html2canvas')).default;
 
             const canvas = await html2canvas(element, {
-                scale: 2, // Higher quality
+                scale: 1.5, // Reduced for mobile memory safety
                 useCORS: true,
                 logging: false,
-                backgroundColor: '#ffffff',
-                windowWidth: element.scrollWidth,
-                windowHeight: element.scrollHeight
+                backgroundColor: '#ffffff'
             });
 
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF('p', 'mm', 'a4');
+
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
-
-            // Calculate dimensions to fit A4 while maintaining aspect ratio
-            const imgWidth = pdfWidth - 20; // 10mm margin on each side
+            const margin = 10;
+            const imgWidth = pdfWidth - (margin * 2);
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
             let heightLeft = imgHeight;
-            let position = 10; // Start with 10mm top margin
+            let position = margin;
 
-            // First page
-            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+            // Page 1
+            pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
             heightLeft -= pdfHeight;
 
-            // Handle multi-page if content is long
-            while (heightLeft >= 0) {
-                position = heightLeft - imgHeight;
+            // Subsequent pages
+            while (heightLeft > 0) {
+                position = heightLeft - imgHeight - margin;
                 pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
                 heightLeft -= pdfHeight;
             }
 
-            pdf.save('lesson.pdf');
+            pdf.save(`${t('common.schoolName')}_Resource.pdf`);
         } catch (e) {
-            console.error('Error generating PDF:', e);
-            alert('Failed to generate PDF. Please try again.');
+            console.error('PDF Export Error:', e);
+            alert('PDF Export failed. Try using a desktop browser or taking a screenshot.');
         } finally {
             setIsExporting(null);
         }

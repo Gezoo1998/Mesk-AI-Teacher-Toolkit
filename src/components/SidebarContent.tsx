@@ -5,7 +5,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
-export function SidebarContent() {
+export function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
     const { t, language, setLanguage } = useLanguage();
 
     const toggleLanguage = () => {
@@ -29,7 +29,11 @@ export function SidebarContent() {
 
             <div className="flex flex-col items-center text-center space-y-6 mt-2">
                 {/* School Badge */}
-                <Link href="/" className="group inline-flex items-center gap-2 rounded-full border border-amber-200/60 bg-gradient-to-r from-amber-50/80 to-yellow-50/50 px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest text-amber-800 shadow-sm transition-all hover:border-amber-400 hover:shadow-md hover:-translate-y-0.5">
+                <Link
+                    href="/"
+                    onClick={onItemClick}
+                    className="group inline-flex items-center gap-2 rounded-full border border-amber-200/60 bg-gradient-to-r from-amber-50/80 to-yellow-50/50 px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest text-amber-800 shadow-sm transition-all hover:border-amber-400 hover:shadow-md hover:-translate-y-0.5"
+                >
                     <span className="h-2 w-2 rounded-full bg-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.8)] animate-pulse" />
                     {t('sidebar.schoolName')}
                 </Link>
@@ -37,7 +41,11 @@ export function SidebarContent() {
                 {/* Logo Area */}
                 <div className="relative">
                     <div className="absolute inset-0 bg-amber-400/20 blur-3xl rounded-full opacity-50 animate-pulse" />
-                    <Link href="/" className="block relative h-32 w-32 transition-transform duration-300 hover:scale-105 active:scale-95">
+                    <Link
+                        href="/"
+                        onClick={onItemClick}
+                        className="block relative h-32 w-32 transition-transform duration-300 hover:scale-105 active:scale-95"
+                    >
                         <motion.img
                             src="/mesk.png"
                             alt={t('common.logoAlt')}
@@ -72,6 +80,7 @@ export function SidebarContent() {
                 {/* AI Chat Link */}
                 <Link
                     href="/chat"
+                    onClick={onItemClick}
                     className="flex items-center gap-3 rounded-2xl border border-amber-200/50 bg-gradient-to-br from-amber-500 to-amber-600 p-4 text-white shadow-lg shadow-amber-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] group/chat"
                 >
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-md transition-transform group-hover/chat:rotate-12">
