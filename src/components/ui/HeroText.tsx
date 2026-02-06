@@ -3,7 +3,12 @@
 import { motion, Variants } from 'framer-motion';
 
 export function HeroText({ text }: { text: string }) {
-    const letters = Array.from(text);
+    // Detect if text contains Arabic
+    const isArabic = /[\u0600-\u06FF]/.test(text);
+
+    // For Arabic, we MUST split by words to keep letters connected.
+    // For English, we can keep the "per-letter" magic animation.
+    const items = isArabic ? text.split(' ') : Array.from(text);
 
     const container: Variants = {
         hidden: { opacity: 0 },
@@ -41,9 +46,14 @@ export function HeroText({ text }: { text: string }) {
             initial="hidden"
             animate="visible"
         >
-            {letters.map((letter, index) => (
-                <motion.span variants={child} key={index} className="inline-block">
-                    {letter === " " ? "\u00A0" : letter}
+            {items.map((item, index) => (
+                <motion.span
+                    variants={child}
+                    key={index}
+                    className="inline-block"
+                >
+                    {item === " " ? "\u00A0" : item}
+                    {isArabic && index < items.length - 1 ? "\u00A0" : ""}
                 </motion.span>
             ))}
         </motion.h1>
