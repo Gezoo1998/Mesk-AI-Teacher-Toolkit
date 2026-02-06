@@ -7,6 +7,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 export function OutputDisplay({ content, onRefine }: { content: string; onRefine?: (type: string) => void }) {
     const [copied, setCopied] = useState(false);
     const [showRefine, setShowRefine] = useState(false);
+    const [isExporting, setIsExporting] = useState<'pdf' | 'docx' | null>(null);
     const { t } = useLanguage();
 
     const handleCopy = () => {
@@ -17,47 +18,76 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
 
     const handleExportPDF = async () => {
         const element = document.getElementById('output-document');
-        if (!element) return;
+        if (!element || isExporting) return;
+
+        setIsExporting('pdf');
 
         // Dynamic imports for performance
-        const jsPDF = (await import('jspdf')).default;
-        const html2canvas = (await import('html2canvas')).default;
-
         try {
+            const jsPDF = (await import('jspdf')).default;
+            const html2canvas = (await import('html2canvas')).default;
+
             const canvas = await html2canvas(element, {
                 scale: 2, // Higher quality
                 useCORS: true,
                 logging: false,
-                backgroundColor: '#ffffff'
+                backgroundColor: '#ffffff',
+                windowWidth: element.scrollWidth,
+                windowHeight: element.scrollHeight
             });
 
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF('p', 'mm', 'a4');
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
-            const imgWidth = canvas.width;
-            const imgHeight = canvas.height;
-            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-            const imgX = (pdfWidth - imgWidth * ratio) / 2;
-            const imgY = 10; // Margin top
 
-            pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+            // Calculate dimensions to fit A4 while maintaining aspect ratio
+            const imgWidth = pdfWidth - 20; // 10mm margin on each side
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+            let heightLeft = imgHeight;
+            let position = 10; // Start with 10mm top margin
+
+            // First page
+            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+            heightLeft -= pdfHeight;
+
+            // Handle multi-page if content is long
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                heightLeft -= pdfHeight;
+            }
+
             pdf.save('lesson.pdf');
         } catch (e) {
             console.error('Error generating PDF:', e);
+            alert('Failed to generate PDF. Please try again.');
+        } finally {
+            setIsExporting(null);
         }
     };
 
     const handleExportDOCX = async () => {
-        // Dynamic imports for performance
-        const { marked } = await import('marked');
-        const htmlDocx = (await import('html-docx-js-typescript')).default;
-        const { saveAs } = await import('file-saver');
+        if (isExporting) return;
+        setIsExporting('docx');
 
-        const brandedContent = `# ${t('common.schoolName')}\n\n${content}`;
-        const html = await marked(brandedContent) as string;
-        const docx = await htmlDocx.asBlob(html) as Blob;
-        saveAs(docx, 'lesson.docx');
+        try {
+            // Dynamic imports for performance
+            const { marked } = await import('marked');
+            const htmlDocx = (await import('html-docx-js-typescript')).default;
+            const { saveAs } = await import('file-saver');
+
+            const brandedContent = `# ${t('common.schoolName')}\n\n${content}`;
+            const html = await marked(brandedContent) as string;
+            const docx = await htmlDocx.asBlob(html) as Blob;
+            saveAs(docx, 'lesson.docx');
+        } catch (e) {
+            console.error('Error generating DOCX:', e);
+        } finally {
+            setIsExporting(null);
+        }
     };
 
     if (!content) return null;
@@ -65,53 +95,67 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
     return (
         <div className="relative animate-fade-in-soft overflow-hidden rounded-3xl border border-white/60 bg-white shadow-2xl shadow-zinc-200/50 ring-1 ring-black/5">
             {/* Action Bar */}
-            <div className="flex items-center justify-between border-b border-zinc-100 bg-zinc-50/80 px-6 py-4 backdrop-blur-md">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-zinc-100 bg-zinc-50/80 px-4 py-4 md:px-6 gap-4 backdrop-blur-md">
                 <div className="flex items-center gap-2.5">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-amber-600 ring-1 ring-amber-500/20">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-600 ring-1 ring-amber-500/20">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /></svg>
                     </div>
-                    <div>
-                        <h3 className="text-sm font-bold text-zinc-900">{t('common.generatedTitle')}</h3>
-                        <p className="text-[11px] font-medium text-zinc-500 uppercase tracking-wide">{t('common.readyToUse')}</p>
+                    <div className="min-w-0">
+                        <h3 className="text-sm font-bold text-zinc-900 truncate">{t('common.generatedTitle')}</h3>
+                        <p className="text-[10px] md:text-[11px] font-medium text-zinc-500 uppercase tracking-wide truncate">{t('common.readyToUse')}</p>
                     </div>
                 </div>
-                <div className="flex gap-2">
+
+                <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                     <button
                         onClick={handleCopy}
-                        className="group inline-flex items-center gap-2 min-h-10 rounded-xl border border-zinc-200 bg-white px-4 py-2 text-xs font-bold text-zinc-700 shadow-sm transition-all hover:border-amber-400 hover:bg-amber-50 hover:text-amber-800 focus:outline-none focus:ring-4 focus:ring-amber-100 active:scale-[0.98]"
+                        className="flex-1 sm:flex-none group inline-flex items-center justify-center gap-2 min-h-10 rounded-xl border border-zinc-200 bg-white px-3 md:px-4 py-2 text-xs font-bold text-zinc-700 shadow-sm transition-all hover:border-amber-400 hover:bg-amber-50 hover:text-amber-800 focus:outline-none ring-zinc-100 focus:ring-4 active:scale-[0.98]"
                     >
                         {copied ? (
                             <>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600"><path d="M20 6 9 17l-5-5" /></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600"><path d="M20 6 9 17l-5-5" /></svg>
                                 <span className="text-emerald-700">{t('common.copied')}</span>
                             </>
                         ) : (
                             <>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-400 decoration-clone group-hover:text-amber-600"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-400 group-hover:text-amber-600"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></svg>
                                 <span>{t('common.copyText')}</span>
                             </>
                         )}
                     </button>
+
                     <button
                         onClick={handleExportPDF}
-                        className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-2 text-xs font-bold text-zinc-700 shadow-sm transition-all hover:border-amber-400 hover:bg-amber-50 hover:text-amber-800 focus:outline-none focus:ring-4 focus:ring-amber-100 active:scale-[0.98]"
+                        disabled={!!isExporting}
+                        className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 min-h-10 rounded-xl border border-zinc-200 bg-white px-3 md:px-4 py-2 text-xs font-bold text-zinc-700 shadow-sm transition-all hover:border-amber-400 hover:bg-amber-50 hover:text-amber-800 focus:outline-none ring-zinc-100 focus:ring-4 disabled:opacity-50 active:scale-[0.98]"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /><path d="M10 12H4" /><path d="M10 16H4" /><path d="M10 20H4" /></svg>
+                        {isExporting === 'pdf' ? (
+                            <div className="h-4 w-4 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
+                        ) : (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /><path d="M10 12H4" /><path d="M10 16H4" /><path d="M10 20H4" /></svg>
+                        )}
                         <span>{t('common.pdf')}</span>
                     </button>
+
                     <button
                         onClick={handleExportDOCX}
-                        className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-2 text-xs font-bold text-zinc-700 shadow-sm transition-all hover:border-amber-400 hover:bg-amber-50 hover:text-amber-800 focus:outline-none focus:ring-4 focus:ring-amber-100 active:scale-[0.98]"
+                        disabled={!!isExporting}
+                        className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 min-h-10 rounded-xl border border-zinc-200 bg-white px-3 md:px-4 py-2 text-xs font-bold text-zinc-700 shadow-sm transition-all hover:border-amber-400 hover:bg-amber-50 hover:text-amber-800 focus:outline-none ring-zinc-100 focus:ring-4 disabled:opacity-50 active:scale-[0.98]"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /></svg>
+                        {isExporting === 'docx' ? (
+                            <div className="h-4 w-4 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
+                        ) : (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /></svg>
+                        )}
                         <span>{t('common.docx')}</span>
                     </button>
+
                     {onRefine && (
                         <button
                             onClick={() => setShowRefine(!showRefine)}
-                            className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-2 text-xs font-bold text-zinc-700 shadow-sm transition-all hover:border-amber-400 hover:bg-amber-50 hover:text-amber-800 focus:outline-none focus:ring-4 focus:ring-amber-100 active:scale-[0.98]"
+                            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 min-h-10 rounded-xl border border-zinc-200 bg-white px-3 md:px-4 py-2 text-xs font-bold text-zinc-700 shadow-sm transition-all hover:border-amber-400 hover:bg-amber-50 hover:text-amber-800 focus:outline-none ring-zinc-100 focus:ring-4 active:scale-[0.98]"
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M3 21v-5h5" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M3 21v-5h5" /></svg>
                             <span>{t('common.refine')}</span>
                         </button>
                     )}
