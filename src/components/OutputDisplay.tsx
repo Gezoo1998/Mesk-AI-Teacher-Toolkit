@@ -42,10 +42,29 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
             const canvas = await html2canvas(element, {
                 scale: 1.5,
                 useCORS: true,
-                logging: true, // Enable html2canvas internal logging
+                logging: true,
                 backgroundColor: '#ffffff',
                 windowWidth: element.scrollWidth,
-                windowHeight: element.scrollHeight
+                windowHeight: element.scrollHeight,
+                onclone: (clonedDoc) => {
+                    const elements = clonedDoc.getElementsByTagName('*');
+                    for (let i = 0; i < elements.length; i++) {
+                        const el = elements[i] as HTMLElement;
+                        const style = window.getComputedStyle(el);
+
+                        // Force conversion of modern colors to standard RGB for html2canvas compatibility
+                        // Tailwind v4 uses lab() and oklch() which html2canvas cannot parse
+                        ['color', 'backgroundColor', 'borderColor', 'outlineColor'].forEach(prop => {
+                            const val = (el.style as any)[prop] || style.getPropertyValue(prop);
+                            if (val && (val.includes('lab') || val.includes('oklch'))) {
+                                // Try to force a computed RGB value by setting it directly
+                                // In most modern browsers, getComputedStyle already returns rgb/rgba 
+                                // but we re-apply it to the inline style of the clone to be safe
+                                el.style.setProperty(prop, style.getPropertyValue(prop), 'important');
+                            }
+                        });
+                    }
+                }
             });
             console.log('[PDF Export] Canvas captured successfully.');
 
