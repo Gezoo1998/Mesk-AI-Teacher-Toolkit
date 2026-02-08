@@ -47,22 +47,59 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
                 windowWidth: element.scrollWidth,
                 windowHeight: element.scrollHeight,
                 onclone: (clonedDoc) => {
-                    const elements = clonedDoc.getElementsByTagName('*');
-                    for (let i = 0; i < elements.length; i++) {
-                        const el = elements[i] as HTMLElement;
-                        const style = window.getComputedStyle(el);
+                    console.log('[PDF Export] Sanitizing styles in cloned document...');
+                    const clonedElement = clonedDoc.getElementById('output-document');
+                    if (!clonedElement || !element) return;
 
-                        // Force conversion of modern colors to standard RGB for html2canvas compatibility
-                        // Tailwind v4 uses lab() and oklch() which html2canvas cannot parse
-                        ['color', 'backgroundColor', 'borderColor', 'outlineColor'].forEach(prop => {
-                            const val = (el.style as any)[prop] || style.getPropertyValue(prop);
-                            if (val && (val.includes('lab') || val.includes('oklch'))) {
-                                // Try to force a computed RGB value by setting it directly
-                                // In most modern browsers, getComputedStyle already returns rgb/rgba 
-                                // but we re-apply it to the inline style of the clone to be safe
-                                el.style.setProperty(prop, style.getPropertyValue(prop), 'important');
-                            }
-                        });
+                    // 1. Capture and inline all computed styles
+                    const sourceElements = Array.from(element.getElementsByTagName('*'));
+                    const clonedElements = Array.from(clonedElement.getElementsByTagName('*'));
+
+                    // Include the roots themselves
+                    sourceElements.unshift(element);
+                    clonedElements.unshift(clonedElement);
+
+                    console.log(`[PDF Export] Inlining styles for ${sourceElements.length} elements...`);
+
+                    for (let i = 0; i < sourceElements.length; i++) {
+                        const source = sourceElements[i] as HTMLElement;
+                        const target = clonedElements[i] as HTMLElement;
+
+                        if (source && target) {
+                            const computedStyle = window.getComputedStyle(source);
+
+                            // Properties that impact look and feel
+                            const propsToCopy = [
+                                'color', 'background-color', 'border-color', 'font-family',
+                                'font-size', 'font-weight', 'line-height', 'padding',
+                                'margin', 'display', 'flex-direction', 'align-items',
+                                'justify-content', 'gap', 'width', 'height', 'opacity',
+                                'text-align', 'border-radius', 'box-shadow', 'border-width',
+                                'border-style', 'position', 'top', 'right', 'bottom', 'left'
+                            ];
+
+                            propsToCopy.forEach(prop => {
+                                try {
+                                    let value = computedStyle.getPropertyValue(prop);
+
+                                    // Strip lab/oklch functions to prevent renderer crash
+                                    if (value.includes('lab') || value.includes('oklch')) {
+                                        value = value.replace(/lab\([^)]+\)/g, 'rgba(0,0,0,0)')
+                                            .replace(/oklch\([^)]+\)/g, 'rgba(0,0,0,0)');
+                                    }
+
+                                    target.style.setProperty(prop, value, 'important');
+                                } catch (err) { }
+                            });
+                        }
+                    }
+
+                    // 2. Remove all external/global styles to prevent the parser from seeing lab() colors
+                    const head = clonedDoc.getElementsByTagName('head')[0];
+                    if (head) {
+                        const styles = head.querySelectorAll('style, link[rel="stylesheet"]');
+                        console.log(`[PDF Export] Stripping ${styles.length} stylesheets from clone...`);
+                        styles.forEach(s => s.remove());
                     }
                 }
             });
