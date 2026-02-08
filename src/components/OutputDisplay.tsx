@@ -85,7 +85,8 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
             console.log('[PDF Export] Export completed successfully.');
         } catch (e) {
             console.error('[PDF Export] CRITICAL FAILURE:', e);
-            alert('PDF Export failed. Tip: You can also use "Print" (Ctrl+P) and "Save as PDF" for a high-quality export.');
+            const errorStr = e instanceof Error ? e.message : String(e);
+            alert(`PDF Export failed: ${errorStr}\n\nTip: You can also use "Print" (Ctrl+P) and "Save as PDF" for a high-quality export.`);
         } finally {
             setIsExporting(null);
         }
