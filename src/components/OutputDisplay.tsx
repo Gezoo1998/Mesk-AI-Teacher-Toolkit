@@ -20,24 +20,39 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
         const element = document.getElementById('output-document');
         if (!element || isExporting) return;
 
+        console.log('[PDF Export] Starting export process...');
         setIsExporting('pdf');
 
         try {
             // Wait a moment for UI to settle
+            console.log('[PDF Export] Waiting for UI to settle (100ms)...');
             await new Promise(resolve => setTimeout(resolve, 100));
 
+            console.group('[PDF Export] Library Loading');
+            console.log('[PDF Export] Loading jsPDF...');
             const jsPDF = (await import('jspdf')).default;
+            console.log('[PDF Export] Loading html2canvas...');
             const html2canvas = (await import('html2canvas')).default;
+            console.groupEnd();
 
+            console.log('[PDF Export] Capturing element with html2canvas...', {
+                width: element.scrollWidth,
+                height: element.scrollHeight
+            });
             const canvas = await html2canvas(element, {
                 scale: 1.5,
                 useCORS: true,
-                allowTaint: true,
-                logging: false,
-                backgroundColor: '#ffffff'
+                logging: true, // Enable html2canvas internal logging
+                backgroundColor: '#ffffff',
+                windowWidth: element.scrollWidth,
+                windowHeight: element.scrollHeight
             });
+            console.log('[PDF Export] Canvas captured successfully.');
 
-            const imgData = canvas.toDataURL('image/png');
+            console.log('[PDF Export] Converting canvas to image data...');
+            const imgData = canvas.toDataURL('image/png', 1.0);
+
+            console.log('[PDF Export] Initializing jsPDF...');
             const pdf = new jsPDF('p', 'mm', 'a4');
 
             const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -49,22 +64,28 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
             let heightLeft = imgHeight;
             let position = margin;
 
+            console.log('[PDF Export] Generating pages...', { imgHeight, pdfHeight });
             // Page 1
             pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
             heightLeft -= pdfHeight;
 
             // Subsequent pages
+            let pageNum = 1;
             while (heightLeft > 0) {
+                pageNum++;
+                console.log(`[PDF Export] Adding page ${pageNum}...`);
                 position = heightLeft - imgHeight - margin;
                 pdf.addPage();
                 pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
                 heightLeft -= pdfHeight;
             }
 
+            console.log('[PDF Export] Saving PDF file...');
             pdf.save(`${t('common.schoolName')}_Resource.pdf`);
+            console.log('[PDF Export] Export completed successfully.');
         } catch (e) {
-            console.error('PDF Export Error:', e);
-            alert('PDF Export failed. Please try again or use a desktop computer if possible.');
+            console.error('[PDF Export] CRITICAL FAILURE:', e);
+            alert('PDF Export failed. Tip: You can also use "Print" (Ctrl+P) and "Save as PDF" for a high-quality export.');
         } finally {
             setIsExporting(null);
         }
