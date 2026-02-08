@@ -23,12 +23,16 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
         setIsExporting('pdf');
 
         try {
+            // Wait a moment for UI to settle
+            await new Promise(resolve => setTimeout(resolve, 100));
+
             const jsPDF = (await import('jspdf')).default;
             const html2canvas = (await import('html2canvas')).default;
 
             const canvas = await html2canvas(element, {
-                scale: 1.5, // Reduced for mobile memory safety
+                scale: 1.5,
                 useCORS: true,
+                allowTaint: true,
                 logging: false,
                 backgroundColor: '#ffffff'
             });
@@ -60,7 +64,7 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
             pdf.save(`${t('common.schoolName')}_Resource.pdf`);
         } catch (e) {
             console.error('PDF Export Error:', e);
-            alert('PDF Export failed. Try using a desktop browser or taking a screenshot.');
+            alert('PDF Export failed. Please try again or use a desktop computer if possible.');
         } finally {
             setIsExporting(null);
         }

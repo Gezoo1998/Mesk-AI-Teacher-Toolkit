@@ -68,19 +68,19 @@ export function ToolForm({ toolId, fields, title, description }: ToolFormProps) 
 
             // Step 1: Google Search
             setSearchStatus(t('common.searchGoogle').replace('{{topic}}', topic));
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            await new Promise(resolve => setTimeout(resolve, 800));
 
             // Step 2: Bilingual Comparison
             setSearchStatus(t('common.searchBilingual'));
-            await new Promise(resolve => setTimeout(resolve, 1200));
+            await new Promise(resolve => setTimeout(resolve, 600));
 
             // Step 3: Found on MoETE
             setSearchStatus(t('common.searchFound'));
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, 500));
 
             // Step 4: Extracting
             setSearchStatus(t('common.searchExtracting'));
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, 500));
 
             setIsSearching(false);
         }
@@ -137,7 +137,13 @@ export function ToolForm({ toolId, fields, title, description }: ToolFormProps) 
                     </div>
                 )}
 
-                <form action={handleSubmit} className="space-y-6 relative z-10">
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        handleSubmit();
+                    }}
+                    className="space-y-6 relative z-10"
+                >
                     <input type="hidden" name="toolId" value={toolId} />
 
                     {fields.map((field) => {
