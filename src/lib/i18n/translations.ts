@@ -231,6 +231,10 @@ export const translations = {
             primary: 'Primary (Grades 1-6)',
             prep: 'Preparatory (Grades 7-9)',
             secondary: 'Secondary (Senior 1-3)',
+            home: 'Home',
+            tools: 'Tools',
+            chat: 'Chat',
+            menu: 'Menu',
         },
         tags: {
             ideas: '3–5 ideas',
@@ -502,6 +506,10 @@ export const translations = {
             primary: 'المرحلة الابتدائية',
             prep: 'المرحلة الإعدادية',
             secondary: 'المرحلة الثانوية',
+            home: 'الرئيسية',
+            tools: 'الأدوات',
+            chat: 'المحادثة',
+            menu: 'القائمة',
         },
         tags: {
             ideas: '3-5 أفكار',

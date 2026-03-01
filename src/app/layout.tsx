@@ -3,7 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/Sidebar";
 import { MobileNav } from "@/components/MobileNav";
+import { BottomNav } from "@/components/BottomNav";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { NavigationProvider } from "@/contexts/NavigationContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -140,20 +142,24 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <LanguageProvider>
-          <div className="flex min-h-screen flex-col bg-transparent md:flex-row">
-            {/* Sidebar Desktop */}
-            <div className="hidden md:block md:w-80 md:flex-none md:p-6">
-              <Sidebar />
-            </div>
-
-            <MobileNav />
-
-            <main className="flex-1 p-6 md:p-10 md:pt-10">
-              <div className="mx-auto max-w-5xl animate-fade-in-soft">
-                {children}
+          <NavigationProvider>
+            <div className="flex min-h-screen flex-col bg-transparent md:flex-row">
+              {/* Sidebar Desktop */}
+              <div className="hidden md:block md:w-80 md:flex-none md:p-6">
+                <Sidebar />
               </div>
-            </main>
-          </div>
+
+              <MobileNav />
+
+              <main className="flex-1 p-6 md:p-10 md:pt-10 pb-28 md:pb-10">
+                <div className="mx-auto max-w-5xl animate-fade-in-soft">
+                  {children}
+                </div>
+              </main>
+
+              <BottomNav />
+            </div>
+          </NavigationProvider>
         </LanguageProvider>
       </body>
     </html>
