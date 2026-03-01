@@ -2,6 +2,7 @@
 
 import { ToolForm } from "@/components/ToolForm";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { GRADE_LEVELS } from "@/lib/constants";
 
 export default function Page() {
     const { t } = useLanguage();
@@ -17,7 +18,7 @@ export default function Page() {
                 toolId="vocab-list"
                 fields={[
                     { name: 'topic', label: t('common.topicLabel'), type: 'text', placeholder: t('common.topicPlaceholder'), required: true },
-                    { name: 'grade', label: t('common.gradeLabel'), type: 'select', options: ['Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6', 'Prep 1', 'Prep 2', 'Prep 3', 'Secondary 1', 'Secondary 2', 'Secondary 3'], required: true },
+                    { name: 'grade', label: t('common.gradeLabel'), type: 'select', options: GRADE_LEVELS, required: true },
                 ]}
             />
         </div>

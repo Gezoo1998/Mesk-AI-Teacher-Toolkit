@@ -226,6 +226,11 @@ export const translations = {
             proofPlaceholder: 'e.g. Pythagorean Theorem, Quadratic Formula...',
             summarizePlaceholder: 'Paste the educational text here...',
             rubricPlaceholder: 'Describe what students need to do...',
+            difficultyLabel: 'Difficulty Level',
+            countLabel: 'Count',
+            primary: 'Primary (Grades 1-6)',
+            prep: 'Preparatory (Grades 7-9)',
+            secondary: 'Secondary (Senior 1-3)',
         },
         tags: {
             ideas: '3–5 ideas',
@@ -492,6 +497,11 @@ export const translations = {
             proofPlaceholder: 'مثال: نظرية فيثاغورس، الصيغة التربيعية...',
             summarizePlaceholder: 'الصق النص التعليمي هنا...',
             rubricPlaceholder: 'صف ما يجب على الطلاب فعله...',
+            difficultyLabel: 'مستوى الصعوبة',
+            countLabel: 'العدد',
+            primary: 'المرحلة الابتدائية',
+            prep: 'المرحلة الإعدادية',
+            secondary: 'المرحلة الثانوية',
         },
         tags: {
             ideas: '3-5 أفكار',

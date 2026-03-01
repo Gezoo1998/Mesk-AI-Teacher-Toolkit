@@ -2,6 +2,7 @@
 
 import { ToolForm } from '@/components/ToolForm';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { GRADE_LEVELS } from '@/lib/constants';
 
 export default function Page() {
     const { t } = useLanguage();
@@ -18,7 +19,7 @@ export default function Page() {
                 fields={[
                     { name: 'topic', label: t('common.projectTopicLabel'), type: 'text', placeholder: t('common.topicPlaceholder'), required: true },
                     { name: 'subject', label: t('common.subjectLabel'), type: 'select', options: ['English', 'Math', 'Science', 'History', 'Geography', 'Arabic', 'Religion'], required: true },
-                    { name: 'grade', label: t('common.gradeLabel'), type: 'select', options: ['Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6', 'Prep 1', 'Prep 2', 'Prep 3', 'Secondary 1', 'Secondary 2', 'Secondary 3'], required: true },
+                    { name: 'grade', label: t('common.gradeLabel'), type: 'select', options: GRADE_LEVELS, required: true },
                     { name: 'duration', label: t('common.durationLabel'), type: 'select', options: ['1 week', '2 weeks', '3 weeks', '4 weeks', '6 weeks'], required: true }
                 ]}
             />

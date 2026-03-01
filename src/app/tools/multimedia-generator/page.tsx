@@ -2,6 +2,7 @@
 
 import { ToolForm } from "@/components/ToolForm";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { GRADE_LEVELS } from "@/lib/constants";
 
 export default function MultimediaGeneratorPage() {
     const { t } = useLanguage();
@@ -18,11 +19,7 @@ export default function MultimediaGeneratorPage() {
             name: 'grade',
             label: t('common.gradeLabel'),
             type: 'select' as const,
-            options: [
-                { value: 'primary', label: t('common.primary') },
-                { value: 'prep', label: t('common.prep') },
-                { value: 'secondary', label: t('common.secondary') }
-            ],
+            options: GRADE_LEVELS,
             required: true
         },
         {

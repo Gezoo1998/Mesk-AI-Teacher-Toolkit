@@ -2,6 +2,7 @@
 
 import { ToolForm } from "@/components/ToolForm";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { GRADE_LEVELS } from "@/lib/constants";
 
 export default function Page() {
     const { t } = useLanguage();
@@ -19,7 +20,7 @@ export default function Page() {
                 fields={[
                     { name: 'lesson_title', label: t('common.lessonTitleLabel'), type: 'text', placeholder: t('common.topicPlaceholder'), required: true },
                     { name: 'subject', label: t('common.subjectLabel'), type: 'select', options: ['English', 'Math', 'Science', 'History', 'Geography', 'Arabic', 'Religion'], required: true },
-                    { name: 'grade', label: t('common.gradeLabel'), type: 'select', options: ['Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6', 'Prep 1', 'Prep 2', 'Prep 3', 'Secondary 1', 'Secondary 2', 'Secondary 3'], required: true },
+                    { name: 'grade', label: t('common.gradeLabel'), type: 'select', options: GRADE_LEVELS, required: true },
                     { name: 'duration', label: t('common.durationLabel'), type: 'select', options: ['30 minutes', '45 minutes', '60 minutes', '90 minutes'], required: true },
                     { name: 'curriculum_standard', label: t('tools.lesson-planner.standardLabel') || 'Curriculum Standard (optional)', type: 'text', placeholder: t('common.standardPlaceholder'), required: false },
                 ]}

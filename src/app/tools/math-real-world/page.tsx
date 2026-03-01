@@ -2,6 +2,7 @@
 
 import { ToolForm } from "@/components/ToolForm";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { GRADE_LEVELS } from "@/lib/constants";
 
 export default function Page() {
     const { t } = useLanguage();
@@ -32,7 +33,7 @@ export default function Page() {
                         name: 'grade',
                         label: t('common.gradeLabel'),
                         type: 'select',
-                        options: ['Primary 4', 'Primary 5', 'Primary 6', 'Prep 1', 'Prep 2', 'Prep 3', 'Secondary 1'],
+                        options: GRADE_LEVELS,
                         required: true
                     },
                 ]}
