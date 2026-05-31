@@ -1,4 +1,4 @@
-import { Lightbulb, Calendar, FileText, Calculator, BookA, Gamepad2, HelpCircle, Globe, Zap, MessageCircle, BookOpen, ClipboardCheck, Signal, Magnet, Map, PartyPopper, Scale, ShieldAlert, Trophy, Feather, Clock, ScrollText, Video } from 'lucide-react';
+import { Lightbulb, Calendar, FileText, Calculator, BookA, Gamepad2, HelpCircle, Globe, Zap, MessageCircle, BookOpen, ClipboardCheck, Signal, Magnet, Map, PartyPopper, Scale, ShieldAlert, Trophy, Feather, Clock, Video, Target, Layers, Code2, Search } from 'lucide-react';
 
 export interface Tool {
     id: string;
@@ -261,5 +261,45 @@ export const TOOLS: Tool[] = [
         color: 'sky',
         tags: ['Slides', 'Images', 'Visuals'],
         category: 'content'
+    },
+    {
+        id: 'iep-goal-assistant',
+        title: 'IEP/SEN Goal Assistant',
+        description: 'Draft SMART goals for Individualized Education Programs tailored to specific student needs.',
+        href: '/tools/iep-goal-assistant',
+        icon: <Target />,
+        color: 'rose',
+        tags: ['Special Needs', 'SMART Goals'],
+        category: 'planning'
+    },
+    {
+        id: 'multi-level-leveler',
+        title: 'Text Leveler (Multi-Level)',
+        description: 'Generate three versions of any text simultaneously: Emerging, On-Level, and Advanced.',
+        href: '/tools/multi-level-leveler',
+        icon: <Layers />,
+        color: 'sky',
+        tags: ['Differentiation', 'Reading'],
+        category: 'content'
+    },
+    {
+        id: 'concept-to-code',
+        title: 'Concept-to-Code Converter',
+        description: 'Transform logic descriptions into simple Python or Scratch snippets for ICT lessons.',
+        href: '/tools/concept-to-code',
+        icon: <Code2 />,
+        color: 'indigo',
+        tags: ['ICT', 'Coding'],
+        category: 'content'
+    },
+    {
+        id: 'concept-mystery',
+        title: 'Concept Mystery Creator',
+        description: 'Turn any curriculum topic into a "Choose Your Own Adventure" style detective story.',
+        href: '/tools/concept-mystery',
+        icon: <Search />,
+        color: 'amber',
+        tags: ['Engagement', 'Problem Solving'],
+        category: 'engagement'
     }
 ];

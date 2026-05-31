@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation | AI Teacher Toolkit</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #f59e0b;
+            --primary-light: #fef3c7;
+            --secondary: #10b981;
+            --bg: #fafafa;
+            --card: #ffffff;
+            --text-main: #18181b;
+            --text-secondary: #525252;
+            --border: #e5e7eb;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--card);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 900;
+            letter-spacing: -0.025em;
+            display: flex;
+            items-center: center;
+            gap: 0.5rem;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background: var(--bg);
+            color: var(--text-main);
+        }
+
+        .nav-link.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Main Content Styles */
+        main {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 4rem 10%;
+            max-width: 1200px;
+        }
+
+        section {
+            padding: 3rem 0;
+            border-bottom: 1px solid var(--border);
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        section:last-child {
+            border-bottom: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #18181b 0%, #52525b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        h2::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 1.5rem;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+
+        /* Code Blocks */
+        pre {
+            background: #18181b;
+            color: #e4e4e7;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            border: 1px solid #27272a;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 500;
+        }
+
+        .step-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 800;
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+
+        .step-content strong {
+            display: block;
+            margin-bottom: 0.25rem;
+            color: var(--text-main);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        /* Alerts */
+        .info-box {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            padding: 1.25rem;
+            border-radius: 1rem;
+            margin: 1.5rem 0;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            color: #0369a1;
+            font-size: 0.95rem;
+        }
+
+        /* UI elements */
+        .config-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .config-table th, .config-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .config-table th {
+            background: #f8fafc;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+        }
+
+        .status-badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 800;
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar {
+                display: none;
+            }
+            main {
+                margin-left: 0;
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <a href="#" class="logo">
+            <span>AI</span> Toolkit
+        </a>
+        <ul class="nav-links">
+            <li><a href="#intro" class="nav-link active">Getting Started</a></li>
+            <li><a href="#installation" class="nav-link">Installation</a></li>
+            <li><a href="#deployment" class="nav-link">Deploy on Vercel</a></li>
+            <li><a href="#apikey" class="nav-link">Add API Key</a></li>
+            <li><a href="#branding" class="nav-link">Customize Branding</a></li>
+            <li><a href="#troubleshooting" class="nav-link">Troubleshooting</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="intro">
+            <span class="badge">Documentation v1.0.0</span>
+            <h1>Documentation</h1>
+            <p>Welcome to the <strong>AI Teacher Toolkit</strong>! This production-ready Next.js application is designed for educators and institutions. It's built with modern technologies, a premium UI, and is fully white-labelable for your own brand.</p>
+        </section>
+
+        <section id="installation">
+            <h2>Step-by-Step Installation</h2>
+            <p>Setting up the toolkit on your local machine is simple. Follow these steps to get started:</p>
+            
+            <div class="step-list">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <strong>Extract and Open</strong>
+                        Unzip the downloaded package and open the folder in your code editor (e.g., VS Code).
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <strong>Install Dependencies</strong>
+                        Open your terminal and run the following command to install all necessary packages.
+                        <pre><code>npm install</code></pre>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <strong>Configure Environment</strong>
+                        Copy the example environment file to create your local settings.
+                        <pre><code>cp .env.example .env.local</code></pre>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <strong>Launch App</strong>
+                        Start the development server.
+                        <pre><code>npm run dev</code></pre>
+                        The app will be available at <code>http://localhost:3000</code>.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="deployment">
+            <h2>Deploy on Vercel</h2>
+            <p>The fastest way to put your toolkit online is using <a href="https://vercel.com" target="_blank">Vercel</a>. It is perfectly optimized for Next.js.</p>
+            
+            <div class="step-list">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <strong>GitHub Repository</strong>
+                        Create a private repository on GitHub and push your extracted code to it.
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <strong>Link to Vercel</strong>
+                        Login to Vercel, click <strong>"Add New"</strong> &rarr; <strong>"Project"</strong>, and import your repository.
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <strong>Environment Variables</strong>
+                        Under the "Environment Variables" section, add a new key named <code>GROQ_API_KEY</code> with your secret key as the value.
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <strong>Deploy!</strong>
+                        Click "Deploy". Your toolkit will be live on a secure HTTPS domain in approximately 2 minutes.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="apikey">
+            <h2>Add API Key</h2>
+            <p>This application uses <strong>Groq Cloud</strong> for lightning-fast AI responses. You need a free API key to power the tools.</p>
+            
+            <div class="info-box">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+                <span>You can generate your key for free at <strong>console.groq.com</strong></span>
+            </div>
+
+            <p>Navigate to <code>.env.local</code> and paste your key:</p>
+            <pre><code>GROQ_API_KEY=gsk_your_actual_key_here</code></pre>
+
+            <div class="info-box" style="background: #fffbeb; border: 1px solid #fde68a; color: #b45309;">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                <span><strong>Security Note:</strong> Never share your <code>.env.local</code> file or commit it to a public GitHub repository.</span>
+            </div>
+        </section>
+
+        <section id="branding">
+            <h2>Customize Branding</h2>
+            <p>We designed this toolkit to be 100% white-label. You can change the name, logo, and identity in a single file.</p>
+            
+            <p>Open <code>src/config/app.ts</code> to modify the metadata:</p>
+            
+            <table class="config-table">
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Description</th>
+                        <th>Location</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>name</code></td>
+                        <td>The main title of your app.</td>
+                        <td>Header, Title Tag</td>
+                    </tr>
+                    <tr>
+                        <td><code>orgName</code></td>
+                        <td>Your institution's name.</td>
+                        <td>PDF/Exports, Footer</td>
+                    </tr>
+                    <tr>
+                        <td><code>logo</code></td>
+                        <td>Path to your transparent logo.</td>
+                        <td>Sidebar, Mobile Nav</td>
+                    </tr>
+                    <tr>
+                        <td><code>description</code></td>
+                        <td>SEO description of the toolkit.</td>
+                        <td>Meta Tags</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>Replacing Logos:</strong></p>
+            <p>Navigate to <code>/public</code> and replace the default images:</p>
+            <ul>
+                <li><code>logo.png</code> - Primary app logo.</li>
+                <li><code>favicon.ico</code> - Browser tab icon.</li>
+                <li><code>og-image.png</code> - Social media preview image.</li>
+            </ul>
+        </section>
+
+        <section id="troubleshooting">
+            <h2>Troubleshooting</h2>
+            <p>Common issues and how to solve them effectively:</p>
+
+            <div class="step-list">
+                <div class="step-item">
+                    <div class="step-number">?</div>
+                    <div class="step-content">
+                        <strong>"Error: Groq API key not found"</strong>
+                        Ensure your variable name is exactly <code>GROQ_API_KEY</code> and it is defined in <code>.env.local</code> for local dev or Vercel settings for production.
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">?</div>
+                    <div class="step-content">
+                        <strong>"Images are not loading"</strong>
+                        Wait for the AI to finish generating. Some regions may have slower access to Pollinations.ai. Ensure your CSP headers allow <code>https://pollinations.ai</code>.
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">?</div>
+                    <div class="step-content">
+                        <strong>"PDF Export looks different"</strong>
+                        PDFs are generated using <code>html2canvas</code>. For the best result, ensure you are using a modern browser (Chrome/Edge/Safari).
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">?</div>
+                    <div class="step-content">
+                        <strong>"Node version mismatch"</strong>
+                        This project requires <strong>Node 18+</strong>. Check your version with <code>node -v</code> and upgrade if necessary using NVM.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer style="padding: 4rem 0; border-top: 1px solid var(--border); margin-top: 2rem; color: var(--text-secondary); font-size: 0.9rem;">
+            &copy; 2026 AI Teacher Toolkit. All rights reserved. <br>
+            Designed for high-performance educational institutions.
+        </footer>
+    </main>
+
+    <script>
+        // Simple scroll spy logic
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.onscroll = () => {
+            let current = "";
+
+            sections.forEach((section) => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute("id");
+                }
+            });
+
+            navLinks.forEach((link) => {
+                link.classList.remove("active");
+                if (link.getAttribute("href").includes(current)) {
+                    link.classList.add("active");
+                }
+            });
+        };
+    </script>
+</body>
+</html>

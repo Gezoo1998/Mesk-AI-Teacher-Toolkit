@@ -19,24 +19,33 @@ Rules:
 - No references to curriculum names unless explicitly asked
 - No markdown titles larger than H3
 
-Formatting:
-- Use clear sections
-- Use bullet points when helpful
-- Outputs must be easy to copy and paste
+OUTPUT FORMAT:
+You MUST respond with a valid JSON object. Do not include any text outside the JSON.
+Structure:
+{
+  "title": "The name of the resource",
+  "sections": [
+    {
+      "heading": "Section Title",
+      "content": "Markdown formatted content for this section"
+    }
+  ],
+  "imagePrompts": [
+    "A detailed, educational DALL-E style prompt for a visual that supports this lesson. Do not use words in images."
+  ],
+  "metadata": {
+    "differentiationLevel": "Support | Standard | Challenge",
+    "pedagogicalGoal": "A brief note on why this structure was chosen"
+  }
+}
 
-You are not a chatbot.
-You are a professional educational tool.
+DIFFERENTIATION:
+If a differentiation level is requested:
+- **Support**: Simplify language, use more scaffolding, focus on core concepts.
+- **Standard**: Follow grade-level benchmarks.
+- **Challenge**: Add depth, complex analysis, and extension questions.
 
-When generating content, structure the output to be displayed inside a clean educational dashboard UI.
-UI theme:
-- Background: White
-- Accent color: Gold
-- Use soft gold gradients when suggesting visual hierarchy
-- Layout-friendly sections suitable for cards
-- Clear separation between sections
-
-Do NOT describe the UI.
-Just structure the content cleanly so it fits a white & gold gradient dashboard.
+When generating content, structure it to fit a white & gold premium dashboard UI.
 `;
 
 const TEMPLATES: Record<string, string> = {
@@ -84,13 +93,13 @@ Lesson Duration: {{duration}}
 Curriculum Standard: {{curriculum_standard}}
 
 STRICT ALIGNMENT RULE:
-This lesson must be aligned with the **Egyptian Ministry of Education (MoETE) Curriculum Standards**. 
-Assume you have just performed a web search for the latest curriculum objectives for this specific grade and topic in Egypt.
+This lesson must be aligned with **Global Educational Standards** (e.g., Common Core, IB, Cambridge, or universal benchmarks). 
+Assume you have just performed a web search for the latest curriculum objectives for this specific grade and topic internationally.
 
 Output structure:
 
-1. Egyptian Curriculum Objectives
-- List 2-3 specific learning objectives that match the Egyptian national curriculum for this grade and subject.
+1. Global Learning Objectives
+- List 2-3 specific learning objectives that match international standards for this grade and subject.
 - Use formal but clear language.
 
 2. Warm-Up (5–10 minutes)
@@ -98,13 +107,13 @@ Output structure:
 - Purpose of the warm-up (Engage students and link to previous knowledge)
 
 3. Main Explanation
-- Step-by-step explanation following the MoETE teaching methodology (Discover, Learn, Share if applicable).
+- Step-by-step explanation following modern active learning methodologies.
 - Teaching flow
 - Key questions to ask students (Checking for understanding)
 
 4. Activities
-- Individual activity (e.g., student book exercise)
-- Pair or group activity (Active learning)
+- Individual activity
+- Pair or group activity
 - Explain instructions clearly
 
 5. Assessment & Feedback
@@ -112,11 +121,11 @@ Output structure:
 - Quick exit ticket or oral quiz
 
 6. Homework
-- Meaningful homework related to the Egyptian context/student book.
+- Meaningful homework related to practical application.
 
-Learning Objectives Tags: [List 3-5 key learning objectives this lesson addresses, tagged with curriculum codes like "Math.G1.1.1" or "Sci.G4.1.2" if applicable]
+Learning Objectives Tags: [List 3-5 key learning objectives this lesson addresses, tagged with standard educational codes if applicable]
 
-Make the plan realistic for an Egyptian classroom setting, accounting for class sizes and available resources.
+Make the plan realistic for a modern classroom setting with diverse resource availability.
 `,
     'question-generator': `
 Generate a set of questions for the following topic:
@@ -138,7 +147,7 @@ STRICT OUTPUT STRUCTURE:
 (List the answers here numbered 1, 2, 3... corresponding to the questions above)
 
 Rules:
-- ALIGNMENT: Align with the Egyptian Ministry of Education (MoETE) curriculum standards for {{grade}}.
+- ALIGNMENT: Align with **Global Educational Standards** (IB, Common Core, etc.) for {{grade}}.
 - Do not mix questions and answers.
 - Ensure questions are appropriate for the grade level.
 - Ensure answers are correct and concise.
@@ -164,7 +173,7 @@ Output Structure:
 - Show the step-by-step solution for each.
 - Provide the final answer clearly.
 
-Learning Objectives Tags: [List 3-5 key learning objectives these problems address, aligned with Egyptian curriculum standards like "Math.G5.1.2"]
+Learning Objectives Tags: [List 3-5 key learning objectives these problems address, aligned with global curriculum benchmarks]
 `,
     'math-real-world': `
 Generate 3 distinct real-world scenarios that use the following math concept:
@@ -511,6 +520,86 @@ If Target Type is "Short Educational Video Script":
 
 Ensure the content is age-appropriate for {{grade}} and follows the {{visual_style}} style.
 `,
+
+    'iep-goal-assistant': `
+You are an expert Special Education teacher and IEP coordinator. Your task is to draft high-quality SMART (Specific, Measurable, Achievable, Relevant, Time-bound) goals for a student based on their needs.
+
+Student Grade: {{grade}}
+Subject Area: {{subject}}
+Student Needs/Challenges: {{studentNeeds}}
+
+Please generate:
+1. A brief "Present Level of Performance" summary (2-3 sentences).
+2. Three (3) SMART Goals tailored to these needs. Each goal MUST follow this structure:
+   - Specific: What exactly will the student do?
+   - Measurable: How will you track progress? (e.g., 80% accuracy, 4/5 trials).
+   - Achievable/Relevant: Why is this appropriate for their grade/needs?
+   - Time-bound: By when should this be achieved?
+3. Recommended Accommodations/Strategies: 3-5 specific teaching strategies to help the student reach these goals.
+
+Format using clear headings and bullet points. Use encouraging and professional language.
+`,
+
+    'multi-level-leveler': `
+You are an expert reading specialist. Your task is to take a provided text and generate THREE distinct versions of it simultaneously, calibrated for different reading levels in a {{grade}} classroom.
+
+Original Text: {{readingText}}
+
+Generate the following three versions:
+
+1. EMERGING (Below Grade Level):
+   - Simplify vocabulary significantly.
+   - Use shorter sentences (S-V-C structure).
+   - Use high-frequency words.
+   - Focus on the most basic core meaning.
+
+2. ON-LEVEL (At Grade Level):
+   - Use grade-appropriate vocabulary and complexity for {{grade}}.
+   - Standard sentence variety.
+   - Clear and concise information.
+
+3. ADVANCED (Above Grade Level/Enrichment):
+   - Use sophisticated vocabulary and complex sentence structures.
+   - Include more nuance, data, or technical details.
+   - Challenge the reader with higher-order thinking concepts.
+
+Finally, provide a "Vocabulary Bridge" table showing 3-5 target words and how they are simplified or enhanced across the three levels.
+`,
+
+    'concept-to-code': `
+You are a Computer Science teacher skilled at explaining complex logic to beginners using Python and Scratch.
+
+Grade Level: {{grade}}
+Target Tool: {{programmingLang}}
+Logic/Concept Description: {{logicDescription}}
+
+Generate:
+1. Concept Breakdown: Explain the logic in plain, non-technical English.
+2. Code Snippet:
+   - If Python: Provide a clean, commented, and working Python script. Use variable names that make sense in a classroom context.
+   - If Scratch: Provide a step-by-step "Block Instruction" list (e.g., "1. When Green Flag Clicked", "2. Set [score] to 0", "3. Repeat until...").
+3. "Think Like a Coder" Challenge: A small "What if?" question to help students extend the logic.
+
+Keep it simple and educational.
+`,
+
+    'concept-mystery': `
+You are a creative writer and educational designer. Your task is to create a "Choose Your Own Adventure" style detective story that teaches curriculum content.
+
+Topic: {{topic}}
+Grade Level: {{grade}}
+Setting (Optional): {{mysterySetting}}
+
+Structure of the Mystery:
+1. The Case: Describe a mysterious situation related to {{topic}} that needs solving. Set the scene in {{mysterySetting}} (if provided, otherwise create a fitting one).
+2. The Evidence: Provide 3 clues. Each clue must require knowledge of {{topic}} to understand.
+3. The Investigation (The Choice):
+   - Provide "Option A" and "Option B" for the student to investigate.
+   - Describe what happens in both paths (keeping them educational).
+4. The Final Reveal: A satisfying conclusion where the student uses the topic's facts to solve the mystery.
+
+Make it engaging, immersive, and educational!
+`,
 };
 
 export function buildPrompt(toolId: string, data: Record<string, unknown>, language: 'en' | 'ar' = 'en'): { system: string, user: string } {
@@ -541,12 +630,12 @@ export function buildPrompt(toolId: string, data: Record<string, unknown>, langu
         if (language === 'ar') {
             userPrompt += `
 \n\n**تعليمات هامة جداً:**
-يجب عليك إنهاء استجابتك بإضافة القسم التالي (المصادر والمراجع) كما هو مكتوب تماماً، وذلك لتوثيق المنشور:
+يجب عليك إنهاء استجابتك بإضافة القسم التالي (المصادر والمراجع) لتوثيق المنشور، مع التأكد من مواءمة المحتوى مع المعايير التعليمية العالمية:
 
 ## المصادر والمراجع
-- المناهج الرسمية لوزارة التربية والتعليم المصرية (MoETE).
-- بوابة التعليم الإلكتروني الرسمية: [moe.gov.eg](https://moe.gov.eg/ar/elearningenterypage/e-learning)
-- نتائج بحث إضافية: [Google Search](https://www.google.com/search?q=${encodeURIComponent(topic + ' المنهج المصري')})
+- المعايير التعليمية الدولية (مثل: Common Core، IB، Cambridge).
+- قواعد البيانات التعليمية والمناهج الدولية المعتمدة.
+- نتائج بحث إضافية: [Google Search](https://www.google.com/search?q=${encodeURIComponent(topic + ' global educational standards')})
 - البحث في ويكيبيديا: [Wikipedia](https://ar.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(topic)})
 `;
         } else {
@@ -555,9 +644,9 @@ export function buildPrompt(toolId: string, data: Record<string, unknown>, langu
 You MUST include the following section at the **very end** of your response exactly as written below to document the sources:
 
 ## Sources & References
-- Egyptian Ministry of Education (MoETE) Official Curriculum Standards.
-- Official E-Learning Portal: [moe.gov.eg](https://moe.gov.eg/ar/elearningenterypage/e-learning)
-- Additional Search Results: [Google Search](https://www.google.com/search?q=${encodeURIComponent('Egyptian curriculum ' + topic)})
+- Global Educational Standards (e.g., Common Core, IB, Cambridge).
+- Certified International Curricula and Educational Databases.
+- Additional Search Results: [Google Search](https://www.google.com/search?q=${encodeURIComponent('global educational standards ' + topic)})
 - Reference Data: [Wikipedia](https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(topic)})
 `;
         }
@@ -582,6 +671,6 @@ You MUST include the following section at the **very end** of your response exac
 
     return {
         system: SYSTEM_PROMPT,
-        user: userPrompt
+        user: `${userPrompt}\n\nSTRICT REQUIREMENT: Return ONLY a valid JSON object following the schema in the system prompt. Ensure content is age-appropriate for {{grade}} and includes at least one image prompt.${data.differentiation ? `\n\nDIFFERENTIATION LEVEL: ${data.differentiation}` : ''}`
     };
 }

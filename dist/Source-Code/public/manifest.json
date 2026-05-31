@@ -1,0 +1,24 @@
+{
+  "name": "AI Teacher Toolkit",
+  "short_name": "Teacher Toolkit",
+  "description": "Your intelligent teaching companion. Turn ideas into classroom-ready resources in seconds.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#f59e0b",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "orientation": "portrait"
+}
