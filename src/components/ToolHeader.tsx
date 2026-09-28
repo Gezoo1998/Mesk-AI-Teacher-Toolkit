@@ -13,7 +13,7 @@ interface ToolHeaderProps {
 }
 
 const colorStyles = {
-    amber: "bg-amber-500 text-white shadow-amber-500/20 ring-amber-500/20",
+    amber: "bg-[#2B508F] text-white shadow-blue-900/20 ring-[#2B508F]/20",
     emerald: "bg-emerald-500 text-white shadow-emerald-500/20 ring-emerald-500/20",
     sky: "bg-sky-500 text-white shadow-sky-500/20 ring-sky-500/20",
     purple: "bg-purple-500 text-white shadow-purple-500/20 ring-purple-500/20",
@@ -24,7 +24,7 @@ const colorStyles = {
 
 const categoryGradients = {
     planning: "from-emerald-500/5 to-teal-500/5",
-    engagement: "from-amber-500/5 to-orange-500/5",
+    engagement: "from-[#2B508F]/5 to-[#4378A0]/5",
     content: "from-sky-500/5 to-indigo-500/5",
     assessment: "from-rose-500/5 to-purple-500/5",
 };
@@ -50,7 +50,7 @@ export function ToolHeader({ toolId }: ToolHeaderProps) {
             {/* Ambient Background Accent */}
             <div className={cn(
                 "absolute -top-24 -left-24 h-64 w-64 rounded-full blur-[80px] opacity-[0.15] pointer-events-none transition-colors duration-1000",
-                tool.color === 'amber' && "bg-amber-400",
+                tool.color === 'amber' && "bg-[#2B508F]",
                 tool.color === 'emerald' && "bg-emerald-400",
                 tool.color === 'sky' && "bg-sky-400",
                 tool.color === 'purple' && "bg-purple-400",
@@ -61,14 +61,14 @@ export function ToolHeader({ toolId }: ToolHeaderProps) {
 
             {/* Breadcrumbs */}
             <nav className="flex items-center gap-2 mb-6 text-[10px] md:text-xs font-bold uppercase tracking-widest text-zinc-400 relative z-10" dir={isRtl ? 'rtl' : 'ltr'}>
-                <Link href="/" className="flex items-center gap-1.5 hover:text-amber-600 transition-colors">
+                <Link href="/" className="flex items-center gap-1.5 hover:text-[#2B508F] transition-colors">
                     <Home size={14} />
                     <span>{t('dashboard.home')}</span>
                 </Link>
                 <ChevronRight size={12} className={cn("text-zinc-300", isRtl && "rotate-180")} />
                 <span className="text-zinc-600">{t(categoryMap[tool.category as keyof typeof categoryMap] || `categories.${tool.category}`)}</span>
                 <ChevronRight size={12} className={cn("text-zinc-300 font-bold", isRtl && "rotate-180")} />
-                <span className="text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full ring-1 ring-amber-200/50">
+                <span className="text-[#2B508F] bg-blue-50 px-2.5 py-1 rounded-full ring-1 ring-[#2B508F]/20">
                     {t(`tools.${toolId}.title`)}
                 </span>
             </nav>
@@ -102,7 +102,7 @@ export function ToolHeader({ toolId }: ToolHeaderProps) {
                             </h2>
                             <div className={cn(
                                 "rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest ring-1",
-                                tool.color === 'amber' && "bg-amber-50 text-amber-700 ring-amber-200",
+                                tool.color === 'amber' && "bg-blue-50 text-[#1E255E] ring-[#2B508F]/20",
                                 tool.color === 'emerald' && "bg-emerald-50 text-emerald-700 ring-emerald-200",
                                 tool.color === 'sky' && "bg-sky-50 text-sky-700 ring-sky-200",
                                 tool.color === 'purple' && "bg-purple-50 text-purple-700 ring-purple-200",

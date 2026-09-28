@@ -140,7 +140,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-amber-200 selection:text-amber-900 transition-colors duration-500`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-blue-200 selection:text-[#1E255E] transition-colors duration-500`}
       >
         <LanguageProvider>
           <NavigationProvider>

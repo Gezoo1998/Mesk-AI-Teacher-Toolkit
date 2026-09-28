@@ -41,7 +41,7 @@ export function HeroText({ text }: { text: string }) {
 
     return (
         <motion.h1
-            className="text-4xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-yellow-500 sm:text-6xl drop-shadow-sm"
+            className="text-4xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#1E255E] via-[#2B508F] to-[#4378A0] sm:text-6xl drop-shadow-sm"
             variants={container}
             initial="hidden"
             animate="visible"

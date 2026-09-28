@@ -21,7 +21,7 @@ export function PremiumBackground() {
                     repeat: Infinity,
                     ease: "linear"
                 }}
-                className="absolute -top-[10%] -left-[10%] h-[50%] w-[50%] rounded-full bg-gradient-to-br from-amber-200/40 to-orange-200/40 blur-[100px] dark:from-amber-900/20 dark:to-orange-900/20"
+                className="absolute -top-[10%] -left-[10%] h-[50%] w-[50%] rounded-full bg-gradient-to-br from-blue-200/30 to-[#2B508F]/20 blur-[100px] dark:from-[#1E255E]/30 dark:to-blue-900/20"
             />
             
             <motion.div

@@ -3,6 +3,11 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --color-almanhal-navy: #1E255E;
+  --color-almanhal-royal: #2B508F;
+  --color-almanhal-ocean: #4378A0;
+  --color-almanhal-cyan: #72A2B8;
+  --color-almanhal-ice: #F0F6FA;
 }
 
 @theme inline {

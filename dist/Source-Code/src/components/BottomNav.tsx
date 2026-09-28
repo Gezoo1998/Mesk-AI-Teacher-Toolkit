@@ -48,19 +48,19 @@ export function BottomNav() {
                             >
                                 <div className={cn(
                                     "flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-500",
-                                    item.active ? "bg-amber-500/10 shadow-inner" : "group-hover:bg-zinc-100/50"
+                                    item.active ? "bg-[#2B508F]/10 shadow-inner" : "group-hover:bg-zinc-100/50"
                                 )}>
                                     <Icon
                                         className={cn(
                                             "h-4.5 w-4.5 transition-all duration-300",
-                                            item.active ? "text-amber-600 scale-110" : "text-zinc-500 group-hover:text-zinc-900"
+                                            item.active ? "text-[#2B508F] scale-110" : "text-zinc-500 group-hover:text-zinc-900"
                                         )}
                                     />
                                 </div>
                                 <span
                                     className={cn(
                                         "mt-0.5 text-[8px] font-black uppercase tracking-[0.05em] transition-colors duration-300",
-                                        item.active ? "text-amber-700" : "text-zinc-400 group-hover:text-zinc-600"
+                                        item.active ? "text-[#1E255E]" : "text-zinc-400 group-hover:text-zinc-600"
                                     )}
                                 >
                                     {item.label}
@@ -68,7 +68,7 @@ export function BottomNav() {
                                 {item.active && (
                                     <motion.div
                                         layoutId="nav-dot"
-                                        className="absolute -top-1 h-0.5 w-0.5 rounded-full bg-amber-500"
+                                        className="absolute -top-1 h-0.5 w-0.5 rounded-full bg-[#2B508F]"
                                         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                     />
                                 )}

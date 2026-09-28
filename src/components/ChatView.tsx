@@ -58,7 +58,7 @@ export function ChatView() {
             {/* Header */}
             <div className="flex items-center justify-between px-4 md:px-8 py-3 md:py-4 border-b border-zinc-100 bg-white">
                 <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-600 shadow-sm ring-1 ring-amber-500/10">
+                    <div className="flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-xl bg-blue-50 text-[#2B508F] shadow-sm ring-1 ring-[#2B508F]/15">
                         <Bot className="w-4 h-4 md:w-5 md:h-5" />
                     </div>
                     <div>
@@ -84,7 +84,7 @@ export function ChatView() {
                         className="flex flex-col items-center justify-center h-full text-center space-y-4 md:space-y-6"
                     >
                         <div className="relative">
-                            <div className="relative flex h-16 w-16 md:h-20 md:w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-amber-100 to-amber-50 text-amber-600 shadow-xl shadow-amber-500/20">
+                            <div className="relative flex h-16 w-16 md:h-20 md:w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-blue-100 to-blue-50 text-[#2B508F] shadow-xl shadow-blue-500/15">
                                 <Sparkles className="w-8 h-8 md:w-10 md:h-10" />
                             </div>
                         </div>
@@ -112,7 +112,7 @@ export function ChatView() {
                                 "flex h-8 w-8 md:h-9 md:w-9 shrink-0 items-center justify-center rounded-xl shadow-sm ring-1",
                                 msg.role === 'user'
                                     ? "bg-zinc-900 text-white ring-zinc-800"
-                                    : "bg-amber-100 text-amber-600 ring-amber-500/20"
+                                    : "bg-blue-50 text-[#2B508F] ring-[#2B508F]/20"
                             )}>
                                 {msg.role === 'user' ? <User className="w-4 h-4 md:w-5 md:h-5" /> : <Bot className="w-4 h-4 md:w-5 md:h-5" />}
                             </div>
@@ -139,14 +139,14 @@ export function ChatView() {
                         animate={{ opacity: 1 }}
                         className="flex items-start gap-3 md:gap-4"
                     >
-                        <div className="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-xl bg-amber-100 text-amber-600 ring-1 ring-amber-500/20 shadow-sm">
+                        <div className="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-xl bg-blue-50 text-[#2B508F] ring-1 ring-[#2B508F]/20 shadow-sm">
                             <Bot className="w-4 h-4 md:w-5 md:h-5" />
                         </div>
                         <div className="bg-white border border-zinc-100 rounded-2xl md:rounded-[1.5rem] rounded-tl-none px-4 md:px-5 py-3 shadow-sm">
                             <div className="flex gap-1.5">
-                                <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-bounce" style={{ animationDelay: '0ms' }} />
-                                <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-bounce" style={{ animationDelay: '150ms' }} />
-                                <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#2B508F] animate-bounce" style={{ animationDelay: '0ms' }} />
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#2B508F] animate-bounce" style={{ animationDelay: '150ms' }} />
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#2B508F] animate-bounce" style={{ animationDelay: '300ms' }} />
                             </div>
                         </div>
                     </motion.div>
@@ -168,7 +168,7 @@ export function ChatView() {
                         }}
                         placeholder={t('chat.placeholder')}
                         className={cn(
-                            "w-full min-h-[60px] md:min-h-[80px] max-h-[200px] md:max-h-[300px] rounded-2xl md:rounded-[2rem] border border-zinc-200 bg-zinc-50/50 px-4 md:px-8 py-4 md:py-6 pr-14 md:pr-16 text-sm md:text-base font-bold text-zinc-900 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-8 focus:ring-amber-500/5 transition-all resize-none shadow-inner",
+                            "w-full min-h-[60px] md:min-h-[80px] max-h-[200px] md:max-h-[300px] rounded-2xl md:rounded-[2rem] border border-zinc-200 bg-zinc-50/50 px-4 md:px-8 py-4 md:py-6 pr-14 md:pr-16 text-sm md:text-base font-bold text-zinc-900 focus:border-[#2B508F] focus:bg-white focus:outline-none focus:ring-8 focus:ring-[#2B508F]/5 transition-all resize-none shadow-inner",
                             isRTL ? "text-right pr-4 md:pr-8 pl-14 md:pl-16" : "text-left"
                         )}
                         dir={isRTL ? 'rtl' : 'ltr'}
@@ -177,7 +177,7 @@ export function ChatView() {
                         onClick={handleSend}
                         disabled={!input.trim() || isLoading}
                         className={cn(
-                            "absolute bottom-2.5 md:bottom-3 flex h-9 w-9 md:h-10 md:w-10 items-center justify-center rounded-xl bg-amber-500 text-white shadow-lg shadow-amber-500/20 transition-all hover:bg-amber-600 disabled:opacity-50 disabled:grayscale active:scale-90",
+                            "absolute bottom-2.5 md:bottom-3 flex h-9 w-9 md:h-10 md:w-10 items-center justify-center rounded-xl bg-[#2B508F] text-white shadow-lg shadow-blue-900/20 transition-all hover:bg-[#1E255E] disabled:opacity-50 disabled:grayscale active:scale-90",
                             isRTL ? "left-2.5 md:left-3" : "right-2.5 md:right-3"
                         )}
                     >

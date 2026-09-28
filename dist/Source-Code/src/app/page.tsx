@@ -20,9 +20,9 @@ export default function Home() {
     <>
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-white">
         {/* Premium Mesh Gradient / Ambient Glows */}
-        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-amber-200/20 blur-[120px] rounded-full animate-pulse opacity-60"></div>
-        <div className="absolute top-[10%] -right-[5%] w-[35%] h-[35%] bg-emerald-200/15 blur-[100px] rounded-full animate-pulse opacity-40" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute -bottom-[10%] left-[20%] w-[50%] h-[50%] bg-sky-200/15 blur-[130px] rounded-full animate-pulse opacity-50" style={{ animationDelay: '4s' }}></div>
+        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-[#2B508F]/12 blur-[120px] rounded-full animate-pulse opacity-60"></div>
+        <div className="absolute top-[10%] -right-[5%] w-[35%] h-[35%] bg-[#4378A0]/10 blur-[100px] rounded-full animate-pulse opacity-40" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute -bottom-[10%] left-[20%] w-[50%] h-[50%] bg-[#72A2B8]/15 blur-[130px] rounded-full animate-pulse opacity-50" style={{ animationDelay: '4s' }}></div>
         
         {/* Subtle Paper Texture / Noise if needed, but keeping it clean for now */}
       </div>
@@ -31,8 +31,8 @@ export default function Home() {
         <div className="space-y-6 max-w-3xl mx-auto px-4">
           <div className="inline-flex items-center gap-2 rounded-full bg-zinc-900 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-white shadow-xl shadow-zinc-200 ring-1 ring-white/10 animate-slide-up">
             <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75"></span>
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-400"></span>
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#2B508F] opacity-75"></span>
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#2B508F]"></span>
             </span>
             {t('dashboard.readyToTeach')}
           </div>
@@ -91,14 +91,14 @@ export default function Home() {
         {/* Engagement */}
         <section className="animate-slide-up" style={{ animationDelay: '200ms' }}>
             <div className="flex items-center gap-4 mb-8">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 text-amber-600 border border-amber-100 shadow-sm transition-transform hover:-rotate-3 group-hover:scale-105">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-[#2B508F] border border-blue-100 shadow-sm transition-transform hover:-rotate-3 group-hover:scale-105">
               <Sparkles className="w-6 h-6" />
             </div>
             <div>
               <h2 className="text-2xl font-black text-zinc-900 tracking-tight leading-none mb-1">{t('dashboard.focusEngagement')}</h2>
               <p className="text-sm text-zinc-500 font-bold uppercase tracking-wider opacity-80">{t('dashboard.engagementDesc')}</p>
             </div>
-            <div className="ml-auto h-[1px] flex-grow bg-gradient-to-r from-amber-100 to-transparent max-w-[200px] hidden md:block"></div>
+            <div className="ml-auto h-[1px] flex-grow bg-gradient-to-r from-blue-100 to-transparent max-w-[200px] hidden md:block"></div>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {engagementTools.map((tool) => (
@@ -146,9 +146,9 @@ export default function Home() {
         </section>
       </div>
 
-      <section className="mt-16 grid gap-6 border-t border-amber-100/50 pt-10 text-sm text-zinc-600 sm:grid-cols-3 pb-10">
+      <section className="mt-16 grid gap-6 border-t border-blue-100/60 pt-10 text-sm text-zinc-600 sm:grid-cols-3 pb-10">
         <div className="group rounded-3xl bg-white p-6 border border-zinc-100 transition-colors hover:bg-zinc-50 shadow-sm">
-          <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-600 shadow-sm">
+          <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-[#2B508F] ring-1 ring-[#2B508F]/15 shadow-sm">
             <span className="text-lg font-bold">1</span>
           </div>
           <p className="font-bold uppercase tracking-wide text-zinc-900">{t('dashboard.step1')}</p>
@@ -157,7 +157,7 @@ export default function Home() {
           </p>
         </div>
         <div className="group rounded-3xl bg-white p-6 border border-zinc-100 transition-colors hover:bg-zinc-50 shadow-sm">
-          <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-600 shadow-sm">
+          <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-[#2B508F] ring-1 ring-[#2B508F]/15 shadow-sm">
             <span className="text-lg font-bold">2</span>
           </div>
           <p className="font-bold uppercase tracking-wide text-zinc-900">{t('dashboard.step2')}</p>
@@ -166,7 +166,7 @@ export default function Home() {
           </p>
         </div>
         <div className="group rounded-3xl bg-white p-6 border border-zinc-100 transition-colors hover:bg-zinc-50 shadow-sm">
-          <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-600 shadow-sm">
+          <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-[#2B508F] ring-1 ring-[#2B508F]/15 shadow-sm">
             <span className="text-lg font-bold">3</span>
           </div>
           <p className="font-bold uppercase tracking-wide text-zinc-900">{t('dashboard.step3')}</p>

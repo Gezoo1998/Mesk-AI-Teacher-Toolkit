@@ -23,7 +23,7 @@ interface ToolFormProps {
 }
 
 const colorStyles = {
-    amber: "ring-amber-500/10 hover:border-amber-400/50 hover:shadow-amber-500/10",
+    amber: "ring-[#2B508F]/15 hover:border-[#2B508F]/50 hover:shadow-blue-500/10",
     emerald: "ring-emerald-500/10 hover:border-emerald-400/50 hover:shadow-emerald-500/10",
     sky: "ring-sky-500/10 hover:border-sky-400/50 hover:shadow-sky-500/10",
     purple: "ring-purple-500/10 hover:border-purple-400/50 hover:shadow-purple-500/10",
@@ -176,7 +176,7 @@ export function ToolForm({ toolId, fields, title, description }: ToolFormProps) 
                     className={cn(
                         "absolute inset-0 pointer-events-none opacity-[0.08] transition-opacity duration-500",
                         "bg-[radial-gradient(circle_at_var(--x)_var(--y),var(--color),transparent_60%)]",
-                        tool?.color === 'amber' && "[--color:#f59e0b]",
+                        tool?.color === 'amber' && "[--color:#2B508F]",
                         tool?.color === 'emerald' && "[--color:#10b981]",
                         tool?.color === 'sky' && "[--color:#0ea5e9]",
                         tool?.color === 'purple' && "[--color:#a855f7]",
@@ -231,7 +231,7 @@ export function ToolForm({ toolId, fields, title, description }: ToolFormProps) 
                                             name={field.name}
                                             required={field.required}
                                             defaultValue={defaultValue || ""}
-                                            className="w-full appearance-none rounded-2xl border-2 border-zinc-50 bg-zinc-50/30 px-6 py-4.5 text-zinc-900 font-bold shadow-sm transition-all focus:border-amber-500/30 focus:bg-white focus:ring-4 focus:ring-amber-500/5 hover:border-zinc-200"
+                                            className="w-full appearance-none rounded-2xl border-2 border-zinc-50 bg-zinc-50/30 px-6 py-4.5 text-zinc-900 font-bold shadow-sm transition-all focus:border-[#2B508F]/40 focus:bg-white focus:ring-4 focus:ring-[#2B508F]/10 hover:border-zinc-200"
                                         >
                                             <option value="">{t('common.select')}</option>
                                             {field.options?.map((opt, idx) => {
@@ -262,7 +262,7 @@ export function ToolForm({ toolId, fields, title, description }: ToolFormProps) 
                                         required={field.required}
                                         rows={4}
                                         defaultValue={defaultValue}
-                                        className="w-full rounded-2xl border-2 border-zinc-50 bg-zinc-50/30 px-6 py-4 text-zinc-900 font-semibold shadow-sm transition-all focus:border-amber-500/30 focus:bg-white focus:ring-4 focus:ring-amber-500/5 hover:border-zinc-200 placeholder:text-zinc-400 resize-none"
+                                        className="w-full rounded-2xl border-2 border-zinc-50 bg-zinc-50/30 px-6 py-4 text-zinc-900 font-semibold shadow-sm transition-all focus:border-[#2B508F]/40 focus:bg-white focus:ring-4 focus:ring-[#2B508F]/10 hover:border-zinc-200 placeholder:text-zinc-400 resize-none"
                                     />
                                 ) : (
                                     <input
@@ -272,7 +272,7 @@ export function ToolForm({ toolId, fields, title, description }: ToolFormProps) 
                                         placeholder={field.placeholder}
                                         required={field.required}
                                         defaultValue={defaultValue}
-                                        className="w-full rounded-2xl border-2 border-zinc-50 bg-zinc-50/30 px-6 py-4.5 text-zinc-900 font-bold shadow-sm transition-all focus:border-amber-500/30 focus:bg-white focus:ring-4 focus:ring-amber-500/5 hover:border-zinc-200 placeholder:text-zinc-400"
+                                        className="w-full rounded-2xl border-2 border-zinc-50 bg-zinc-50/30 px-6 py-4.5 text-zinc-900 font-bold shadow-sm transition-all focus:border-[#2B508F]/40 focus:bg-white focus:ring-4 focus:ring-[#2B508F]/10 hover:border-zinc-200 placeholder:text-zinc-400"
                                     />
                                 )}
                             </motion.div>
@@ -308,7 +308,7 @@ export function ToolForm({ toolId, fields, title, description }: ToolFormProps) 
                                                 : level.id === 'support'
                                                 ? "bg-emerald-500 text-white border-emerald-500 shadow-md shadow-emerald-500/20"
                                                 : level.id === 'standard'
-                                                ? "bg-amber-500 text-white border-amber-500 shadow-md shadow-amber-500/20"
+                                                ? "bg-[#2B508F] text-white border-[#2B508F] shadow-md shadow-blue-900/20"
                                                 : "bg-rose-500 text-white border-rose-500 shadow-md shadow-rose-500/20"
                                             : "border-zinc-100 bg-white text-zinc-400 hover:border-zinc-200"
                                     )}
@@ -331,7 +331,7 @@ export function ToolForm({ toolId, fields, title, description }: ToolFormProps) 
                             "shadow-xl shadow-zinc-900/10 hover:shadow-zinc-900/20 disabled:opacity-70 disabled:grayscale disabled:cursor-not-allowed"
                         )}
                     >
-                        <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-amber-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#1E255E] to-[#2B508F] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                         <div className="relative z-10 flex items-center justify-center gap-3">
                             {isSearching ? (
                                 <>

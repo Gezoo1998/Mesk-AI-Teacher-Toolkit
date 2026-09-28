@@ -12,16 +12,16 @@ const colorStyles = {
     amber: {
         bg: 'bg-white',
         border: 'border-zinc-100',
-        borderHover: 'group-hover:border-amber-400',
+        borderHover: 'group-hover:border-[#2B508F]',
         text: 'text-zinc-900',
-        icon: 'text-amber-600 bg-amber-50 shadow-sm border-2 border-amber-200/50',
-        badge: 'bg-amber-50 text-amber-900 ring-amber-500/20 shadow-sm',
-        shadow: 'shadow-md shadow-zinc-200/30 group-hover:shadow-2xl group-hover:shadow-amber-500/10',
-        glow: 'from-amber-400 to-orange-400',
-        cornerFlare: 'group-hover:from-amber-400',
-        orbital: 'bg-amber-400',
-        dotColor: '#f59e0b',
-        spotlight: 'rgba(245, 158, 11, 0.08)'
+        icon: 'text-[#2B508F] bg-blue-50/80 shadow-sm border-2 border-blue-200/50',
+        badge: 'bg-blue-50 text-[#1E255E] ring-[#2B508F]/20 shadow-sm',
+        shadow: 'shadow-md shadow-zinc-200/30 group-hover:shadow-2xl group-hover:shadow-blue-500/10',
+        glow: 'from-[#1E255E] via-[#2B508F] to-[#4378A0]',
+        cornerFlare: 'group-hover:from-[#2B508F]',
+        orbital: 'bg-[#2B508F]',
+        dotColor: '#2B508F',
+        spotlight: 'rgba(43, 80, 143, 0.08)'
     },
     emerald: {
         bg: 'bg-white',
