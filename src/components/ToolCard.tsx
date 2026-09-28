@@ -6,6 +6,7 @@ import { Tool } from '@/lib/data/tools';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { cn } from '@/lib/utils';
 import { useRef } from 'react';
+import { Star } from 'lucide-react';
 
 // Mapping color to classes with Modern Premium Aesthetics
 const colorStyles = {
@@ -21,7 +22,7 @@ const colorStyles = {
         cornerFlare: 'group-hover:from-[#2B508F]',
         orbital: 'bg-[#2B508F]',
         dotColor: '#2B508F',
-        spotlight: 'rgba(43, 80, 143, 0.08)'
+        spotlight: 'rgba(43, 80, 143, 0.09)'
     },
     emerald: {
         bg: 'bg-white',
@@ -35,7 +36,7 @@ const colorStyles = {
         cornerFlare: 'group-hover:from-emerald-400',
         orbital: 'bg-emerald-400',
         dotColor: '#10b981',
-        spotlight: 'rgba(16, 185, 129, 0.08)'
+        spotlight: 'rgba(16, 185, 129, 0.09)'
     },
     sky: {
         bg: 'bg-white',
@@ -49,7 +50,7 @@ const colorStyles = {
         cornerFlare: 'group-hover:from-sky-400',
         orbital: 'bg-sky-400',
         dotColor: '#0ea5e9',
-        spotlight: 'rgba(14, 165, 233, 0.08)'
+        spotlight: 'rgba(14, 165, 233, 0.09)'
     },
     purple: {
         bg: 'bg-white',
@@ -63,7 +64,7 @@ const colorStyles = {
         cornerFlare: 'group-hover:from-purple-400',
         orbital: 'bg-purple-400',
         dotColor: '#a855f7',
-        spotlight: 'rgba(168, 85, 247, 0.08)'
+        spotlight: 'rgba(168, 85, 247, 0.09)'
     },
     rose: {
         bg: 'bg-white',
@@ -77,7 +78,7 @@ const colorStyles = {
         cornerFlare: 'group-hover:from-rose-400',
         orbital: 'bg-rose-400',
         dotColor: '#f43f5e',
-        spotlight: 'rgba(244, 63, 94, 0.08)'
+        spotlight: 'rgba(244, 63, 94, 0.09)'
     },
     indigo: {
         bg: 'bg-white',
@@ -91,7 +92,7 @@ const colorStyles = {
         cornerFlare: 'group-hover:from-indigo-400',
         orbital: 'bg-indigo-400',
         dotColor: '#6366f1',
-        spotlight: 'rgba(99, 102, 241, 0.08)'
+        spotlight: 'rgba(99, 102, 241, 0.09)'
     },
     slate: {
         bg: 'bg-white',
@@ -105,12 +106,19 @@ const colorStyles = {
         cornerFlare: 'group-hover:from-slate-400',
         orbital: 'bg-slate-400',
         dotColor: '#64748b',
-        spotlight: 'rgba(100, 116, 139, 0.08)'
+        spotlight: 'rgba(100, 116, 139, 0.09)'
     }
 };
 
-export function ToolCard({ tool }: { tool: Tool }) {
-    const { t } = useLanguage();
+interface ToolCardProps {
+    tool: Tool;
+    isFavorite?: boolean;
+    onToggleFavorite?: (toolId: string) => void;
+}
+
+export function ToolCard({ tool, isFavorite = false, onToggleFavorite }: ToolCardProps) {
+    const { t, language } = useLanguage();
+    const isRTL = language === 'ar';
     const cardRef = useRef<HTMLDivElement>(null);
     const styles = colorStyles[tool.color] || colorStyles.slate;
 
@@ -123,12 +131,12 @@ export function ToolCard({ tool }: { tool: Tool }) {
     const springY = useSpring(mouseY, springConfig);
 
     // Dynamic 3D Tilt Rotations
-    const rotateX = useTransform(springY, [-0.5, 0.5], ["10deg", "-10deg"]);
-    const rotateY = useTransform(springX, [-0.5, 0.5], ["-10deg", "10deg"]);
+    const rotateX = useTransform(springY, [-0.5, 0.5], ["9deg", "-9deg"]);
+    const rotateY = useTransform(springX, [-0.5, 0.5], ["-9deg", "9deg"]);
 
     // Parallax movements for decorations
-    const decoTranslateX = useTransform(springX, [-0.5, 0.5], ["-12px", "12px"]);
-    const decoTranslateY = useTransform(springY, [-0.5, 0.5], ["-12px", "12px"]);
+    const decoTranslateX = useTransform(springX, [-0.5, 0.5], ["-10px", "10px"]);
+    const decoTranslateY = useTransform(springY, [-0.5, 0.5], ["-10px", "10px"]);
     
     // Spotlight position (percentage)
     const spotlightX = useTransform(springX, [-0.5, 0.5], ["0%", "100%"]);
@@ -136,11 +144,11 @@ export function ToolCard({ tool }: { tool: Tool }) {
 
     const spotlightBg = useTransform(
         [spotlightX, spotlightY],
-        ([x, y]) => `radial-gradient(circle at ${x} ${y}, ${styles.spotlight} 0%, transparent 60%)`
+        ([x, y]) => `radial-gradient(circle at ${x} ${y}, ${styles.spotlight} 0%, transparent 65%)`
     );
 
-    const dotX = useTransform(springX, [-0.5, 0.5], ["5px", "-5px"]);
-    const dotY = useTransform(springY, [-0.5, 0.5], ["5px", "-5px"]);
+    const dotX = useTransform(springX, [-0.5, 0.5], ["4px", "-4px"]);
+    const dotY = useTransform(springY, [-0.5, 0.5], ["4px", "-4px"]);
     const flareX = useTransform(springX, [-0.5, 0.5], ["4px", "-4px"]);
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -169,7 +177,7 @@ export function ToolCard({ tool }: { tool: Tool }) {
             <motion.div 
                 style={{ x: decoTranslateX, y: decoTranslateY }}
                 className={cn(
-                    "absolute -inset-1.5 rounded-[2.2rem] opacity-0 group-hover:opacity-15 blur-2xl transition-all duration-700 pointer-events-none",
+                    "absolute -inset-1.5 rounded-[2.2rem] opacity-0 group-hover:opacity-20 blur-2xl transition-all duration-700 pointer-events-none",
                     "bg-gradient-to-br",
                     styles.glow
                 )} 
@@ -183,7 +191,7 @@ export function ToolCard({ tool }: { tool: Tool }) {
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 className={cn(
                     "relative flex h-full w-full flex-col gap-4 rounded-[28px] border-2 p-5 md:p-6 transition-all duration-500 overflow-hidden bg-white ring-1 ring-black/[0.04]",
-                    "border-zinc-100/90",
+                    isFavorite ? "border-amber-300/80 shadow-[0_12px_32px_rgba(245,158,11,0.08)]" : "border-zinc-100/90",
                     styles.borderHover,
                     styles.shadow,
                 )}
@@ -195,6 +203,9 @@ export function ToolCard({ tool }: { tool: Tool }) {
                         background: spotlightBg
                     }}
                 />
+
+                {/* Decoration: Subtle Shimmer Light Sweep on Hover */}
+                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out bg-gradient-to-r from-transparent via-white/30 to-transparent pointer-events-none" />
 
                 {/* Decoration: Subtle Dot Grid Section (Parallax) */}
                 <motion.div 
@@ -217,6 +228,7 @@ export function ToolCard({ tool }: { tool: Tool }) {
                     )} 
                 />
 
+                {/* Header Row: Icon + Tag & Interactive Bookmark */}
                 <div className="flex items-center justify-between relative z-10" style={{ transform: "translateZ(30px)" }}>
                     <div className="relative">
                         {/* Icon Orbital Ring */}
@@ -235,11 +247,32 @@ export function ToolCard({ tool }: { tool: Tool }) {
                         </div>
                     </div>
 
-                    <div className={cn(
-                        "rounded-xl px-3 py-1 text-[9px] font-black uppercase tracking-widest ring-1 ring-inset shadow-xs transition-all duration-300",
-                        styles.badge
-                    )}>
-                        {t(`tags.${tool.tags[0].replace(/[^a-zA-Z]/g, '').replace(/^\d+/, '').replace(/^./, c => c.toLowerCase())}`) || tool.tags[0]}
+                    <div className="flex items-center gap-1.5">
+                        <div className={cn(
+                            "rounded-xl px-2.5 py-1 text-[9px] font-black uppercase tracking-widest ring-1 ring-inset shadow-xs transition-all duration-300",
+                            styles.badge
+                        )}>
+                            {t(`tags.${tool.tags[0].replace(/[^a-zA-Z]/g, '').replace(/^\d+/, '').replace(/^./, c => c.toLowerCase())}`) || tool.tags[0]}
+                        </div>
+
+                        {/* Interactive Favorite Star Button */}
+                        <button
+                            type="button"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                onToggleFavorite?.(tool.id);
+                            }}
+                            title={isFavorite ? (isRTL ? "إزالة من المفضلة" : "Remove from favorites") : (isRTL ? "إضافة إلى المفضلة" : "Add to favorites")}
+                            className={cn(
+                                "flex h-7 w-7 items-center justify-center rounded-xl border transition-all duration-300 active:scale-80",
+                                isFavorite
+                                    ? "bg-amber-50 border-amber-300 text-amber-500 shadow-xs shadow-amber-500/20 opacity-100 scale-100"
+                                    : "bg-zinc-50/80 border-zinc-200/80 text-zinc-400 hover:text-amber-500 hover:bg-amber-50/80 hover:border-amber-200 opacity-60 sm:opacity-0 group-hover:opacity-100"
+                            )}
+                        >
+                            <Star className={cn("w-3.5 h-3.5 transition-transform", isFavorite && "fill-amber-400 text-amber-500 scale-110")} />
+                        </button>
                     </div>
                 </div>
 
@@ -254,6 +287,7 @@ export function ToolCard({ tool }: { tool: Tool }) {
                     </div>
                 </div>
 
+                {/* Footer Action Row */}
                 <div className="mt-auto pt-3 flex items-center justify-between relative z-10" style={{ transform: "translateZ(10px)" }}>
                     <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-[0.1em] text-zinc-400 group-hover:text-[#2B508F] transition-colors duration-500 px-1">
                         <span>{t('common.openTool')}</span>
@@ -262,11 +296,11 @@ export function ToolCard({ tool }: { tool: Tool }) {
 
                     <motion.div
                         className={cn(
-                            "p-2.5 rounded-xl border transition-all duration-500 shadow-sm",
+                            "p-2.5 rounded-xl border transition-all duration-500 shadow-sm flex items-center justify-center",
                             "bg-zinc-50 border-zinc-100 text-zinc-400",
                             "group-hover:bg-[#2B508F] group-hover:border-[#2B508F] group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-900/20"
                         )}
-                        whileHover={{ scale: 1.15, rotate: 12 }}
+                        whileHover={{ scale: 1.15, rotate: isRTL ? -12 : 12 }}
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"

@@ -36,6 +36,17 @@ export const translations = {
             assessmentFeedback: 'Assessment & Feedback',
             assessmentDesc: 'Evaluate learning and provide feedback.',
             assessmentSubDesc: 'Rubrics, quizzes, and safety checks.',
+            searchPlaceholder: 'Search 29+ tools (e.g. lesson plan, quiz, math, rubric)...',
+            allTools: 'All Tools',
+            favorites: 'Favorites',
+            randomTool: 'Surprise Me 🎲',
+            noToolsFound: 'No tools found matching',
+            resetSearch: 'Reset filters',
+            activeToolsCount: 'tools available',
+            statsTools: '29 Curriculum Tools',
+            statsInstant: 'Instant Generation',
+            statsExport: 'Word & Markdown',
+            statsBilingual: 'Arabic & English',
         },
         tools: {
             'lesson-ideas': {
@@ -155,6 +166,22 @@ export const translations = {
                 styleModern: 'Modern & Clean',
                 styleEngaging: 'Colorful & Engaging',
                 styleProfessional: 'Formal & Professional',
+            },
+            'iep-goal-assistant': {
+                title: 'IEP/SEN Goal Assistant',
+                description: 'Draft SMART goals for Individualized Education Programs tailored to specific student needs.'
+            },
+            'multi-level-leveler': {
+                title: 'Text Leveler (Multi-Level)',
+                description: 'Generate three versions of any text simultaneously: Emerging, On-Level, and Advanced.'
+            },
+            'concept-to-code': {
+                title: 'Concept-to-Code Converter',
+                description: 'Transform logic descriptions into simple Python or Scratch snippets for ICT lessons.'
+            },
+            'concept-mystery': {
+                title: 'Concept Mystery Creator',
+                description: 'Turn any curriculum topic into a "Choose Your Own Adventure" style detective story.'
             }
         },
         common: {
@@ -226,6 +253,10 @@ export const translations = {
             wordsListLabel: 'Word List',
             summarizeLabel: 'Text to Summarize',
             vocabListLabel: 'Vocabulary List',
+            studentNeedsLabel: 'Student Needs & Context',
+            logicDescriptionLabel: 'Logic/Problem Description',
+            programmingLangLabel: 'Programming Language',
+            mysterySettingLabel: 'Mystery Setting (Optional)',
             topicPlaceholder: 'e.g. Ancient Egypt, Photosynthesis...',
             experimentPlaceholder: 'e.g. Elephant Toothpaste, Mixing Acid & Base...',
             scenarioPlaceholder: 'e.g. Ordering coffee, Asking for directions...',
@@ -360,6 +391,17 @@ export const translations = {
             assessmentFeedback: 'التقييم والملاحظات',
             assessmentDesc: 'قيم التعلم وقدم ملاحظاتك.',
             assessmentSubDesc: 'نماذج التقييم، الاختبارات، وفحوصات السلامة.',
+            searchPlaceholder: 'ابحث في أكثر من 29 أداة (مثل: خطة درس، اختبار، رياضيات، سلم تقييم)...',
+            allTools: 'جميع الأدوات',
+            favorites: 'المفضلة',
+            randomTool: 'أداة عشوائية 🎲',
+            noToolsFound: 'لم يتم العثور على أدوات تطابق',
+            resetSearch: 'إعادة ضبط البحث',
+            activeToolsCount: 'أداة متوفرة',
+            statsTools: '29 أداة ذكية',
+            statsInstant: 'توليد فوري للدروس',
+            statsExport: 'تصدير Word و Markdown',
+            statsBilingual: 'عربي وإنجليزي متكامل',
         },
         tools: {
             'lesson-ideas': {
@@ -474,6 +516,22 @@ export const translations = {
                 styleModern: 'حديث ونظيف',
                 styleEngaging: 'ملون وتفاعلي',
                 styleProfessional: 'رسمي واحترافي',
+            },
+            'iep-goal-assistant': {
+                title: 'مساعد أهداف ذوي الاحتياجات (IEP)',
+                description: 'صياغة أهداف SMART لبرامج التعليم الفردية المصممة لاحتياجات الطلاب المحددة.'
+            },
+            'multi-level-leveler': {
+                title: 'معدل مستويات النص (متعدد المستويات)',
+                description: 'توليد ثلاث نسخ من أي نص في وقت واحد: مستجد، متوسط، ومتقدم.'
+            },
+            'concept-to-code': {
+                title: 'محول المفاهيم إلى برمجة',
+                description: 'تحويل أوصاف المنطق إلى قصاصات بسيطة من لغة Python أو Scratch لدروس الحاسب الآلي.'
+            },
+            'concept-mystery': {
+                title: 'صانع لغز المفاهيم',
+                description: 'حول أي موضوع في المنهج إلى قصة بوليسية بأسلوب "اختر مغامرتك الخاصة".'
             }
         },
         common: {
@@ -545,6 +603,10 @@ export const translations = {
             wordsListLabel: 'قائمة الكلمات',
             summarizeLabel: 'النص المراد تلخيصه',
             vocabListLabel: 'قائمة المفردات',
+            studentNeedsLabel: 'احتياجات الطالب وسياق الحالة',
+            logicDescriptionLabel: 'وصف المنطق/المشكلة',
+            programmingLangLabel: 'لغة البرمجة',
+            mysterySettingLabel: 'إعداد اللغز (اختياري)',
             topicPlaceholder: 'مثال: مصر القديمة، البناء الضوئي...',
             experimentPlaceholder: 'مثال: تجربة معجون أسنان الفيل، خلط الأحماض...',
             scenarioPlaceholder: 'مثال: طلب القهوة، السؤال عن الاتجاهات...',
