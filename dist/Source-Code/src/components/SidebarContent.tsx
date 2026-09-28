@@ -23,25 +23,35 @@ export function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
             <div className="flex justify-end relative z-10">
                 <button
                     onClick={toggleLanguage}
-                    className="group flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white/80 backdrop-blur-sm px-4 py-1.5 text-xs font-bold shadow-sm transition-all hover:border-blue-400 hover:shadow-blue-500/10 hover:scale-105 active:scale-95"
+                    className="group relative flex items-center rounded-full border border-zinc-200/80 bg-zinc-50/80 p-1 text-xs font-black shadow-sm transition-all hover:border-[#2B508F]/40 hover:shadow-md hover:shadow-blue-500/5 active:scale-95"
                     dir="ltr"
+                    title={language === 'en' ? 'Switch to Arabic' : 'التبديل إلى الإنجليزية'}
                 >
-                    <span className={cn("transition-colors", language === 'en' ? 'text-[#2B508F]' : 'text-zinc-400 group-hover:text-zinc-600')}>EN</span>
-                    <span className="h-3 w-[1px] bg-zinc-300"></span>
-                    <span className={cn("transition-colors", language === 'ar' ? 'text-[#2B508F]' : 'text-zinc-400 group-hover:text-zinc-600')}>عربي</span>
+                    <span className={cn(
+                        "rounded-full px-3 py-1 transition-all duration-300",
+                        language === 'en' 
+                            ? "bg-[#2B508F] text-white shadow-sm font-black" 
+                            : "text-zinc-500 hover:text-zinc-800"
+                    )}>EN</span>
+                    <span className={cn(
+                        "rounded-full px-3 py-1 transition-all duration-300",
+                        language === 'ar' 
+                            ? "bg-[#2B508F] text-white shadow-sm font-black" 
+                            : "text-zinc-500 hover:text-zinc-800"
+                    )}>عربي</span>
                 </button>
             </div>
 
-            <div className="flex flex-col items-center text-center space-y-6 mt-2 relative z-10">
+            <div className="flex flex-col items-center text-center space-y-6 mt-1 relative z-10">
                 {/* School Badge - Al Manhal Royal Blue Living Style */}
                 <Link
                     href="/"
                     onClick={onItemClick}
-                    className="group relative inline-flex items-center gap-2.5 rounded-full border-2 border-zinc-100 bg-white px-5 py-2 text-[10px] font-black uppercase tracking-[0.15em] text-zinc-800 shadow-xl shadow-zinc-200/50 transition-all hover:border-blue-400/50 hover:-translate-y-0.5"
+                    className="group relative inline-flex items-center gap-2.5 rounded-full border border-blue-100 bg-gradient-to-r from-blue-50/80 to-white px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-zinc-800 shadow-md shadow-blue-900/5 transition-all hover:border-[#2B508F]/40 hover:-translate-y-0.5 active:scale-95"
                 >
-                    <div className="relative h-2 w-2">
-                        <span className="absolute inset-0 rounded-full bg-[#2B508F] animate-ping opacity-75" />
-                        <span className="relative block h-2 w-2 rounded-full bg-[#2B508F] shadow-[0_0_8px_rgba(43,80,143,0.6)]" />
+                    <div className="relative flex h-2 w-2">
+                        <span className="absolute inline-flex h-full w-full rounded-full bg-[#2B508F] animate-ping opacity-75" />
+                        <span className="relative inline-flex h-2 w-2 rounded-full bg-[#2B508F] shadow-[0_0_8px_rgba(43,80,143,0.8)]" />
                     </div>
                     {language === 'ar' ? (APP_CONFIG.orgNameAr || APP_CONFIG.orgName) : APP_CONFIG.orgName}
                 </Link>
@@ -95,24 +105,28 @@ export function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
                 <Link
                     href="/chat"
                     onClick={onItemClick}
-                    className="group/chat relative flex items-center gap-4 overflow-hidden rounded-[24px] border border-blue-500/20 bg-white p-4 shadow-2xl shadow-blue-900/5 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    className="group/chat relative flex items-center gap-4 overflow-hidden rounded-[24px] border border-blue-200/60 bg-gradient-to-br from-white to-blue-50/20 p-4 shadow-lg shadow-blue-900/5 transition-all hover:scale-[1.02] hover:border-[#2B508F]/50 hover:shadow-xl hover:shadow-blue-900/10 active:scale-[0.98]"
                 >
                     <div className="absolute inset-0 bg-gradient-to-br from-[#1E255E] via-[#2B508F] to-[#4378A0] opacity-[0.04] group-hover/chat:opacity-[0.08] transition-opacity" />
+                    <div className="absolute inset-0 -translate-x-full group-hover/chat:animate-shimmer bg-gradient-to-r from-transparent via-blue-500/10 to-transparent pointer-events-none" />
                     
-                    <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#1E255E] to-[#2B508F] text-white shadow-lg shadow-blue-900/20 transition-transform group-hover/chat:rotate-6">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z" /></svg>
+                    <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#1E255E] to-[#2B508F] text-white shadow-md shadow-blue-900/25 transition-transform group-hover/chat:rotate-6 group-hover/chat:scale-105">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z" /></svg>
                     </div>
                     
                     <div className="relative">
-                        <p className="text-[10px] font-black text-blue-700/80 uppercase tracking-widest mb-0.5">{t('chat.subtitle')}</p>
+                        <div className="flex items-center gap-2 mb-0.5">
+                            <p className="text-[10px] font-black text-[#2B508F] uppercase tracking-widest">{t('chat.subtitle')}</p>
+                            <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        </div>
                         <p className="font-black text-base text-zinc-900 leading-tight">{t('chat.title')}</p>
                     </div>
                 </Link>
 
                 {/* Grade Info - Premium Card */}
-                <div className="group relative rounded-[24px] border-2 border-zinc-100/80 bg-white p-4 shadow-sm transition-all hover:border-blue-200 hover:shadow-lg hover:shadow-zinc-200/50">
+                <div className="group relative rounded-[24px] border border-zinc-200/70 bg-white p-4 shadow-sm transition-all hover:border-blue-200 hover:shadow-md hover:shadow-zinc-200/50">
                     <div className="flex items-center gap-4">
-                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-zinc-50 text-[#2B508F] shadow-inner group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50/60 text-[#2B508F] shadow-inner group-hover:bg-blue-100/60 group-hover:text-[#1E255E] transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10v6" /><path d="M20 20a2 2 0 01-2 2H6a2 2 0 01-2-2V10" /><path d="M12 2L2 7l10 5 10-5-10-5z" /></svg>
                         </div>
                         <div className="flex-1">
@@ -124,14 +138,14 @@ export function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
             </div>
 
             {/* Quick Tip - Floating Premium Card in Al Manhal Colors */}
-            <div className="mt-auto pt-8 relative z-10">
-                <div className="group relative overflow-hidden rounded-[28px] border-2 border-blue-100/60 bg-gradient-to-b from-white to-blue-50/30 p-6 shadow-xl shadow-blue-950/5">
-                    <div className="absolute top-0 right-0 -mr-4 -mt-4 h-24 w-24 rounded-full bg-blue-200/20 blur-2xl transition-opacity group-hover:opacity-40" />
+            <div className="mt-auto pt-6 relative z-10">
+                <div className="group relative overflow-hidden rounded-[24px] border border-blue-100 bg-gradient-to-b from-white via-blue-50/30 to-blue-50/50 p-5 shadow-lg shadow-blue-950/5 transition-all hover:border-blue-200">
+                    <div className="absolute top-0 right-0 -mr-4 -mt-4 h-24 w-24 rounded-full bg-blue-200/20 blur-2xl transition-opacity group-hover:opacity-50" />
                     
                     <div className="relative z-10">
-                        <div className="mb-3 flex items-center gap-2 text-[#2B508F]">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-100 ring-4 ring-blue-50">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20" /><path d="M2 12h20" /><circle cx="12" cy="12" r="10" /></svg>
+                        <div className="mb-2.5 flex items-center gap-2 text-[#2B508F]">
+                            <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-100 ring-4 ring-blue-50/50 text-[#2B508F]">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20" /><path d="M2 12h20" /><circle cx="12" cy="12" r="10" /></svg>
                             </div>
                             <span className="text-[10px] font-black uppercase tracking-[0.2em]">{t('sidebar.quickTip')}</span>
                         </div>

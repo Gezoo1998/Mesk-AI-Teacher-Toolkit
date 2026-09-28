@@ -74,10 +74,10 @@ export function ToolHeader({ toolId }: ToolHeaderProps) {
             </nav>
 
             {/* Main Header Card */}
-            <div className="relative group overflow-hidden rounded-[32px] border-2 border-zinc-100 bg-white p-6 md:p-8 shadow-2xl shadow-zinc-200/40">
+            <div className="relative group overflow-hidden rounded-[32px] border border-zinc-200/80 bg-white/95 backdrop-blur-xl p-6 md:p-8 shadow-[0_20px_50px_rgba(30,37,94,0.06)] ring-1 ring-black/[0.03]">
                 {/* Decorative Layer */}
                 <div className={cn(
-                    "absolute inset-0 bg-gradient-to-br opacity-[0.03] pointer-events-none",
+                    "absolute inset-0 bg-gradient-to-br opacity-[0.04] pointer-events-none",
                     categoryGradients[tool.category as keyof typeof categoryGradients] || "from-zinc-500/5 to-zinc-600/5"
                 )} />
                 
@@ -87,7 +87,7 @@ export function ToolHeader({ toolId }: ToolHeaderProps) {
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         className={cn(
-                            "flex h-20 w-20 shrink-0 items-center justify-center rounded-[24px] shadow-lg ring-4 ring-white transition-transform group-hover:scale-105",
+                            "flex h-20 w-20 shrink-0 items-center justify-center rounded-[24px] shadow-xl ring-4 ring-white transition-transform group-hover:scale-105 group-hover:-rotate-3",
                             colorStyles[tool.color || 'slate']
                         )}
                     >

@@ -235,11 +235,11 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
     if (!content) return null;
 
     return (
-        <div className="relative group overflow-hidden rounded-[2.5rem] border-2 border-zinc-100 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] shadow-zinc-200/50 transition-all duration-500 hover:border-[#2B508F]/30">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-zinc-50 bg-zinc-50/50 px-6 py-5 md:px-8 gap-6 relative z-20">
+        <div className="relative group overflow-hidden rounded-[2.5rem] border border-zinc-200/90 bg-white shadow-[0_25px_60px_rgba(30,37,94,0.08)] transition-all duration-500 hover:border-[#2B508F]/40">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-zinc-100 bg-zinc-50/70 backdrop-blur-sm px-6 py-5 md:px-8 gap-6 relative z-20">
                 <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#2B508F] text-white shadow-lg shadow-blue-900/20 ring-4 ring-white transition-transform group-hover:scale-110">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /></svg>
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#1E255E] to-[#2B508F] text-white shadow-lg shadow-blue-900/25 ring-4 ring-white transition-transform group-hover:scale-110">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /></svg>
                     </div>
                     <div>
                         <h3 className="text-base font-black text-zinc-900 tracking-tight">{t('common.generatedTitle')}</h3>
@@ -338,45 +338,50 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
             <div id="output-document" className="relative bg-white px-6 py-10 md:px-16 md:py-16">
                 <div className={cn("absolute inset-y-0 w-1 bg-[#2B508F]/20", isRtl ? "right-0" : "left-0")} />
 
-                <div className="mb-12 flex items-center gap-8 border-b-2 border-zinc-100 pb-10">
-                    <div className="relative h-20 w-32 shrink-0">
-                        <Image
-                            src={APP_CONFIG.logoPath}
-                            alt={APP_CONFIG.orgName}
-                            fill
-                            className="object-contain drop-shadow-sm"
-                        />
+                <div className="mb-12 flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b-2 border-zinc-100 pb-10">
+                    <div className="flex items-center gap-6">
+                        <div className="relative h-20 w-32 shrink-0">
+                            <Image
+                                src={APP_CONFIG.logoPath}
+                                alt={APP_CONFIG.orgName}
+                                fill
+                                className="object-contain drop-shadow-sm"
+                            />
+                        </div>
+                        <div className="flex flex-col">
+                            <h2 className="text-2xl md:text-3xl font-black tracking-[0.05em] text-zinc-900 uppercase">
+                                {APP_CONFIG.orgName}
+                            </h2>
+                            <p className="text-xs font-black text-[#2B508F] uppercase tracking-[0.3em] mt-1.5">
+                                Teacher Toolkit Platform
+                            </p>
+                        </div>
                     </div>
-                    <div className="flex flex-col">
-                        <h2 className="text-3xl font-black tracking-[0.05em] text-zinc-900 uppercase">
-                            {APP_CONFIG.orgName}
-                        </h2>
-                        <p className="text-xs font-black text-[#2B508F] uppercase tracking-[0.3em] mt-1.5">
-                            Teacher Toolkit Platform
-                        </p>
+                    <div className="self-start sm:self-center px-4 py-2 rounded-2xl bg-blue-50/70 border border-blue-100 text-[10px] font-black text-[#1E255E] uppercase tracking-widest shadow-xs">
+                        Official Curriculum Resource
                     </div>
                 </div>
 
                 <div className="prose prose-zinc prose-blue max-w-none">
                 {structured ? (
                     <div className="space-y-12">
-                        <h1 className="mb-12 border-b-4 border-blue-100 pb-6 text-5xl font-black tracking-tight text-zinc-900 leading-tight">
+                        <h1 className="mb-12 border-b-4 border-blue-100 pb-6 text-4xl md:text-5xl font-black tracking-tight text-zinc-900 leading-tight">
                             {structured.title}
                         </h1>
 
-                        <div className="grid gap-10">
+                        <div className="grid gap-8">
                             {structured.sections.map((section, idx) => (
                                 <motion.div 
                                     key={idx}
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: idx * 0.1 }}
-                                    className="group relative overflow-hidden rounded-[2.5rem] border-2 border-zinc-50 bg-white p-8 md:p-12 shadow-[0_15px_40px_rgba(0,0,0,0.04)] transition-all hover:border-blue-200 hover:shadow-[0_25px_60px_rgba(43,80,143,0.08)] print:break-inside-avoid"
+                                    className="group relative overflow-hidden rounded-[28px] border border-zinc-200/80 bg-gradient-to-b from-white to-zinc-50/20 p-8 md:p-12 shadow-sm transition-all duration-300 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-950/5 print:break-inside-avoid"
                                 >
                                     <div className="absolute top-0 left-0 w-2 h-full bg-[#2B508F]/20 group-hover:bg-[#2B508F] transition-colors pointer-events-none" />
                                     
                                     <div className="mb-6 flex items-center gap-4">
-                                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-[#2B508F] font-black text-xs">
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100/70 text-[#2B508F] ring-1 ring-[#2B508F]/20 font-black text-xs shadow-xs">
                                             0{idx + 1}
                                         </div>
                                         <h2 className="text-2xl font-black text-zinc-900 tracking-tight m-0">

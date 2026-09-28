@@ -231,7 +231,7 @@ export function ToolForm({ toolId, fields, title, description }: ToolFormProps) 
                                             name={field.name}
                                             required={field.required}
                                             defaultValue={defaultValue || ""}
-                                            className="w-full appearance-none rounded-2xl border-2 border-zinc-50 bg-zinc-50/30 px-6 py-4.5 text-zinc-900 font-bold shadow-sm transition-all focus:border-[#2B508F]/40 focus:bg-white focus:ring-4 focus:ring-[#2B508F]/10 hover:border-zinc-200"
+                                            className="w-full appearance-none rounded-2xl border border-zinc-200/90 bg-zinc-50/50 px-6 py-4.5 text-zinc-900 font-bold shadow-xs transition-all focus:border-[#2B508F]/60 focus:bg-white focus:ring-4 focus:ring-[#2B508F]/10 hover:border-zinc-300"
                                         >
                                             <option value="">{t('common.select')}</option>
                                             {field.options?.map((opt, idx) => {
@@ -251,7 +251,7 @@ export function ToolForm({ toolId, fields, title, description }: ToolFormProps) 
                                             })}
                                         </select>
                                         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-5 text-zinc-400">
-                                            <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5.229 7.72a.75.75 0 011.06 0L10 11.439l3.711-3.72a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.229 8.78a.75.75 0 010-1.06z" clipRule="evenodd" /></svg>
+                                            <svg className="h-5 w-5 transition-transform group-hover/field:translate-y-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5.229 7.72a.75.75 0 011.06 0L10 11.439l3.711-3.72a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.229 8.78a.75.75 0 010-1.06z" clipRule="evenodd" /></svg>
                                         </div>
                                     </div>
                                 ) : field.type === 'textarea' ? (
@@ -262,7 +262,7 @@ export function ToolForm({ toolId, fields, title, description }: ToolFormProps) 
                                         required={field.required}
                                         rows={4}
                                         defaultValue={defaultValue}
-                                        className="w-full rounded-2xl border-2 border-zinc-50 bg-zinc-50/30 px-6 py-4 text-zinc-900 font-semibold shadow-sm transition-all focus:border-[#2B508F]/40 focus:bg-white focus:ring-4 focus:ring-[#2B508F]/10 hover:border-zinc-200 placeholder:text-zinc-400 resize-none"
+                                        className="w-full rounded-2xl border border-zinc-200/90 bg-zinc-50/50 px-6 py-4 text-zinc-900 font-semibold shadow-xs transition-all focus:border-[#2B508F]/60 focus:bg-white focus:ring-4 focus:ring-[#2B508F]/10 hover:border-zinc-300 placeholder:text-zinc-400 resize-none leading-relaxed"
                                     />
                                 ) : (
                                     <input
@@ -272,24 +272,29 @@ export function ToolForm({ toolId, fields, title, description }: ToolFormProps) 
                                         placeholder={field.placeholder}
                                         required={field.required}
                                         defaultValue={defaultValue}
-                                        className="w-full rounded-2xl border-2 border-zinc-50 bg-zinc-50/30 px-6 py-4.5 text-zinc-900 font-bold shadow-sm transition-all focus:border-[#2B508F]/40 focus:bg-white focus:ring-4 focus:ring-[#2B508F]/10 hover:border-zinc-200 placeholder:text-zinc-400"
+                                        className="w-full rounded-2xl border border-zinc-200/90 bg-zinc-50/50 px-6 py-4.5 text-zinc-900 font-bold shadow-xs transition-all focus:border-[#2B508F]/60 focus:bg-white focus:ring-4 focus:ring-[#2B508F]/10 hover:border-zinc-300 placeholder:text-zinc-400"
                                     />
                                 )}
                             </motion.div>
                         );
                     })}
 
-                    {/* Global Differentiation Toggle */}
+                    {/* Global Differentiation Toggle - Segmented Controller */}
                     <motion.div 
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.4 }}
-                        className="p-5 rounded-2xl border-2 border-zinc-50 bg-zinc-50/20"
+                        className="p-5 rounded-[24px] border border-zinc-200/70 bg-zinc-50/40 shadow-xs"
                     >
-                        <label className="block text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] mb-4 ml-1">
-                            {t('common.differentiationLabel') || 'Learning Differentiation'}
-                        </label>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex items-center justify-between mb-3 px-1">
+                            <label className="block text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">
+                                {t('common.differentiationLabel') || 'Learning Differentiation'}
+                            </label>
+                            <span className="text-[10px] font-bold text-[#2B508F] bg-blue-50 px-2.5 py-0.5 rounded-full ring-1 ring-blue-100">
+                                {activeDiff.toUpperCase()}
+                            </span>
+                        </div>
+                        <div className="flex flex-wrap gap-2 p-1.5 rounded-2xl bg-zinc-100/70 border border-zinc-200/50">
                             {[
                                 { id: 'none', label: t('common.none') || 'None', color: 'slate' },
                                 { id: 'support', label: t('common.support') || 'Support', color: 'emerald' },
@@ -301,16 +306,16 @@ export function ToolForm({ toolId, fields, title, description }: ToolFormProps) 
                                     type="button"
                                     onClick={() => setActiveDiff(level.id)}
                                     className={cn(
-                                        "flex-1 min-w-[100px] py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border-2",
+                                        "flex-1 min-w-[90px] py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-200",
                                         activeDiff === level.id
                                             ? level.id === 'none'
-                                                ? "border-zinc-300 bg-zinc-100 text-zinc-600"
+                                                ? "bg-white text-zinc-800 shadow-sm"
                                                 : level.id === 'support'
-                                                ? "bg-emerald-500 text-white border-emerald-500 shadow-md shadow-emerald-500/20"
+                                                ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/20"
                                                 : level.id === 'standard'
-                                                ? "bg-[#2B508F] text-white border-[#2B508F] shadow-md shadow-blue-900/20"
-                                                : "bg-rose-500 text-white border-rose-500 shadow-md shadow-rose-500/20"
-                                            : "border-zinc-100 bg-white text-zinc-400 hover:border-zinc-200"
+                                                ? "bg-[#2B508F] text-white shadow-md shadow-blue-900/25"
+                                                : "bg-rose-600 text-white shadow-md shadow-rose-600/20"
+                                            : "text-zinc-500 hover:text-zinc-900 hover:bg-white/60"
                                     )}
                                 >
                                     {level.label}
@@ -320,27 +325,30 @@ export function ToolForm({ toolId, fields, title, description }: ToolFormProps) 
                         <input type="hidden" name="differentiation" value={activeDiff === 'none' ? '' : activeDiff} />
                     </motion.div>
 
+                    {/* Generate Button with Continuous Shimmer */}
                     <motion.button
                         whileHover={{ scale: 1.01, y: -2 }}
                         whileTap={{ scale: 0.98 }}
                         type="submit"
                         disabled={isLoading || isSearching}
                         className={cn(
-                            "group relative w-full h-[64px] overflow-hidden rounded-[20px] transition-all duration-300",
-                            "bg-gradient-to-r from-zinc-900 to-zinc-800 text-white font-black uppercase tracking-[0.2em] text-xs",
-                            "shadow-xl shadow-zinc-900/10 hover:shadow-zinc-900/20 disabled:opacity-70 disabled:grayscale disabled:cursor-not-allowed"
+                            "group relative w-full h-[64px] overflow-hidden rounded-[22px] transition-all duration-300",
+                            "bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 text-white font-black uppercase tracking-[0.2em] text-xs",
+                            "shadow-xl shadow-zinc-900/15 hover:shadow-2xl hover:shadow-blue-950/20 disabled:opacity-70 disabled:grayscale disabled:cursor-not-allowed border border-white/10"
                         )}
                     >
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#1E255E] to-[#2B508F] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#1E255E] via-[#2B508F] to-[#4378A0] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none" />
+                        
                         <div className="relative z-10 flex items-center justify-center gap-3">
                             {isSearching ? (
                                 <>
-                                    <div className="h-5 w-5 animate-spin rounded-full border-3 border-white/30 border-t-white" />
+                                    <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
                                     <span>{searchStatus}</span>
                                 </>
                             ) : isLoading ? (
                                 <>
-                                    <div className="h-5 w-5 animate-spin rounded-full border-3 border-white/30 border-t-white" />
+                                    <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
                                     <span>{t('common.generatingMagic')}</span>
                                 </>
                             ) : (

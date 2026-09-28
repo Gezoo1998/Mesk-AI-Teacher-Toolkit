@@ -182,8 +182,8 @@ export function ToolCard({ tool }: { tool: Tool }) {
                 style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 className={cn(
-                    "relative flex h-full w-full flex-col gap-4 rounded-3xl border-2 p-5 md:p-6 transition-all duration-500 overflow-hidden bg-white ring-1 ring-black/5",
-                    "border-zinc-100",
+                    "relative flex h-full w-full flex-col gap-4 rounded-[28px] border-2 p-5 md:p-6 transition-all duration-500 overflow-hidden bg-white ring-1 ring-black/[0.04]",
+                    "border-zinc-100/90",
                     styles.borderHover,
                     styles.shadow,
                 )}
@@ -236,7 +236,7 @@ export function ToolCard({ tool }: { tool: Tool }) {
                     </div>
 
                     <div className={cn(
-                        "rounded-lg px-2.5 py-1 text-[9px] font-black uppercase tracking-widest ring-1 ring-inset shadow-inner transition-all duration-300",
+                        "rounded-xl px-3 py-1 text-[9px] font-black uppercase tracking-widest ring-1 ring-inset shadow-xs transition-all duration-300",
                         styles.badge
                     )}>
                         {t(`tags.${tool.tags[0].replace(/[^a-zA-Z]/g, '').replace(/^\d+/, '').replace(/^./, c => c.toLowerCase())}`) || tool.tags[0]}
@@ -255,16 +255,16 @@ export function ToolCard({ tool }: { tool: Tool }) {
                 </div>
 
                 <div className="mt-auto pt-3 flex items-center justify-between relative z-10" style={{ transform: "translateZ(10px)" }}>
-                    <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-[0.1em] text-zinc-400 group-hover:text-zinc-600 transition-colors duration-500 px-1">
+                    <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-[0.1em] text-zinc-400 group-hover:text-[#2B508F] transition-colors duration-500 px-1">
                         <span>{t('common.openTool')}</span>
-                        <div className="h-[2.5px] w-4 group-hover:w-10 transition-all duration-700 rounded-full bg-zinc-200" />
+                        <div className="h-[2.5px] w-4 group-hover:w-10 transition-all duration-700 rounded-full bg-zinc-200 group-hover:bg-[#2B508F]/40" />
                     </div>
 
                     <motion.div
                         className={cn(
-                            "p-2 rounded-xl border transition-all duration-500 shadow-sm",
+                            "p-2.5 rounded-xl border transition-all duration-500 shadow-sm",
                             "bg-zinc-50 border-zinc-100 text-zinc-400",
-                            "group-hover:bg-zinc-900 group-hover:border-zinc-900 group-hover:text-white group-hover:shadow-lg"
+                            "group-hover:bg-[#2B508F] group-hover:border-[#2B508F] group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-900/20"
                         )}
                         whileHover={{ scale: 1.15, rotate: 12 }}
                     >

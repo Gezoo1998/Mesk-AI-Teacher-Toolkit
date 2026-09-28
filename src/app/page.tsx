@@ -27,12 +27,12 @@ export default function Home() {
         {/* Subtle Paper Texture / Noise if needed, but keeping it clean for now */}
       </div>
 
-      <header className="relative z-10 mb-20 flex flex-col items-center justify-center pt-8 pb-16 text-center animate-fade-in-soft">
+      <header className="relative z-10 mb-20 flex flex-col items-center justify-center pt-8 pb-12 text-center animate-fade-in-soft">
         <div className="space-y-6 max-w-3xl mx-auto px-4">
-          <div className="inline-flex items-center gap-2 rounded-full bg-zinc-900 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-white shadow-xl shadow-zinc-200 ring-1 ring-white/10 animate-slide-up">
+          <div className="inline-flex items-center gap-2.5 rounded-full border border-[#2B508F]/30 bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 px-5 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-white shadow-xl shadow-blue-950/15 ring-1 ring-white/10 animate-slide-up hover:scale-105 transition-transform cursor-default">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#2B508F] opacity-75"></span>
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#2B508F]"></span>
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#2B508F] shadow-[0_0_8px_rgba(43,80,143,0.9)]"></span>
             </span>
             {t('dashboard.readyToTeach')}
           </div>
@@ -40,31 +40,6 @@ export default function Home() {
           <div className="py-2">
             <HeroText text={t('dashboard.heroTitle')} />
           </div>
-
-{/* 
-          <p className="mx-auto max-w-xl text-lg md:text-xl font-medium text-zinc-500 animate-slide-up delay-200 leading-relaxed">
-            {t('dashboard.heroDesc')}
-          </p> 
-          */}
-
-          {/* 
-          <div className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up delay-300">
-            <div className="relative w-full max-w-md group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
-                <div className="relative flex items-center bg-white border border-zinc-200 rounded-2xl px-5 py-3.5 shadow-sm transition-all duration-300 group-focus-within:border-amber-500 group-focus-within:ring-4 group-focus-within:ring-amber-500/10">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-400 mr-3"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                    <input 
-                        type="text" 
-                        placeholder={t('chat.placeholder')} 
-                        className="bg-transparent border-none outline-none w-full text-sm font-semibold text-zinc-900 placeholder:text-zinc-400"
-                    />
-                    <div className="hidden sm:flex items-center self-center bg-zinc-50 border border-zinc-200 rounded-lg px-2 py-0.5 ml-2">
-                        <span className="text-[10px] font-bold text-zinc-400">⌘K</span>
-                    </div>
-                </div>
-            </div>
-          </div> 
-          */}
         </div>
       </header>
 
@@ -146,31 +121,31 @@ export default function Home() {
         </section>
       </div>
 
-      <section className="mt-16 grid gap-6 border-t border-blue-100/60 pt-10 text-sm text-zinc-600 sm:grid-cols-3 pb-10">
-        <div className="group rounded-3xl bg-white p-6 border border-zinc-100 transition-colors hover:bg-zinc-50 shadow-sm">
-          <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-[#2B508F] ring-1 ring-[#2B508F]/15 shadow-sm">
-            <span className="text-lg font-bold">1</span>
+      <section className="mt-20 grid gap-6 border-t border-zinc-200/80 pt-12 text-sm text-zinc-600 sm:grid-cols-3 pb-12 relative z-10">
+        <div className="group relative rounded-[28px] bg-white p-7 border border-zinc-200/80 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-950/5 hover:border-blue-200">
+          <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100/70 text-[#2B508F] font-black text-sm shadow-sm ring-1 ring-[#2B508F]/20 group-hover:scale-110 transition-transform">
+            <span>01</span>
           </div>
-          <p className="font-bold uppercase tracking-wide text-zinc-900">{t('dashboard.step1')}</p>
-          <p className="mt-1 leading-relaxed">
+          <p className="font-black uppercase tracking-wide text-zinc-900 text-sm">{t('dashboard.step1')}</p>
+          <p className="mt-1.5 leading-relaxed text-zinc-500 font-medium">
             {t('dashboard.step1Desc')}
           </p>
         </div>
-        <div className="group rounded-3xl bg-white p-6 border border-zinc-100 transition-colors hover:bg-zinc-50 shadow-sm">
-          <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-[#2B508F] ring-1 ring-[#2B508F]/15 shadow-sm">
-            <span className="text-lg font-bold">2</span>
+        <div className="group relative rounded-[28px] bg-white p-7 border border-zinc-200/80 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-950/5 hover:border-blue-200">
+          <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100/70 text-[#2B508F] font-black text-sm shadow-sm ring-1 ring-[#2B508F]/20 group-hover:scale-110 transition-transform">
+            <span>02</span>
           </div>
-          <p className="font-bold uppercase tracking-wide text-zinc-900">{t('dashboard.step2')}</p>
-          <p className="mt-1 leading-relaxed">
+          <p className="font-black uppercase tracking-wide text-zinc-900 text-sm">{t('dashboard.step2')}</p>
+          <p className="mt-1.5 leading-relaxed text-zinc-500 font-medium">
             {t('dashboard.step2Desc')}
           </p>
         </div>
-        <div className="group rounded-3xl bg-white p-6 border border-zinc-100 transition-colors hover:bg-zinc-50 shadow-sm">
-          <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-[#2B508F] ring-1 ring-[#2B508F]/15 shadow-sm">
-            <span className="text-lg font-bold">3</span>
+        <div className="group relative rounded-[28px] bg-white p-7 border border-zinc-200/80 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-950/5 hover:border-blue-200">
+          <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100/70 text-[#2B508F] font-black text-sm shadow-sm ring-1 ring-[#2B508F]/20 group-hover:scale-110 transition-transform">
+            <span>03</span>
           </div>
-          <p className="font-bold uppercase tracking-wide text-zinc-900">{t('dashboard.step3')}</p>
-          <p className="mt-1 leading-relaxed">
+          <p className="font-black uppercase tracking-wide text-zinc-900 text-sm">{t('dashboard.step3')}</p>
+          <p className="mt-1.5 leading-relaxed text-zinc-500 font-medium">
             {t('dashboard.step3Desc')}
           </p>
         </div>
