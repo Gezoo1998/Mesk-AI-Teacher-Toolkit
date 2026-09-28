@@ -1,21 +1,27 @@
 {
-  "name": "AI Teacher Toolkit",
-  "short_name": "Teacher Toolkit",
-  "description": "Your intelligent teaching companion. Turn ideas into classroom-ready resources in seconds.",
+  "name": "Al Manhal AI Teacher Toolkit",
+  "short_name": "Al Manhal AI",
+  "description": "Your intelligent teaching companion for Al Manhal International Schools. Turn ideas into classroom-ready resources in seconds.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#f59e0b",
+  "theme_color": "#2B508F",
   "icons": [
     {
-      "src": "/mesk.png",
+      "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/mesk.png",
+      "src": "/icon-512.png",
       "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/almanhal-logo.png",
+      "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "any maskable"
     }

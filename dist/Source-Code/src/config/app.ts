@@ -1,22 +1,24 @@
 /**
  * Application Configuration
  * 
- * Edit this file to customize the branding, metadata, and links
- * for your CodeCanyon product or personal deployment.
+ * Rebranded for Al Manhal International Schools (مدارس المنهل العالمية)
  */
 
 export const APP_CONFIG = {
     // Basic Branding
-    name: "AI Teacher Toolkit Pro",
-    shortName: "Teacher AI",
-    orgName: "Your Institution",
-    logoPath: "/logo.png", // Located in public/
+    name: "Al Manhal AI Teacher Toolkit",
+    shortName: "Al Manhal AI",
+    orgName: "Al Manhal International Schools",
+    orgNameAr: "مدارس المنهل العالمية",
+    logoPath: "/almanhal-logo.png", // Located in public/
     
     // Metadata & SEO
-    url: "https://yourtool-demo.vercel.app",
-    description: "The ultimate AI assistant for teachers. Generate lesson plans, creative activities, and educational resources in seconds.",
+    url: "https://almanhal.edu.sa",
+    description: "The intelligent teaching companion for Al Manhal International Schools educators. Generate lesson plans, creative activities, and classroom-ready resources in seconds.",
     keywords: [
-        "AI Teacher Toolkit",
+        "Al Manhal International Schools",
+        "مدارس المنهل العالمية",
+        "Al Manhal AI Teacher Toolkit",
         "Lesson Planner AI",
         "Educational AI Tools",
         "Teaching Assistant",
@@ -25,18 +27,18 @@ export const APP_CONFIG = {
     
     // Social & Support
     author: {
-        name: "Developer Name",
-        url: "https://your-portfolio.com",
-        handle: "@yourhandle"
+        name: "Al Manhal International Schools",
+        url: "https://almanhal.edu.sa",
+        handle: "@almanhal_schools"
     },
     
     // Features / Technical
     defaultLanguage: "en" as const, // "en" or "ar"
-    themeColor: "#f59e0b", // Amber-500
+    themeColor: "#2B508F", // Al Manhal Royal Blue
     
-    // Marketplace Context (Used in documentation/demo)
-    demoUrl: "https://your-demo-url.com",
-    purchaseUrl: "https://codecanyon.net/item/your-item-id", // Add your CodeCanyon link here
+    // Portal Context
+    demoUrl: "https://almanhal.edu.sa",
+    purchaseUrl: "",
 };
 
 export type AppConfig = typeof APP_CONFIG;

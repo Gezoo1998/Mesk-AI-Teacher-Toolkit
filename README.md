@@ -1,8 +1,8 @@
-# 🏫 AI Teacher Toolkit
-
+# 🏫 Al Manhal AI Teacher Toolkit
+> **مدارس المنهل العالمية | Al Manhal International Schools**
 > **Your Intelligent Teaching Companion** – Turn ideas into classroom-ready resources in seconds.
 
-The **AI Teacher Toolkit** is a specialized, AI-powered platform designed for modern educators. It leverages cutting-edge Large Language Models (LLMs) to automate time-consuming preparations, allowing teachers to focus on what matters most: **teaching and student engagement.**
+The **Al Manhal AI Teacher Toolkit** is a specialized, AI-powered platform designed for educators at Al Manhal International Schools. It leverages cutting-edge Large Language Models (LLMs) to automate time-consuming preparations, allowing teachers to focus on what matters most: **teaching and student engagement.**
 
 ---
 

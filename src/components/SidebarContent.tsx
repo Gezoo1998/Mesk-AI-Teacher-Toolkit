@@ -43,7 +43,7 @@ export function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
                         <span className="absolute inset-0 rounded-full bg-amber-500 animate-ping opacity-75" />
                         <span className="relative block h-2 w-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]" />
                     </div>
-                    {APP_CONFIG.orgName}
+                    {language === 'ar' ? (APP_CONFIG.orgNameAr || APP_CONFIG.orgName) : APP_CONFIG.orgName}
                 </Link>
 
                 {/* Logo Area */}

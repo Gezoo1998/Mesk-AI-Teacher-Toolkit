@@ -15,7 +15,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const [language, setLanguageState] = useState<Language>(() => {
         if (typeof window !== 'undefined') {
-            const stored = localStorage.getItem('mesk-lang') as Language;
+            const stored = (localStorage.getItem('almanhal-lang') || localStorage.getItem('mesk-lang')) as Language;
             return stored === 'en' || stored === 'ar' ? stored : 'en';
         }
         return 'en';
@@ -23,7 +23,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
     const setLanguage = (lang: Language) => {
         setLanguageState(lang);
-        localStorage.setItem('mesk-lang', lang);
+        localStorage.setItem('almanhal-lang', lang);
         // Update HTML dir and lang attributes for accessibility/styling
         document.documentElement.lang = lang;
         document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';

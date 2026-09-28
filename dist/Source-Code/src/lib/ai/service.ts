@@ -15,20 +15,53 @@ function getGroq() {
     return groqInstance;
 }
 
+function getCandidateModels(): string[] {
+    const configured = process.env.GROQ_MODEL;
+    const candidates = [
+        configured,
+        'openai/gpt-oss-120b',
+        'allam-2-7b',
+        'llama-3.3-70b-versatile',
+        'llama-3.1-8b-instant',
+        'openai/gpt-oss-20b'
+    ].filter(Boolean) as string[];
+
+    return Array.from(new Set(candidates));
+}
+
 export async function generateContent(request: GenerateRequest): Promise<GenerateResponse> {
     try {
         const { system, user } = buildPrompt(request.toolId, request.payload, request.language);
+        const models = getCandidateModels();
+        let completion;
+        let lastError: unknown;
 
-        const completion = await getGroq().chat.completions.create({
-            messages: [
-                { role: 'system', content: system },
-                { role: 'user', content: user },
-            ],
-            model: 'llama-3.3-70b-versatile',
-            temperature: 0.7,
-            max_tokens: 4096,
-            response_format: { type: "json_object" }
-        });
+        for (const model of models) {
+            try {
+                completion = await getGroq().chat.completions.create({
+                    messages: [
+                        { role: 'system', content: system },
+                        { role: 'user', content: user },
+                    ],
+                    model,
+                    temperature: 0.7,
+                    max_tokens: 4096,
+                    response_format: { type: "json_object" }
+                });
+                break;
+            } catch (err: any) {
+                lastError = err;
+                if (err?.status === 404 || err?.error?.code === 'model_not_found') {
+                    console.warn(`[Groq] Model ${model} not available, trying next fallback...`);
+                    continue;
+                }
+                throw err;
+            }
+        }
+
+        if (!completion) {
+            throw lastError || new Error('No compatible Groq model available');
+        }
 
         const rawContent = completion.choices[0]?.message?.content || '';
         
@@ -57,27 +90,62 @@ export async function generateContent(request: GenerateRequest): Promise<Generat
 
 export async function createChatStream(request: GenerateRequest) {
     const { system, user } = buildPrompt(request.toolId, request.payload, request.language);
-    
-    return getGroq().chat.completions.create({
-        messages: [
-            { role: 'system', content: system },
-            { role: 'user', content: user },
-        ],
-        model: 'llama-3.3-70b-versatile',
-        temperature: 0.7,
-        max_tokens: 4096,
-        stream: true,
-    });
+    const models = getCandidateModels();
+    let lastError: unknown;
+
+    for (const model of models) {
+        try {
+            return await getGroq().chat.completions.create({
+                messages: [
+                    { role: 'system', content: system },
+                    { role: 'user', content: user },
+                ],
+                model,
+                temperature: 0.7,
+                max_tokens: 4096,
+                stream: true,
+            });
+        } catch (err: any) {
+            lastError = err;
+            if (err?.status === 404 || err?.error?.code === 'model_not_found') {
+                console.warn(`[Groq] Model ${model} not available, trying next fallback...`);
+                continue;
+            }
+            throw err;
+        }
+    }
+
+    throw lastError || new Error('No compatible Groq model available');
 }
 
 export async function generateChatResponse(messages: ChatMessage[]): Promise<GenerateResponse> {
     try {
-        const completion = await getGroq().chat.completions.create({
-            messages: messages as { role: 'user' | 'assistant' | 'system'; content: string }[],
-            model: 'llama-3.3-70b-versatile',
-            temperature: 0.7,
-            max_tokens: 2048,
-        });
+        const models = getCandidateModels();
+        let completion;
+        let lastError: unknown;
+
+        for (const model of models) {
+            try {
+                completion = await getGroq().chat.completions.create({
+                    messages: messages as { role: 'user' | 'assistant' | 'system'; content: string }[],
+                    model,
+                    temperature: 0.7,
+                    max_tokens: 2048,
+                });
+                break;
+            } catch (err: any) {
+                lastError = err;
+                if (err?.status === 404 || err?.error?.code === 'model_not_found') {
+                    console.warn(`[Groq] Model ${model} not available, trying next fallback...`);
+                    continue;
+                }
+                throw err;
+            }
+        }
+
+        if (!completion) {
+            throw lastError || new Error('No compatible Groq model available');
+        }
 
         const content = completion.choices[0]?.message?.content || '';
 

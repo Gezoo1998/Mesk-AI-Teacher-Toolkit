@@ -7,9 +7,112 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { cn } from '@/lib/utils';
 import { useRef } from 'react';
 
+// Mapping color to classes with Modern Premium Aesthetics
+const colorStyles = {
+    amber: {
+        bg: 'bg-white',
+        border: 'border-zinc-100',
+        borderHover: 'group-hover:border-amber-400',
+        text: 'text-zinc-900',
+        icon: 'text-amber-600 bg-amber-50 shadow-sm border-2 border-amber-200/50',
+        badge: 'bg-amber-50 text-amber-900 ring-amber-500/20 shadow-sm',
+        shadow: 'shadow-md shadow-zinc-200/30 group-hover:shadow-2xl group-hover:shadow-amber-500/10',
+        glow: 'from-amber-400 to-orange-400',
+        cornerFlare: 'group-hover:from-amber-400',
+        orbital: 'bg-amber-400',
+        dotColor: '#f59e0b',
+        spotlight: 'rgba(245, 158, 11, 0.08)'
+    },
+    emerald: {
+        bg: 'bg-white',
+        border: 'border-zinc-100',
+        borderHover: 'group-hover:border-emerald-400',
+        text: 'text-zinc-900',
+        icon: 'text-emerald-600 bg-emerald-50 shadow-sm border-2 border-emerald-200/50',
+        badge: 'bg-emerald-50 text-emerald-900 ring-emerald-500/20 shadow-sm',
+        shadow: 'shadow-md shadow-zinc-200/30 group-hover:shadow-2xl group-hover:shadow-emerald-500/10',
+        glow: 'from-emerald-400 to-teal-400',
+        cornerFlare: 'group-hover:from-emerald-400',
+        orbital: 'bg-emerald-400',
+        dotColor: '#10b981',
+        spotlight: 'rgba(16, 185, 129, 0.08)'
+    },
+    sky: {
+        bg: 'bg-white',
+        border: 'border-zinc-100',
+        borderHover: 'group-hover:border-sky-400',
+        text: 'text-zinc-900',
+        icon: 'text-sky-600 bg-sky-50 shadow-sm border-2 border-sky-200/50',
+        badge: 'bg-sky-50 text-sky-900 ring-sky-500/20 shadow-sm',
+        shadow: 'shadow-md shadow-zinc-200/30 group-hover:shadow-2xl group-hover:shadow-sky-500/10',
+        glow: 'from-sky-400 to-blue-400',
+        cornerFlare: 'group-hover:from-sky-400',
+        orbital: 'bg-sky-400',
+        dotColor: '#0ea5e9',
+        spotlight: 'rgba(14, 165, 233, 0.08)'
+    },
+    purple: {
+        bg: 'bg-white',
+        border: 'border-zinc-100',
+        borderHover: 'group-hover:border-purple-400',
+        text: 'text-zinc-900',
+        icon: 'text-purple-600 bg-purple-50 shadow-sm border-2 border-purple-200/50',
+        badge: 'bg-purple-50 text-purple-900 ring-purple-500/20 shadow-sm',
+        shadow: 'shadow-md shadow-zinc-200/30 group-hover:shadow-2xl group-hover:shadow-purple-500/10',
+        glow: 'from-purple-400 to-fuchsia-400',
+        cornerFlare: 'group-hover:from-purple-400',
+        orbital: 'bg-purple-400',
+        dotColor: '#a855f7',
+        spotlight: 'rgba(168, 85, 247, 0.08)'
+    },
+    rose: {
+        bg: 'bg-white',
+        border: 'border-zinc-100',
+        borderHover: 'group-hover:border-rose-400',
+        text: 'text-zinc-900',
+        icon: 'text-rose-600 bg-rose-50 shadow-sm border-2 border-rose-200/50',
+        badge: 'bg-rose-50 text-rose-900 ring-rose-500/20 shadow-sm',
+        shadow: 'shadow-md shadow-zinc-200/30 group-hover:shadow-2xl group-hover:shadow-rose-500/10',
+        glow: 'from-rose-400 to-pink-400',
+        cornerFlare: 'group-hover:from-rose-400',
+        orbital: 'bg-rose-400',
+        dotColor: '#f43f5e',
+        spotlight: 'rgba(244, 63, 94, 0.08)'
+    },
+    indigo: {
+        bg: 'bg-white',
+        border: 'border-zinc-100',
+        borderHover: 'group-hover:border-indigo-400',
+        text: 'text-zinc-900',
+        icon: 'text-indigo-600 bg-indigo-50 shadow-sm border-2 border-indigo-200/50',
+        badge: 'bg-indigo-50 text-indigo-900 ring-indigo-500/20 shadow-sm',
+        shadow: 'shadow-md shadow-zinc-200/30 group-hover:shadow-2xl group-hover:shadow-indigo-500/10',
+        glow: 'from-indigo-400 to-violet-400',
+        cornerFlare: 'group-hover:from-indigo-400',
+        orbital: 'bg-indigo-400',
+        dotColor: '#6366f1',
+        spotlight: 'rgba(99, 102, 241, 0.08)'
+    },
+    slate: {
+        bg: 'bg-white',
+        border: 'border-zinc-100',
+        borderHover: 'group-hover:border-slate-400',
+        text: 'text-zinc-900',
+        icon: 'text-slate-600 bg-slate-50 shadow-sm border-2 border-slate-200/50',
+        badge: 'bg-slate-50 text-slate-900 ring-slate-500/20 shadow-sm',
+        shadow: 'shadow-md shadow-zinc-200/30 group-hover:shadow-2xl group-hover:shadow-slate-500/10',
+        glow: 'from-slate-400 to-slate-500',
+        cornerFlare: 'group-hover:from-slate-400',
+        orbital: 'bg-slate-400',
+        dotColor: '#64748b',
+        spotlight: 'rgba(100, 116, 139, 0.08)'
+    }
+};
+
 export function ToolCard({ tool }: { tool: Tool }) {
     const { t } = useLanguage();
     const cardRef = useRef<HTMLDivElement>(null);
+    const styles = colorStyles[tool.color] || colorStyles.slate;
 
     // Motion mouse tracking
     const mouseX = useMotionValue(0);
@@ -55,110 +158,6 @@ export function ToolCard({ tool }: { tool: Tool }) {
         mouseX.set(0);
         mouseY.set(0);
     };
-
-    // Mapping color to classes with Modern Premium Aesthetics
-    const colorStyles = {
-        amber: {
-            bg: 'bg-white',
-            border: 'border-zinc-100',
-            borderHover: 'group-hover:border-amber-400',
-            text: 'text-zinc-900',
-            icon: 'text-amber-600 bg-amber-50 shadow-sm border-2 border-amber-200/50',
-            badge: 'bg-amber-50 text-amber-900 ring-amber-500/20 shadow-sm',
-            shadow: 'shadow-md shadow-zinc-200/30 group-hover:shadow-2xl group-hover:shadow-amber-500/10',
-            glow: 'from-amber-400 to-orange-400',
-            cornerFlare: 'group-hover:from-amber-400',
-            orbital: 'bg-amber-400',
-            dotColor: '#f59e0b',
-            spotlight: 'rgba(245, 158, 11, 0.08)'
-        },
-        emerald: {
-            bg: 'bg-white',
-            border: 'border-zinc-100',
-            borderHover: 'group-hover:border-emerald-400',
-            text: 'text-zinc-900',
-            icon: 'text-emerald-600 bg-emerald-50 shadow-sm border-2 border-emerald-200/50',
-            badge: 'bg-emerald-50 text-emerald-900 ring-emerald-500/20 shadow-sm',
-            shadow: 'shadow-md shadow-zinc-200/30 group-hover:shadow-2xl group-hover:shadow-emerald-500/10',
-            glow: 'from-emerald-400 to-teal-400',
-            cornerFlare: 'group-hover:from-emerald-400',
-            orbital: 'bg-emerald-400',
-            dotColor: '#10b981',
-            spotlight: 'rgba(16, 185, 129, 0.08)'
-        },
-        sky: {
-            bg: 'bg-white',
-            border: 'border-zinc-100',
-            borderHover: 'group-hover:border-sky-400',
-            text: 'text-zinc-900',
-            icon: 'text-sky-600 bg-sky-50 shadow-sm border-2 border-sky-200/50',
-            badge: 'bg-sky-50 text-sky-900 ring-sky-500/20 shadow-sm',
-            shadow: 'shadow-md shadow-zinc-200/30 group-hover:shadow-2xl group-hover:shadow-sky-500/10',
-            glow: 'from-sky-400 to-blue-400',
-            cornerFlare: 'group-hover:from-sky-400',
-            orbital: 'bg-sky-400',
-            dotColor: '#0ea5e9',
-            spotlight: 'rgba(14, 165, 233, 0.08)'
-        },
-        purple: {
-            bg: 'bg-white',
-            border: 'border-zinc-100',
-            borderHover: 'group-hover:border-purple-400',
-            text: 'text-zinc-900',
-            icon: 'text-purple-600 bg-purple-50 shadow-sm border-2 border-purple-200/50',
-            badge: 'bg-purple-50 text-purple-900 ring-purple-500/20 shadow-sm',
-            shadow: 'shadow-md shadow-zinc-200/30 group-hover:shadow-2xl group-hover:shadow-purple-500/10',
-            glow: 'from-purple-400 to-fuchsia-400',
-            cornerFlare: 'group-hover:from-purple-400',
-            orbital: 'bg-purple-400',
-            dotColor: '#a855f7',
-            spotlight: 'rgba(168, 85, 247, 0.08)'
-        },
-        rose: {
-            bg: 'bg-white',
-            border: 'border-zinc-100',
-            borderHover: 'group-hover:border-rose-400',
-            text: 'text-zinc-900',
-            icon: 'text-rose-600 bg-rose-50 shadow-sm border-2 border-rose-200/50',
-            badge: 'bg-rose-50 text-rose-900 ring-rose-500/20 shadow-sm',
-            shadow: 'shadow-md shadow-zinc-200/30 group-hover:shadow-2xl group-hover:shadow-rose-500/10',
-            glow: 'from-rose-400 to-pink-400',
-            cornerFlare: 'group-hover:from-rose-400',
-            orbital: 'bg-rose-400',
-            dotColor: '#f43f5e',
-            spotlight: 'rgba(244, 63, 94, 0.08)'
-        },
-        indigo: {
-            bg: 'bg-white',
-            border: 'border-zinc-100',
-            borderHover: 'group-hover:border-indigo-400',
-            text: 'text-zinc-900',
-            icon: 'text-indigo-600 bg-indigo-50 shadow-sm border-2 border-indigo-200/50',
-            badge: 'bg-indigo-50 text-indigo-900 ring-indigo-500/20 shadow-sm',
-            shadow: 'shadow-md shadow-zinc-200/30 group-hover:shadow-2xl group-hover:shadow-indigo-500/10',
-            glow: 'from-indigo-400 to-violet-400',
-            cornerFlare: 'group-hover:from-indigo-400',
-            orbital: 'bg-indigo-400',
-            dotColor: '#6366f1',
-            spotlight: 'rgba(99, 102, 241, 0.08)'
-        },
-        slate: {
-            bg: 'bg-white',
-            border: 'border-zinc-100',
-            borderHover: 'group-hover:border-slate-400',
-            text: 'text-zinc-900',
-            icon: 'text-slate-600 bg-slate-50 shadow-sm border-2 border-slate-200/50',
-            badge: 'bg-slate-50 text-slate-900 ring-slate-500/20 shadow-sm',
-            shadow: 'shadow-md shadow-zinc-200/30 group-hover:shadow-2xl group-hover:shadow-slate-500/10',
-            glow: 'from-slate-400 to-slate-500',
-            cornerFlare: 'group-hover:from-slate-400',
-            orbital: 'bg-slate-400',
-            dotColor: '#64748b',
-            spotlight: 'rgba(100, 116, 139, 0.08)'
-        }
-    };
-
-    const styles = colorStyles[tool.color] || colorStyles.slate;
 
     return (
         <Link 

@@ -3,9 +3,9 @@ export type Language = 'en' | 'ar';
 export const translations = {
     en: {
         sidebar: {
-            schoolName: 'Your Institution',
+            schoolName: 'Al Manhal International Schools',
             appName: 'AI Teacher Toolkit',
-            desc: 'Your intelligent teaching companion. Turn ideas into classroom-ready resources in seconds.',
+            desc: 'Your intelligent teaching companion for Al Manhal International Schools. Turn ideas into classroom-ready resources in seconds.',
             currentMode: 'Current Mode',
             gradeLevel: 'Grade Level',
             allGrades: 'All Grades',
@@ -327,9 +327,9 @@ export const translations = {
     },
     ar: {
         sidebar: {
-            schoolName: 'مؤسستك التعليمية',
+            schoolName: 'مدارس المنهل العالمية',
             appName: 'صندوق أدوات المعلم',
-            desc: 'رفيقك الذكي في التدريس. حول الأفكار إلى مصادر جاهزة للفصل في ثوانٍ.',
+            desc: 'رفيقك الذكي في التدريس لمدارس المنهل العالمية. حول الأفكار إلى مصادر جاهزة للفصل في ثوانٍ.',
             currentMode: 'الوضع الحالي',
             gradeLevel: 'المراحل الدراسية',
             allGrades: 'كل المراحل',

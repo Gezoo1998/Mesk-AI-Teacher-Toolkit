@@ -1,6 +1,6 @@
 # Deployment Guide
 
-The Mesk AI Teacher Toolkit is built with **Next.js** and can be easily deployed to **Vercel**.
+The Al Manhal AI Teacher Toolkit is built with **Next.js** and can be easily deployed to **Vercel**.
 
 ## Prerequisites
 - A GitHub repository containing this code.
@@ -15,7 +15,7 @@ The Mesk AI Teacher Toolkit is built with **Next.js** and can be easily deployed
 2.  **Import to Vercel**:
     - Go to your Vercel Dashboard.
     - Click "Add New..." -> "Project".
-    - Import the `mesk-ai-teacher-toolkit` repository.
+    - Import the repository.
 
 3.  **Configure Project**:
     - **Framework Preset**: Next.js (should be auto-detected).
@@ -27,6 +27,8 @@ The Mesk AI Teacher Toolkit is built with **Next.js** and can be easily deployed
     - Expand the **Environment Variables** section.
     - Key: `GROQ_API_KEY`
     - Value: `gsk_...` (Your actual API Key)
+    - (Optional) Key: `GROQ_MODEL`
+    - Value: `openai/gpt-oss-120b` or `allam-2-7b`
     - Click **Add**.
 
 5.  **Deploy**:
@@ -34,7 +36,7 @@ The Mesk AI Teacher Toolkit is built with **Next.js** and can be easily deployed
     - Vercel will build your application. This may take a minute.
 
 6.  **Success**:
-    - Once built, you will get a live URL (e.g., `https://mesk-ai-toolkit.vercel.app`).
+    - Once built, you will get a live URL.
     - Visit the link and test the "Lesson Ideas" tool.
 
 ## Troubleshooting
