@@ -52,6 +52,28 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
         return `${schoolPrefix}_${sanitized || 'Resource'}_${dateStr}.${ext}`;
     };
 
+    const sanitizeCssColor = (val: string): string => {
+        if (!val || val === 'transparent' || val === 'inherit' || val === 'initial') return val;
+        if (val.includes('lab') || val.includes('oklch') || val.includes('oklab') || val.includes('color(')) {
+            try {
+                const helperCanvas = document.createElement('canvas');
+                helperCanvas.width = 1;
+                helperCanvas.height = 1;
+                const helperCtx = helperCanvas.getContext('2d');
+                if (helperCtx) {
+                    helperCtx.fillStyle = '#1E255E';
+                    helperCtx.fillStyle = val;
+                    const converted = helperCtx.fillStyle;
+                    if (converted && !converted.includes('lab') && !converted.includes('oklch') && !converted.includes('oklab')) {
+                        return converted;
+                    }
+                }
+            } catch { }
+            return '#1E255E';
+        }
+        return val;
+    };
+
     const handleExportPDF = async () => {
         const element = document.getElementById('output-document');
         if (!element || isExporting) return;
@@ -60,10 +82,11 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
 
         try {
             // Wait a moment for UI to settle
-            await new Promise(resolve => setTimeout(resolve, 120));
+            await new Promise(resolve => setTimeout(resolve, 150));
 
             const jsPDF = (await import('jspdf')).default;
-            const html2canvas = (await import('html2canvas')).default;
+            // Use html2canvas-pro for native support of modern CSS colors (lab, oklch, oklab)
+            const html2canvas = (await import('html2canvas-pro')).default;
 
             const canvas = await html2canvas(element, {
                 scale: 2,
@@ -74,49 +97,24 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
                 windowHeight: element.scrollHeight,
                 onclone: (clonedDoc) => {
                     const clonedElement = clonedDoc.getElementById('output-document');
-                    if (!clonedElement || !element) return;
+                    if (!clonedElement) return;
 
-                    // 1. Capture and inline all computed styles
-                    const sourceElements = Array.from(element.getElementsByTagName('*'));
-                    const clonedElements = Array.from(clonedElement.getElementsByTagName('*'));
+                    clonedElement.style.backgroundColor = '#ffffff';
 
-                    sourceElements.unshift(element);
-                    clonedElements.unshift(clonedElement);
-
-                    for (let i = 0; i < sourceElements.length; i++) {
-                        const source = sourceElements[i] as HTMLElement;
-                        const target = clonedElements[i] as HTMLElement;
-
-                        if (source && target) {
-                            const computedStyle = window.getComputedStyle(source);
-                            const propsToCopy = [
-                                'color', 'background-color', 'border-color', 'font-family',
-                                'font-size', 'font-weight', 'line-height', 'padding',
-                                'margin', 'display', 'flex-direction', 'align-items',
-                                'justify-content', 'gap', 'width', 'height', 'opacity',
-                                'text-align', 'border-radius', 'box-shadow', 'border-width',
-                                'border-style', 'position', 'top', 'right', 'bottom', 'left'
-                            ];
-
-                            propsToCopy.forEach(prop => {
-                                try {
-                                    let value = computedStyle.getPropertyValue(prop);
-                                    if (value.includes('oklch')) {
-                                        if (value.includes('0.556 0.142 38')) value = '#f59e0b';
-                                        else if (value.includes('0.208 0.042')) value = '#18181b';
-                                        else value = '#27272a';
-                                    }
-                                    target.style.setProperty(prop, value, 'important');
-                                } catch { }
-                            });
-                        }
-                    }
-
-                    // 2. Remove external styles to prevent oklch parser errors
-                    const head = clonedDoc.getElementsByTagName('head')[0];
-                    if (head) {
-                        const styles = head.querySelectorAll('style, link[rel="stylesheet"]');
-                        styles.forEach(s => s.remove());
+                    // Convert any computed colors that modern browsers output as lab/oklch/oklab
+                    const allNodes = [clonedElement, ...Array.from(clonedElement.getElementsByTagName('*'))] as HTMLElement[];
+                    for (const node of allNodes) {
+                        if (!node || !node.style) continue;
+                        try {
+                            const cs = window.getComputedStyle(node);
+                            const colorAttrs = ['color', 'background-color', 'border-color', 'outline-color'];
+                            for (const attr of colorAttrs) {
+                                const rawVal = cs.getPropertyValue(attr);
+                                if (rawVal && (rawVal.includes('lab') || rawVal.includes('oklch') || rawVal.includes('oklab') || rawVal.includes('color('))) {
+                                    node.style.setProperty(attr, sanitizeCssColor(rawVal), 'important');
+                                }
+                            }
+                        } catch { }
                     }
                 }
             });
@@ -182,8 +180,45 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
             const htmlDocx = (await import('html-docx-js-typescript')).default;
             const { saveAs } = await import('file-saver');
 
-            const bodyHtml = await marked(content) as string;
-            const docTitle = structured?.title || APP_CONFIG.orgName;
+            // Format markdown correctly from structured JSON or raw text
+            let markdownToExport = '';
+            let docTitle = APP_CONFIG.orgName;
+
+            let parsed: StructuredResponse | null = structured;
+            if (!parsed) {
+                try {
+                    const cleanJson = content.replace(/```json\n?|\n?```/g, '').trim();
+                    parsed = JSON.parse(cleanJson);
+                } catch {
+                    const match = content.match(/\{[\s\S]*"title"[\s\S]*"sections"[\s\S]*\}/);
+                    if (match) {
+                        try {
+                            parsed = JSON.parse(match[0]);
+                        } catch { }
+                    }
+                }
+            }
+
+            if (parsed && parsed.title && Array.isArray(parsed.sections)) {
+                docTitle = parsed.title;
+                markdownToExport = `# ${parsed.title}\n\n`;
+                for (const section of parsed.sections) {
+                    if (section.heading) {
+                        markdownToExport += `## ${section.heading}\n\n`;
+                    }
+                    if (section.content) {
+                        markdownToExport += `${section.content}\n\n`;
+                    }
+                }
+            } else {
+                markdownToExport = content;
+                const headingMatch = content.match(/^#+\s*(.+)$/m);
+                if (headingMatch && headingMatch[1]) {
+                    docTitle = headingMatch[1].replace(/[#*`_]/g, '').trim();
+                }
+            }
+
+            const bodyHtml = await marked(markdownToExport) as string;
             const dateStr = new Date().toLocaleDateString(isRtl ? 'ar-SA' : 'en-US', {
                 year: 'numeric',
                 month: 'long',
