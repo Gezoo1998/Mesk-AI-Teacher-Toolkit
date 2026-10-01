@@ -31,38 +31,48 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
         setTimeout(() => setCopied(false), 2000);
     };
 
+    const getExportFilename = (ext: 'pdf' | 'docx') => {
+        let cleanTitle = '';
+        if (structured?.title) {
+            cleanTitle = structured.title;
+        } else {
+            const headingMatch = content.match(/^#+\s*(.+)$/m);
+            if (headingMatch && headingMatch[1]) {
+                cleanTitle = headingMatch[1];
+            }
+        }
+        const sanitized = cleanTitle
+            .replace(/[#*`~_]/g, '')
+            .trim()
+            .replace(/[\/\\?%*:|"<>]/g, '-')
+            .replace(/\s+/g, '_')
+            .slice(0, 35);
+        const dateStr = new Date().toISOString().split('T')[0];
+        const schoolPrefix = (APP_CONFIG.shortName || 'AlManhal').replace(/\s+/g, '_');
+        return `${schoolPrefix}_${sanitized || 'Resource'}_${dateStr}.${ext}`;
+    };
+
     const handleExportPDF = async () => {
         const element = document.getElementById('output-document');
         if (!element || isExporting) return;
 
-        console.log('[PDF Export] Starting export process...');
         setIsExporting('pdf');
 
         try {
             // Wait a moment for UI to settle
-            console.log('[PDF Export] Waiting for UI to settle (100ms)...');
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await new Promise(resolve => setTimeout(resolve, 120));
 
-            console.group('[PDF Export] Library Loading');
-            console.log('[PDF Export] Loading jsPDF...');
             const jsPDF = (await import('jspdf')).default;
-            console.log('[PDF Export] Loading html2canvas...');
             const html2canvas = (await import('html2canvas')).default;
-            console.groupEnd();
 
-            console.log('[PDF Export] Capturing element with html2canvas...', {
-                width: element.scrollWidth,
-                height: element.scrollHeight
-            });
             const canvas = await html2canvas(element, {
-                scale: 1.5,
+                scale: 2,
                 useCORS: true,
                 logging: false,
                 backgroundColor: '#ffffff',
                 windowWidth: element.scrollWidth,
                 windowHeight: element.scrollHeight,
                 onclone: (clonedDoc) => {
-                    console.log('[PDF Export] Sanitizing styles in cloned document...');
                     const clonedElement = clonedDoc.getElementById('output-document');
                     if (!clonedElement || !element) return;
 
@@ -70,11 +80,8 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
                     const sourceElements = Array.from(element.getElementsByTagName('*'));
                     const clonedElements = Array.from(clonedElement.getElementsByTagName('*'));
 
-                    // Include the roots themselves
                     sourceElements.unshift(element);
                     clonedElements.unshift(clonedElement);
-
-                    console.log(`[PDF Export] Inlining styles for ${sourceElements.length} elements...`);
 
                     for (let i = 0; i < sourceElements.length; i++) {
                         const source = sourceElements[i] as HTMLElement;
@@ -82,8 +89,6 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
 
                         if (source && target) {
                             const computedStyle = window.getComputedStyle(source);
-
-                            // Properties that impact look and feel
                             const propsToCopy = [
                                 'color', 'background-color', 'border-color', 'font-family',
                                 'font-size', 'font-weight', 'line-height', 'padding',
@@ -96,70 +101,73 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
                             propsToCopy.forEach(prop => {
                                 try {
                                     let value = computedStyle.getPropertyValue(prop);
-
-                                    // Replace lab/oklch functions with black/solid fallbacks to prevent renderer crash
-                                    // while keeping text and borders visible.
                                     if (value.includes('oklch')) {
                                         if (value.includes('0.556 0.142 38')) value = '#f59e0b';
                                         else if (value.includes('0.208 0.042')) value = '#18181b';
                                         else value = '#27272a';
                                     }
-
                                     target.style.setProperty(prop, value, 'important');
                                 } catch { }
                             });
                         }
                     }
 
-                    // 2. Remove all external/global styles to prevent the parser from seeing lab() colors
+                    // 2. Remove external styles to prevent oklch parser errors
                     const head = clonedDoc.getElementsByTagName('head')[0];
                     if (head) {
                         const styles = head.querySelectorAll('style, link[rel="stylesheet"]');
-                        console.log(`[PDF Export] Stripping ${styles.length} stylesheets from clone...`);
                         styles.forEach(s => s.remove());
                     }
                 }
             });
-            console.log('[PDF Export] Canvas captured successfully.');
 
-            console.log('[PDF Export] Converting canvas to image data...');
-            const imgData = canvas.toDataURL('image/png', 1.0);
-
-            console.log('[PDF Export] Initializing jsPDF...');
             const pdf = new jsPDF('p', 'mm', 'a4');
-
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const pdfWidth = 210; // A4 mm
+            const pdfHeight = 297; // A4 mm
             const margin = 10;
-            const imgWidth = pdfWidth - (margin * 2);
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            const contentWidthMm = pdfWidth - (margin * 2);
+            const contentHeightMm = pdfHeight - (margin * 2);
 
-            let heightLeft = imgHeight;
-            let position = margin;
+            const pxPerMm = canvas.width / contentWidthMm;
+            const pageHeightPx = Math.floor(contentHeightMm * pxPerMm);
 
-            console.log('[PDF Export] Generating pages...', { imgHeight, pdfHeight });
-            // Page 1
-            pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
-            heightLeft -= pdfHeight;
+            let currentYPx = 0;
+            let pageNum = 0;
 
-            // Subsequent pages
-            let pageNum = 1;
-            while (heightLeft > 0) {
+            while (currentYPx < canvas.height) {
+                if (pageNum > 0) {
+                    pdf.addPage();
+                }
+
+                const sliceHeightPx = Math.min(pageHeightPx, canvas.height - currentYPx);
+                const pageCanvas = document.createElement('canvas');
+                pageCanvas.width = canvas.width;
+                pageCanvas.height = sliceHeightPx;
+
+                const ctx = pageCanvas.getContext('2d');
+                if (ctx) {
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+                    ctx.drawImage(
+                        canvas,
+                        0, currentYPx, canvas.width, sliceHeightPx,
+                        0, 0, canvas.width, sliceHeightPx
+                    );
+
+                    const sliceData = pageCanvas.toDataURL('image/jpeg', 0.95);
+                    const sliceHeightMm = sliceHeightPx / pxPerMm;
+                    pdf.addImage(sliceData, 'JPEG', margin, margin, contentWidthMm, sliceHeightMm);
+                }
+
+                currentYPx += pageHeightPx;
                 pageNum++;
-                console.log(`[PDF Export] Adding page ${pageNum}...`);
-                position = heightLeft - imgHeight - margin;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
-                heightLeft -= pdfHeight;
             }
 
-            console.log('[PDF Export] Saving PDF file...');
-            pdf.save(`${APP_CONFIG.orgName}_Resource.pdf`);
-            console.log('[PDF Export] Export completed successfully.');
+            pdf.save(getExportFilename('pdf'));
         } catch (e: unknown) {
-            console.error('[PDF Export] CRITICAL FAILURE:', e);
+            console.error('[PDF Export] Failure:', e);
             const errorStr = e instanceof Error ? e.message : String(e);
-            alert(`PDF Export failed: ${errorStr}\n\nTip: You can also use "Print" (Ctrl+P) and "Save as PDF" for a high-quality export.`);
+            alert(`PDF Export failed: ${errorStr}\n\nTip: You can also use "Print" (Ctrl+P) and "Save as PDF" for a high-quality vector export.`);
         } finally {
             setIsExporting(null);
         }
@@ -170,17 +178,161 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
         setIsExporting('docx');
 
         try {
-            // Dynamic imports for performance
             const { marked } = await import('marked');
             const htmlDocx = (await import('html-docx-js-typescript')).default;
             const { saveAs } = await import('file-saver');
 
-            const brandedContent = `# ${APP_CONFIG.orgName}\n\n${content}`;
-            const html = await marked(brandedContent) as string;
-            const docx = await htmlDocx.asBlob(html) as Blob;
-            saveAs(docx, 'lesson.docx');
+            const bodyHtml = await marked(content) as string;
+            const docTitle = structured?.title || APP_CONFIG.orgName;
+            const dateStr = new Date().toLocaleDateString(isRtl ? 'ar-SA' : 'en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            const docHtml = `
+<!DOCTYPE html>
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+    <meta charset="utf-8">
+    <title>${docTitle}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2.5cm 2cm 2.5cm 2cm;
+            mso-header-margin: 36pt;
+            mso-footer-margin: 36pt;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, 'Traditional Arabic', Tahoma, sans-serif;
+            font-size: 11pt;
+            line-height: 1.6;
+            color: #171717;
+            direction: ${isRtl ? 'rtl' : 'ltr'};
+            text-align: ${isRtl ? 'right' : 'left'};
+        }
+        .header-table {
+            width: 100%;
+            border-bottom: 2pt solid #1E255E;
+            margin-bottom: 24pt;
+            padding-bottom: 12pt;
+        }
+        .school-title {
+            color: #1E255E;
+            font-size: 16pt;
+            font-weight: bold;
+            margin: 0;
+        }
+        .school-subtitle {
+            color: #2B508F;
+            font-size: 10pt;
+            font-weight: bold;
+            margin: 3pt 0 0 0;
+            text-transform: uppercase;
+        }
+        .date-badge {
+            color: #1E255E;
+            background-color: #F0F6FA;
+            padding: 4pt 8pt;
+            border: 1pt solid #D0E1ED;
+            border-radius: 4pt;
+            font-size: 9pt;
+            font-weight: bold;
+        }
+        h1 {
+            color: #1E255E;
+            font-size: 18pt;
+            font-weight: bold;
+            border-bottom: 1.5pt solid #E2E8F0;
+            padding-bottom: 6pt;
+            margin-top: 18pt;
+            margin-bottom: 12pt;
+        }
+        h2 {
+            color: #2B508F;
+            font-size: 14pt;
+            font-weight: bold;
+            margin-top: 16pt;
+            margin-bottom: 8pt;
+        }
+        h3 {
+            color: #4378A0;
+            font-size: 12pt;
+            font-weight: bold;
+            margin-top: 12pt;
+            margin-bottom: 6pt;
+        }
+        p {
+            margin-bottom: 8pt;
+        }
+        ul, ol {
+            margin-bottom: 12pt;
+            padding-${isRtl ? 'right' : 'left'}: 24pt;
+        }
+        li {
+            margin-bottom: 4pt;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 14pt 0;
+        }
+        th, td {
+            border: 1pt solid #CBD5E1;
+            padding: 8pt 10pt;
+            text-align: ${isRtl ? 'right' : 'left'};
+        }
+        th {
+            background-color: #F0F6FA;
+            color: #1E255E;
+            font-weight: bold;
+        }
+        blockquote {
+            border-${isRtl ? 'right' : 'left'}: 3.5pt solid #2B508F;
+            background-color: #F8FAFC;
+            padding: 8pt 14pt;
+            margin: 12pt 0;
+            color: #475569;
+            font-style: italic;
+        }
+        .footer-note {
+            margin-top: 36pt;
+            border-top: 1pt solid #E2E8F0;
+            padding-top: 10pt;
+            font-size: 9pt;
+            color: #94A3B8;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <table class="header-table">
+        <tr>
+            <td style="border: none; text-align: ${isRtl ? 'right' : 'left'};">
+                <div class="school-title">${APP_CONFIG.orgName}</div>
+                <div class="school-subtitle">${isRtl ? 'منصة المعلم الذكية • مورد تعليمي رسمي' : 'AI Teacher Toolkit Platform • Official Educational Resource'}</div>
+            </td>
+            <td style="border: none; text-align: ${isRtl ? 'left' : 'right'}; vertical-align: middle;">
+                <span class="date-badge">${dateStr}</span>
+            </td>
+        </tr>
+    </table>
+
+    <div class="content-body">
+        ${bodyHtml}
+    </div>
+
+    <div class="footer-note">
+        ${isRtl ? 'تم الإنشاء بواسطة منصة مدارس المنهل للذكاء الاصطناعي للمعلمين' : 'Generated by Al Manhal AI Teacher Toolkit Platform'}
+    </div>
+</body>
+</html>`;
+
+            const docx = await htmlDocx.asBlob(docHtml) as Blob;
+            saveAs(docx, getExportFilename('docx'));
         } catch (e: unknown) {
             console.error('Error generating DOCX:', e);
+            alert('DOCX generation failed. You can use Copy Text or Print as an alternative.');
         } finally {
             setIsExporting(null);
         }
@@ -235,10 +387,10 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
     if (!content) return null;
 
     return (
-        <div className="relative group overflow-hidden rounded-[2.5rem] border border-zinc-200/90 bg-white shadow-[0_25px_60px_rgba(30,37,94,0.08)] transition-all duration-500 hover:border-[#2B508F]/40">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-zinc-100 bg-zinc-50/70 backdrop-blur-sm px-6 py-5 md:px-8 gap-6 relative z-20">
+        <div className="relative group overflow-hidden rounded-[2.5rem] border-2 border-zinc-200/70 bg-white/95 backdrop-blur-xl shadow-[0_30px_70px_rgba(30,37,94,0.1)] transition-all duration-500 hover:border-[#2B508F]/30 hover:shadow-[0_35px_80px_rgba(30,37,94,0.14)]">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b-2 border-zinc-100/80 bg-gradient-to-r from-zinc-50/90 via-white to-zinc-50/90 backdrop-blur-sm px-6 py-5 md:px-8 gap-6 relative z-20">
                 <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#1E255E] to-[#2B508F] text-white shadow-lg shadow-blue-900/25 ring-4 ring-white transition-transform group-hover:scale-110">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#1E255E] to-[#2B508F] text-white shadow-lg shadow-blue-900/25 ring-4 ring-white transition-all group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-blue-900/30">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /></svg>
                     </div>
                     <div>
@@ -250,7 +402,7 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
                 <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
                     <button
                         onClick={handleCopy}
-                        className="flex-1 sm:flex-none group/btn inline-flex items-center justify-center gap-2.5 h-12 rounded-[14px] border border-zinc-200 bg-white px-5 text-xs font-black uppercase tracking-widest text-zinc-600 shadow-sm transition-all hover:border-[#2B508F] hover:bg-blue-50 hover:text-[#1E255E] active:scale-[0.98]"
+                        className="flex-1 sm:flex-none group/btn inline-flex items-center justify-center gap-2.5 h-12 rounded-[14px] border-2 border-zinc-200/80 bg-white px-5 text-xs font-black uppercase tracking-widest text-zinc-600 shadow-sm transition-all duration-300 hover:border-[#2B508F]/50 hover:bg-[#2B508F]/5 hover:text-[#1E255E] hover:shadow-md active:scale-[0.97]"
                     >
                         {copied ? (
                             <>
@@ -269,7 +421,8 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
                         <button
                             onClick={handleExportPDF}
                             disabled={!!isExporting}
-                            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2.5 h-12 rounded-[14px] border border-zinc-200 bg-white px-5 text-xs font-black uppercase tracking-widest text-zinc-600 shadow-sm transition-all hover:border-[#2B508F] hover:bg-blue-50 hover:text-[#1E255E] disabled:opacity-50 active:scale-[0.98]"
+                            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 h-12 rounded-[14px] border-2 border-zinc-200/80 bg-white px-4 text-xs font-black uppercase tracking-widest text-zinc-600 shadow-sm transition-all duration-300 hover:border-[#2B508F]/50 hover:bg-[#2B508F]/5 hover:text-[#1E255E] disabled:opacity-50 active:scale-[0.97]"
+                            title={isRtl ? 'تحميل بصيغة PDF' : 'Download as PDF'}
                         >
                             {isExporting === 'pdf' ? (
                                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#2B508F] border-t-transparent" />
@@ -283,15 +436,26 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
                         <button
                             onClick={handleExportDOCX}
                             disabled={!!isExporting}
-                            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2.5 h-12 rounded-[14px] border border-zinc-200 bg-white px-5 text-xs font-black uppercase tracking-widest text-zinc-600 shadow-sm transition-all hover:border-[#2B508F] hover:bg-blue-50 hover:text-[#1E255E] disabled:opacity-50 active:scale-[0.98]"
+                            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 h-12 rounded-[14px] border-2 border-zinc-200/80 bg-white px-4 text-xs font-black uppercase tracking-widest text-zinc-600 shadow-sm transition-all duration-300 hover:border-[#2B508F]/50 hover:bg-[#2B508F]/5 hover:text-[#1E255E] disabled:opacity-50 active:scale-[0.97]"
+                            title={isRtl ? 'تحميل بصيغة Word' : 'Download as Word DOCX'}
                         >
                             {isExporting === 'docx' ? (
                                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#2B508F] border-t-transparent" />
                             ) : (
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><line x1="10" y1="9" x2="8" y2="9" /></svg>
                             )}
                             <span className="hidden md:inline">{t('common.docx')}</span>
                             <span className="md:hidden">Word</span>
+                        </button>
+
+                        <button
+                            onClick={() => window.print()}
+                            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 h-12 rounded-[14px] border-2 border-zinc-200/80 bg-white px-4 text-xs font-black uppercase tracking-widest text-zinc-600 shadow-sm transition-all duration-300 hover:border-[#2B508F]/50 hover:bg-[#2B508F]/5 hover:text-[#1E255E] active:scale-[0.97]"
+                            title={isRtl ? 'طباعة مباشرة أو حفظ كـ PDF عالي الدقة' : 'Direct Print or Save as High-Res Vector PDF'}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 6 2 18 2 18 9" /><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /><rect width="12" height="8" x="6" y="14" /></svg>
+                            <span className="hidden md:inline">{t('common.print') || 'Print'}</span>
+                            <span className="md:hidden">{t('common.print') || 'Print'}</span>
                         </button>
                     </div>
 
@@ -326,7 +490,7 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
                         <button
                             key={opt.key}
                             onClick={() => { onRefine?.(opt.type); setShowRefine(false); }}
-                            className="inline-flex items-center gap-2.5 rounded-xl border border-zinc-200 bg-white px-5 py-3 text-[10px] font-black uppercase tracking-widest text-zinc-600 shadow-sm transition-all hover:border-[#2B508F] hover:bg-blue-50 hover:text-[#1E255E] active:scale-[0.95]"
+                            className="inline-flex items-center gap-2.5 rounded-xl border-2 border-zinc-200/80 bg-white px-5 py-3 text-[10px] font-black uppercase tracking-widest text-zinc-600 shadow-sm transition-all duration-300 hover:border-[#2B508F]/50 hover:bg-[#2B508F]/5 hover:text-[#1E255E] hover:shadow-md active:scale-[0.95]"
                         >
                             <div className="h-1.5 w-1.5 rounded-full bg-[#2B508F]" />
                             {t(`common.refine${opt.key.charAt(0).toUpperCase() + opt.key.slice(1)}`)}
@@ -335,7 +499,7 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
                 </div>
             </motion.div>
 
-            <div id="output-document" className="relative bg-white px-6 py-10 md:px-16 md:py-16">
+            <div id="output-document" className="relative bg-gradient-to-b from-white to-zinc-50/30 px-6 py-10 md:px-16 md:py-16">
                 <div className={cn("absolute inset-y-0 w-1 bg-[#2B508F]/20", isRtl ? "right-0" : "left-0")} />
 
                 <div className="mb-12 flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b-2 border-zinc-100 pb-10">
@@ -376,7 +540,7 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: idx * 0.1 }}
-                                    className="group relative overflow-hidden rounded-[28px] border border-zinc-200/80 bg-gradient-to-b from-white to-zinc-50/20 p-8 md:p-12 shadow-sm transition-all duration-300 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-950/5 print:break-inside-avoid"
+                                    className="group relative overflow-hidden rounded-[28px] border-2 border-zinc-200/70 bg-gradient-to-b from-white to-zinc-50/30 p-8 md:p-12 shadow-sm transition-all duration-400 hover:border-[#2B508F]/30 hover:shadow-xl hover:shadow-blue-950/5 hover:-translate-y-0.5 print:break-inside-avoid"
                                 >
                                     <div className="absolute top-0 left-0 w-2 h-full bg-[#2B508F]/20 group-hover:bg-[#2B508F] transition-colors pointer-events-none" />
                                     
@@ -459,7 +623,7 @@ export function OutputDisplay({ content, onRefine }: { content: string; onRefine
 
             </div>
 
-            <div className="flex justify-center items-center gap-3 border-t border-dashed border-zinc-200 bg-zinc-50/80 py-6 relative z-20">
+            <div className="flex justify-center items-center gap-3 border-t-2 border-dashed border-zinc-200/60 bg-gradient-to-r from-zinc-50/50 via-white to-zinc-50/50 py-6 relative z-20">
                 <div className="h-1 w-1 rounded-full bg-zinc-300" />
                 <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.4em]">{t('common.generatedBy')}</p>
                 <div className="h-1 w-1 rounded-full bg-zinc-300" />

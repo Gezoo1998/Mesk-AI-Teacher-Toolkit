@@ -162,12 +162,14 @@ export function ToolForm({ toolId, fields, title, description }: ToolFormProps) 
             <motion.div
                 ref={containerRef}
                 onMouseMove={handleMouseMove}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
+                transition={{ type: 'spring', stiffness: 100, damping: 20 }}
                 className={cn(
-                    "relative overflow-hidden bg-white rounded-[2.5rem] p-6 md:p-10 transition-all duration-500",
-                    "border-2 border-zinc-100",
-                    "shadow-[0_20px_50px_rgba(0,0,0,0.08)] shadow-zinc-200/50",
+                    "relative overflow-hidden bg-white/95 backdrop-blur-xl rounded-[2.5rem] p-6 md:p-10 transition-all duration-500",
+                    "border-2 border-zinc-100/80",
+                    "shadow-[0_24px_60px_rgba(30,37,94,0.08)] hover:shadow-[0_32px_70px_rgba(30,37,94,0.12)]",
+                    "hover:border-zinc-200/90",
                     colorStyles[themeColor]
                 )}
             >
@@ -231,7 +233,7 @@ export function ToolForm({ toolId, fields, title, description }: ToolFormProps) 
                                             name={field.name}
                                             required={field.required}
                                             defaultValue={defaultValue || ""}
-                                            className="w-full appearance-none rounded-2xl border border-zinc-200/90 bg-zinc-50/50 px-6 py-4.5 text-zinc-900 font-bold shadow-xs transition-all focus:border-[#2B508F]/60 focus:bg-white focus:ring-4 focus:ring-[#2B508F]/10 hover:border-zinc-300"
+                                            className="w-full appearance-none rounded-2xl border-2 border-zinc-200/80 bg-zinc-50/40 px-6 py-4.5 text-zinc-900 font-bold shadow-xs transition-all duration-300 focus:border-[#2B508F]/50 focus:bg-white focus:ring-4 focus:ring-[#2B508F]/10 focus:shadow-[0_0_0_4px_rgba(43,80,143,0.06)] hover:border-zinc-300 hover:bg-zinc-50/70"
                                         >
                                             <option value="">{t('common.select')}</option>
                                             {field.options?.map((opt, idx) => {
@@ -262,7 +264,7 @@ export function ToolForm({ toolId, fields, title, description }: ToolFormProps) 
                                         required={field.required}
                                         rows={4}
                                         defaultValue={defaultValue}
-                                        className="w-full rounded-2xl border border-zinc-200/90 bg-zinc-50/50 px-6 py-4 text-zinc-900 font-semibold shadow-xs transition-all focus:border-[#2B508F]/60 focus:bg-white focus:ring-4 focus:ring-[#2B508F]/10 hover:border-zinc-300 placeholder:text-zinc-400 resize-none leading-relaxed"
+                                        className="w-full rounded-2xl border-2 border-zinc-200/80 bg-zinc-50/40 px-6 py-4 text-zinc-900 font-semibold shadow-xs transition-all duration-300 focus:border-[#2B508F]/50 focus:bg-white focus:ring-4 focus:ring-[#2B508F]/10 focus:shadow-[0_0_0_4px_rgba(43,80,143,0.06)] hover:border-zinc-300 hover:bg-zinc-50/70 placeholder:text-zinc-400 resize-none leading-relaxed"
                                     />
                                 ) : (
                                     <input
@@ -272,7 +274,7 @@ export function ToolForm({ toolId, fields, title, description }: ToolFormProps) 
                                         placeholder={field.placeholder}
                                         required={field.required}
                                         defaultValue={defaultValue}
-                                        className="w-full rounded-2xl border border-zinc-200/90 bg-zinc-50/50 px-6 py-4.5 text-zinc-900 font-bold shadow-xs transition-all focus:border-[#2B508F]/60 focus:bg-white focus:ring-4 focus:ring-[#2B508F]/10 hover:border-zinc-300 placeholder:text-zinc-400"
+                                        className="w-full rounded-2xl border-2 border-zinc-200/80 bg-zinc-50/40 px-6 py-4.5 text-zinc-900 font-bold shadow-xs transition-all duration-300 focus:border-[#2B508F]/50 focus:bg-white focus:ring-4 focus:ring-[#2B508F]/10 focus:shadow-[0_0_0_4px_rgba(43,80,143,0.06)] hover:border-zinc-300 hover:bg-zinc-50/70 placeholder:text-zinc-400"
                                     />
                                 )}
                             </motion.div>
@@ -284,7 +286,7 @@ export function ToolForm({ toolId, fields, title, description }: ToolFormProps) 
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.4 }}
-                        className="p-5 rounded-[24px] border border-zinc-200/70 bg-zinc-50/40 shadow-xs"
+                        className="p-5 rounded-[24px] border-2 border-zinc-200/60 bg-gradient-to-b from-zinc-50/60 to-white shadow-xs hover:border-zinc-300/80 transition-all duration-300"
                     >
                         <div className="flex items-center justify-between mb-3 px-1">
                             <label className="block text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">
@@ -327,18 +329,19 @@ export function ToolForm({ toolId, fields, title, description }: ToolFormProps) 
 
                     {/* Generate Button with Continuous Shimmer */}
                     <motion.button
-                        whileHover={{ scale: 1.01, y: -2 }}
-                        whileTap={{ scale: 0.98 }}
+                        whileHover={{ scale: 1.02, y: -3 }}
+                        whileTap={{ scale: 0.97 }}
                         type="submit"
                         disabled={isLoading || isSearching}
                         className={cn(
-                            "group relative w-full h-[64px] overflow-hidden rounded-[22px] transition-all duration-300",
-                            "bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 text-white font-black uppercase tracking-[0.2em] text-xs",
-                            "shadow-xl shadow-zinc-900/15 hover:shadow-2xl hover:shadow-blue-950/20 disabled:opacity-70 disabled:grayscale disabled:cursor-not-allowed border border-white/10"
+                            "group relative w-full h-[68px] overflow-hidden rounded-[22px] transition-all duration-400",
+                            "bg-gradient-to-r from-[#1E255E] via-[#2B508F] to-[#1E255E] text-white font-black uppercase tracking-[0.2em] text-xs",
+                            "shadow-xl shadow-blue-900/20 hover:shadow-2xl hover:shadow-blue-950/30 disabled:opacity-60 disabled:grayscale disabled:cursor-not-allowed border border-white/10"
                         )}
                     >
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#1E255E] via-[#2B508F] to-[#4378A0] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                        <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#2B508F] via-[#4378A0] to-[#2B508F] opacity-0 group-hover:opacity-100 transition-opacity duration-600" />
+                        <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+                        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
                         
                         <div className="relative z-10 flex items-center justify-center gap-3">
                             {isSearching ? (

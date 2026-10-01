@@ -74,7 +74,12 @@ export function ToolHeader({ toolId }: ToolHeaderProps) {
             </nav>
 
             {/* Main Header Card */}
-            <div className="relative group overflow-hidden rounded-[32px] border border-zinc-200/80 bg-white/95 backdrop-blur-xl p-6 md:p-8 shadow-[0_20px_50px_rgba(30,37,94,0.06)] ring-1 ring-black/[0.03]">
+            <motion.div 
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ type: 'spring', stiffness: 120, damping: 20 }}
+                className="relative group overflow-hidden rounded-[32px] border-2 border-zinc-200/70 bg-white/95 backdrop-blur-xl p-6 md:p-8 shadow-[0_24px_60px_rgba(30,37,94,0.08)] ring-1 ring-black/[0.02] hover:shadow-[0_30px_70px_rgba(30,37,94,0.12)] hover:border-zinc-300/80 transition-all duration-500"
+            >
                 {/* Decorative Layer */}
                 <div className={cn(
                     "absolute inset-0 bg-gradient-to-br opacity-[0.04] pointer-events-none",
@@ -84,10 +89,11 @@ export function ToolHeader({ toolId }: ToolHeaderProps) {
                 <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-6">
                     {/* Icon Pocket */}
                     <motion.div 
-                        initial={{ scale: 0.9, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
+                        initial={{ scale: 0.85, opacity: 0, rotate: -5 }}
+                        animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                        transition={{ type: 'spring', stiffness: 150, damping: 15, delay: 0.1 }}
                         className={cn(
-                            "flex h-20 w-20 shrink-0 items-center justify-center rounded-[24px] shadow-xl ring-4 ring-white transition-transform group-hover:scale-105 group-hover:-rotate-3",
+                            "flex h-20 w-20 shrink-0 items-center justify-center rounded-[24px] shadow-xl ring-4 ring-white transition-all duration-300 group-hover:scale-110 group-hover:-rotate-3 group-hover:shadow-2xl",
                             colorStyles[tool.color || 'slate']
                         )}
                     >
@@ -127,7 +133,7 @@ export function ToolHeader({ toolId }: ToolHeaderProps) {
                         </div>
                     </div>
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 }

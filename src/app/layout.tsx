@@ -7,6 +7,7 @@ import { BottomNav } from "@/components/BottomNav";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { NavigationProvider } from "@/contexts/NavigationContext";
 import { APP_CONFIG } from "@/config/app";
+import { PremiumBackground } from "@/components/PremiumBackground";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +30,10 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: APP_CONFIG.name,
+  title: {
+    default: APP_CONFIG.name,
+    template: `%s | ${APP_CONFIG.shortName}`,
+  },
   description: APP_CONFIG.description,
   keywords: APP_CONFIG.keywords,
   authors: [{ name: APP_CONFIG.author.name, url: APP_CONFIG.author.url }],
@@ -44,19 +48,13 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   alternates: {
     canonical: '/',
-    languages: {
-      'en': '/',
-      'ar': '/ar',
-    },
   },
   robots: {
     index: true,
     follow: true,
-    nocache: true,
     googleBot: {
       index: true,
       follow: true,
-      noimageindex: false,
       'max-video-preview': -1,
       'max-image-preview': 'large',
       'max-snippet': -1,
@@ -82,10 +80,11 @@ export const metadata: Metadata = {
         url: APP_CONFIG.logoPath,
         width: 1200,
         height: 630,
-        alt: APP_CONFIG.name,
+        alt: `${APP_CONFIG.name} - ${APP_CONFIG.orgName}`,
       },
     ],
     locale: 'en_US',
+    alternateLocale: ['ar_SA'],
     type: 'website',
   },
   twitter: {
@@ -94,9 +93,6 @@ export const metadata: Metadata = {
     description: APP_CONFIG.description,
     images: [APP_CONFIG.logoPath],
     creator: APP_CONFIG.author.handle,
-  },
-  verification: {
-    google: 'your-google-site-verification-code', // Add actual code
   },
   appleWebApp: {
     capable: true,
@@ -114,18 +110,28 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": APP_CONFIG.name,
+    "alternateName": [APP_CONFIG.shortName, APP_CONFIG.orgNameAr],
     "description": APP_CONFIG.description,
     "url": APP_CONFIG.url,
     "applicationCategory": "EducationalApplication",
-    "operatingSystem": "Web Browser",
+    "applicationSubCategory": "AI Teacher Toolkit",
+    "operatingSystem": "All modern browsers (Chrome, Edge, Safari, Firefox)",
+    "inLanguage": ["en", "ar"],
+    "audience": {
+      "@type": "EducationalAudience",
+      "educationalRole": "teacher"
+    },
     "offers": {
       "@type": "Offer",
       "price": "0",
-      "priceCurrency": "USD"
+      "priceCurrency": "SAR"
     },
     "creator": {
-      "@type": "Organization",
-      "name": APP_CONFIG.orgName
+      "@type": "EducationalOrganization",
+      "name": APP_CONFIG.orgName,
+      "alternateName": APP_CONFIG.orgNameAr,
+      "url": APP_CONFIG.url,
+      "logo": `${APP_CONFIG.url}${APP_CONFIG.logoPath}`
     }
   };
 
@@ -144,6 +150,7 @@ export default function RootLayout({
       >
         <LanguageProvider>
           <NavigationProvider>
+            <PremiumBackground />
             <div className="flex min-h-screen flex-col bg-transparent md:flex-row">
               {/* Sidebar Desktop */}
               <div className="hidden md:block md:w-80 md:flex-none md:p-6">
@@ -152,8 +159,8 @@ export default function RootLayout({
 
               <MobileNav />
 
-              <main className="flex-1 p-6 md:p-10 md:pt-10 pb-28 md:pb-10">
-                <div className="mx-auto max-w-5xl animate-fade-in-soft">
+              <main className="flex-1 p-4 sm:p-6 md:p-8 lg:p-10 pb-28 md:pb-10 min-w-0">
+                <div className="mx-auto max-w-7xl w-full animate-fade-in-soft">
                   {children}
                 </div>
               </main>

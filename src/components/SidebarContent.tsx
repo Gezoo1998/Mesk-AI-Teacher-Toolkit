@@ -23,7 +23,7 @@ export function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
             <div className="flex justify-end relative z-10">
                 <button
                     onClick={toggleLanguage}
-                    className="group relative flex items-center rounded-full border border-zinc-200/80 bg-zinc-50/80 p-1 text-xs font-black shadow-sm transition-all hover:border-[#2B508F]/40 hover:shadow-md hover:shadow-blue-500/5 active:scale-95"
+                    className="group relative flex items-center rounded-full border-2 border-zinc-200/70 bg-white/80 backdrop-blur-sm p-1 text-xs font-black shadow-md shadow-zinc-200/50 transition-all duration-300 hover:border-[#2B508F]/40 hover:shadow-lg hover:shadow-blue-500/8 active:scale-95"
                     dir="ltr"
                     title={language === 'en' ? 'Switch to Arabic' : 'التبديل إلى الإنجليزية'}
                 >
@@ -47,7 +47,7 @@ export function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
                 <Link
                     href="/"
                     onClick={onItemClick}
-                    className="group relative inline-flex items-center gap-2.5 rounded-full border border-blue-100 bg-gradient-to-r from-blue-50/80 to-white px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-zinc-800 shadow-md shadow-blue-900/5 transition-all hover:border-[#2B508F]/40 hover:-translate-y-0.5 active:scale-95"
+                    className="group relative inline-flex items-center gap-2.5 rounded-full border-2 border-blue-100/80 bg-gradient-to-r from-blue-50/90 to-white px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-zinc-800 shadow-lg shadow-blue-900/8 transition-all duration-300 hover:border-[#2B508F]/40 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-900/12 active:scale-95"
                 >
                     <div className="relative flex h-2 w-2">
                         <span className="absolute inline-flex h-full w-full rounded-full bg-[#2B508F] animate-ping opacity-75" />
@@ -105,7 +105,7 @@ export function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
                 <Link
                     href="/chat"
                     onClick={onItemClick}
-                    className="group/chat relative flex items-center gap-4 overflow-hidden rounded-[24px] border border-blue-200/60 bg-gradient-to-br from-white to-blue-50/20 p-4 shadow-lg shadow-blue-900/5 transition-all hover:scale-[1.02] hover:border-[#2B508F]/50 hover:shadow-xl hover:shadow-blue-900/10 active:scale-[0.98]"
+                    className="group/chat relative flex items-center gap-4 overflow-hidden rounded-[24px] border-2 border-blue-200/50 bg-gradient-to-br from-white to-blue-50/30 p-4 shadow-lg shadow-blue-900/6 transition-all duration-400 hover:scale-[1.02] hover:border-[#2B508F]/40 hover:shadow-xl hover:shadow-blue-900/12 active:scale-[0.98]"
                 >
                     <div className="absolute inset-0 bg-gradient-to-br from-[#1E255E] via-[#2B508F] to-[#4378A0] opacity-[0.04] group-hover/chat:opacity-[0.08] transition-opacity" />
                     <div className="absolute inset-0 -translate-x-full group-hover/chat:animate-shimmer bg-gradient-to-r from-transparent via-blue-500/10 to-transparent pointer-events-none" />
@@ -124,7 +124,7 @@ export function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
                 </Link>
 
                 {/* Grade Info - Premium Card */}
-                <div className="group relative rounded-[24px] border border-zinc-200/70 bg-white p-4 shadow-sm transition-all hover:border-blue-200 hover:shadow-md hover:shadow-zinc-200/50">
+                <div className="group relative rounded-[24px] border-2 border-zinc-200/60 bg-white/90 backdrop-blur-sm p-4 shadow-sm transition-all duration-300 hover:border-blue-200 hover:shadow-md hover:shadow-blue-100/40">
                     <div className="flex items-center gap-4">
                         <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50/60 text-[#2B508F] shadow-inner group-hover:bg-blue-100/60 group-hover:text-[#1E255E] transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10v6" /><path d="M20 20a2 2 0 01-2 2H6a2 2 0 01-2-2V10" /><path d="M12 2L2 7l10 5 10-5-10-5z" /></svg>
@@ -139,7 +139,7 @@ export function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
 
             {/* Quick Tip - Floating Premium Card in Al Manhal Colors */}
             <div className="mt-auto pt-6 relative z-10">
-                <div className="group relative overflow-hidden rounded-[24px] border border-blue-100 bg-gradient-to-b from-white via-blue-50/30 to-blue-50/50 p-5 shadow-lg shadow-blue-950/5 transition-all hover:border-blue-200">
+                <div className="group relative overflow-hidden rounded-[24px] border-2 border-blue-100/70 bg-gradient-to-b from-white via-blue-50/30 to-blue-50/50 p-5 shadow-lg shadow-blue-950/5 transition-all duration-300 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-950/8">
                     <div className="absolute top-0 right-0 -mr-4 -mt-4 h-24 w-24 rounded-full bg-blue-200/20 blur-2xl transition-opacity group-hover:opacity-50" />
                     
                     <div className="relative z-10">

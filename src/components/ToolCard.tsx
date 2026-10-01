@@ -190,8 +190,10 @@ export function ToolCard({ tool, isFavorite = false, onToggleFavorite }: ToolCar
                 style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 className={cn(
-                    "relative flex h-full w-full flex-col gap-4 rounded-[28px] border-2 p-5 md:p-6 transition-all duration-500 overflow-hidden bg-white ring-1 ring-black/[0.04]",
-                    isFavorite ? "border-amber-300/80 shadow-[0_12px_32px_rgba(245,158,11,0.08)]" : "border-zinc-100/90",
+                    "relative flex h-full w-full flex-col justify-between gap-4 rounded-[26px] border p-5 md:p-6 transition-all duration-500 overflow-hidden bg-white/95 backdrop-blur-sm",
+                    isFavorite 
+                        ? "border-amber-300/90 shadow-[0_8px_28px_rgba(245,158,11,0.08)] ring-1 ring-amber-400/20" 
+                        : "border-zinc-200/80 shadow-[0_4px_20px_rgba(30,37,94,0.03)] ring-1 ring-black/[0.02]",
                     styles.borderHover,
                     styles.shadow,
                 )}
@@ -205,7 +207,7 @@ export function ToolCard({ tool, isFavorite = false, onToggleFavorite }: ToolCar
                 />
 
                 {/* Decoration: Subtle Shimmer Light Sweep on Hover */}
-                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out bg-gradient-to-r from-transparent via-white/30 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
 
                 {/* Decoration: Subtle Dot Grid Section (Parallax) */}
                 <motion.div 
@@ -233,23 +235,23 @@ export function ToolCard({ tool, isFavorite = false, onToggleFavorite }: ToolCar
                     <div className="relative">
                         {/* Icon Orbital Ring */}
                         <div className={cn(
-                            "absolute inset-0 rounded-xl blur-md opacity-0 group-hover:opacity-40 transition-all duration-700 animate-pulse",
+                            "absolute inset-0 rounded-2xl blur-md opacity-0 group-hover:opacity-40 transition-all duration-700 animate-pulse",
                             styles.orbital
                         )} />
                         
                         <div className={cn(
-                            "relative flex h-11 w-11 items-center justify-center rounded-xl transition-all duration-700 group-hover:scale-110 group-hover:-rotate-6 shadow-md border-2",
+                            "relative flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-500 group-hover:scale-110 group-hover:-rotate-3 shadow-sm border",
                             styles.icon
                         )}>
                             {tool.icon || (
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20" /><path d="M2 12h20" /><circle cx="12" cy="12" r="10" /></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20" /><path d="M2 12h20" /><circle cx="12" cy="12" r="10" /></svg>
                             )}
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-2">
                         <div className={cn(
-                            "rounded-xl px-2.5 py-1 text-[9px] font-black uppercase tracking-widest ring-1 ring-inset shadow-xs transition-all duration-300",
+                            "rounded-xl px-2.5 py-1 text-[10px] font-black uppercase tracking-wider ring-1 ring-inset shadow-2xs transition-all duration-300",
                             styles.badge
                         )}>
                             {t(`tags.${tool.tags[0].replace(/[^a-zA-Z]/g, '').replace(/^\d+/, '').replace(/^./, c => c.toLowerCase())}`) || tool.tags[0]}
@@ -265,45 +267,46 @@ export function ToolCard({ tool, isFavorite = false, onToggleFavorite }: ToolCar
                             }}
                             title={isFavorite ? (isRTL ? "إزالة من المفضلة" : "Remove from favorites") : (isRTL ? "إضافة إلى المفضلة" : "Add to favorites")}
                             className={cn(
-                                "flex h-7 w-7 items-center justify-center rounded-xl border transition-all duration-300 active:scale-80",
+                                "flex h-8 w-8 items-center justify-center rounded-xl border transition-all duration-300 active:scale-90",
                                 isFavorite
                                     ? "bg-amber-50 border-amber-300 text-amber-500 shadow-xs shadow-amber-500/20 opacity-100 scale-100"
-                                    : "bg-zinc-50/80 border-zinc-200/80 text-zinc-400 hover:text-amber-500 hover:bg-amber-50/80 hover:border-amber-200 opacity-60 sm:opacity-0 group-hover:opacity-100"
+                                    : "bg-zinc-50/80 border-zinc-200/80 text-zinc-400 hover:text-amber-500 hover:bg-amber-50/80 hover:border-amber-200 opacity-80 sm:opacity-0 group-hover:opacity-100"
                             )}
                         >
-                            <Star className={cn("w-3.5 h-3.5 transition-transform", isFavorite && "fill-amber-400 text-amber-500 scale-110")} />
+                            <Star className={cn("w-4 h-4 transition-transform", isFavorite && "fill-amber-400 text-amber-500 scale-110")} />
                         </button>
                     </div>
                 </div>
 
-                <div className="space-y-1.5 relative z-10" style={{ transform: "translateZ(20px)" }}>
-                    <h3 className={cn("text-base md:text-lg font-black leading-tight tracking-tight px-1", styles.text)}>
+                {/* Content Section */}
+                <div className="space-y-1.5 relative z-10 flex-1 flex flex-col justify-start" style={{ transform: "translateZ(20px)" }}>
+                    <h3 className={cn("text-base md:text-[17px] font-black leading-snug tracking-tight text-zinc-900 group-hover:text-[#1E255E] transition-colors duration-300 px-0.5", styles.text)}>
                         {t(`tools.${tool.id}.title`)}
                     </h3>
-                    <div className="min-h-[3rem] flex flex-col justify-start px-1">
-                        <p className="text-[13px] font-semibold leading-relaxed text-zinc-500/90 group-hover:text-zinc-700 transition-colors duration-300 line-clamp-2">
+                    <div className="min-h-[2.85rem] flex flex-col justify-start px-0.5">
+                        <p className="text-[13px] font-medium leading-relaxed text-zinc-500/90 group-hover:text-zinc-700 transition-colors duration-300 line-clamp-2">
                             {t(`tools.${tool.id}.description`)}
                         </p>
                     </div>
                 </div>
 
                 {/* Footer Action Row */}
-                <div className="mt-auto pt-3 flex items-center justify-between relative z-10" style={{ transform: "translateZ(10px)" }}>
-                    <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-[0.1em] text-zinc-400 group-hover:text-[#2B508F] transition-colors duration-500 px-1">
+                <div className="pt-2 flex items-center justify-between border-t border-zinc-100 relative z-10" style={{ transform: "translateZ(10px)" }}>
+                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-wider text-zinc-400 group-hover:text-[#2B508F] transition-colors duration-300 px-0.5">
                         <span>{t('common.openTool')}</span>
-                        <div className="h-[2.5px] w-4 group-hover:w-10 transition-all duration-700 rounded-full bg-zinc-200 group-hover:bg-[#2B508F]/40" />
+                        <div className="h-[2px] w-4 group-hover:w-8 transition-all duration-500 rounded-full bg-zinc-200 group-hover:bg-[#2B508F]/50" />
                     </div>
 
                     <motion.div
                         className={cn(
-                            "p-2.5 rounded-xl border transition-all duration-500 shadow-sm flex items-center justify-center",
-                            "bg-zinc-50 border-zinc-100 text-zinc-400",
-                            "group-hover:bg-[#2B508F] group-hover:border-[#2B508F] group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-900/20"
+                            "h-8 w-8 rounded-xl border transition-all duration-300 shadow-2xs flex items-center justify-center shrink-0",
+                            "bg-zinc-50/80 border-zinc-200/70 text-zinc-400",
+                            "group-hover:bg-[#2B508F] group-hover:border-[#2B508F] group-hover:text-white group-hover:shadow-md group-hover:shadow-blue-900/20"
                         )}
-                        whileHover={{ scale: 1.15, rotate: isRTL ? -12 : 12 }}
+                        whileHover={{ scale: 1.1, rotate: isRTL ? -8 : 8 }}
                     >
                         <svg
-                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
+                            xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
                             className="rtl:rotate-180"
                         >
                             <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
