@@ -249,8 +249,10 @@ body {
 }
 
 /* ─── Smooth Page Transitions ─── */
-main {
-  view-transition-name: main-content;
+@supports (view-transition-name: main-content) {
+  main {
+    view-transition-name: main-content;
+  }
 }
 
 /* ─── Premium Input Focus States ─── */

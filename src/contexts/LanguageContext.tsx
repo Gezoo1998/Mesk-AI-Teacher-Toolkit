@@ -15,18 +15,29 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const [language, setLanguageState] = useState<Language>(() => {
         if (typeof window !== 'undefined') {
-            const stored = (localStorage.getItem('almanhal-lang') || localStorage.getItem('mesk-lang')) as Language;
-            return stored === 'en' || stored === 'ar' ? stored : 'en';
+            try {
+                const stored = (localStorage.getItem('almanhal-lang') || localStorage.getItem('mesk-lang')) as Language;
+                if (stored === 'en' || stored === 'ar') return stored;
+            } catch {
+                // Safari Private Browsing mode throws SecurityError
+            }
         }
         return 'en';
     });
 
     const setLanguage = (lang: Language) => {
         setLanguageState(lang);
-        localStorage.setItem('almanhal-lang', lang);
-        // Update HTML dir and lang attributes for accessibility/styling
-        document.documentElement.lang = lang;
-        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+        try {
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('almanhal-lang', lang);
+                if (document?.documentElement) {
+                    document.documentElement.lang = lang;
+                    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+                }
+            }
+        } catch {
+            // Safari storage exception safeguard
+        }
     };
 
     // Helper to access nested keys like 'sidebar.title'

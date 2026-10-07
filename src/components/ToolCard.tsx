@@ -171,26 +171,22 @@ export function ToolCard({ tool, isFavorite = false, onToggleFavorite }: ToolCar
         <Link 
             href={tool.href} 
             className="block relative group h-full focus:outline-none rounded-3xl"
-            style={{ perspective: "1200px" }}
         >
-            {/* The Outer Glow Layer - following mouse slightly */}
-            <motion.div 
-                style={{ x: decoTranslateX, y: decoTranslateY }}
+            {/* The Outer Glow Layer - subtle brand highlight */}
+            <div 
                 className={cn(
-                    "absolute -inset-1.5 rounded-[2.2rem] opacity-0 group-hover:opacity-20 blur-2xl transition-all duration-700 pointer-events-none",
+                    "absolute -inset-1 rounded-[2.2rem] opacity-0 group-hover:opacity-15 blur-xl transition-all duration-500 pointer-events-none",
                     "bg-gradient-to-br",
                     styles.glow
                 )} 
             />
 
-            <motion.div
+            <div
                 ref={cardRef}
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
-                style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-                transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 className={cn(
-                    "relative flex h-full w-full flex-col justify-between gap-4 rounded-[26px] border p-5 md:p-6 transition-all duration-500 overflow-hidden bg-white/95 backdrop-blur-sm",
+                    "relative flex h-full w-full flex-col justify-between gap-4 rounded-[26px] border p-5 md:p-6 transition-all duration-300 overflow-hidden bg-white group-hover:-translate-y-1.5",
                     isFavorite 
                         ? "border-amber-300/90 shadow-[0_8px_28px_rgba(245,158,11,0.08)] ring-1 ring-amber-400/20" 
                         : "border-zinc-200/80 shadow-[0_4px_20px_rgba(30,37,94,0.03)] ring-1 ring-black/[0.02]",
@@ -200,7 +196,7 @@ export function ToolCard({ tool, isFavorite = false, onToggleFavorite }: ToolCar
             >
                 {/* Decoration: Spotlight Mouse Tracking */}
                 <motion.div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 hidden sm:block"
                     style={{
                         background: spotlightBg
                     }}
@@ -313,7 +309,7 @@ export function ToolCard({ tool, isFavorite = false, onToggleFavorite }: ToolCar
                         </svg>
                     </motion.div>
                 </div>
-            </motion.div>
+            </div>
         </Link>
     );
 }

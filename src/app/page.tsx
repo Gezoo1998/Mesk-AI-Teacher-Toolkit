@@ -150,13 +150,6 @@ export default function Home() {
 
   return (
     <>
-      {/* Background Ambient Depth Layer (transparent, meshes with layout PremiumBackground) */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute -top-[10%] -left-[10%] w-[45%] h-[45%] bg-[#2B508F]/8 blur-[130px] rounded-full animate-pulse" />
-        <div className="absolute top-[20%] -right-[8%] w-[40%] h-[40%] bg-[#4378A0]/7 blur-[110px] rounded-full animate-pulse" style={{ animationDelay: '2.5s' }} />
-        <div className="absolute -bottom-[10%] left-[25%] w-[50%] h-[50%] bg-[#72A2B8]/8 blur-[140px] rounded-full animate-pulse" style={{ animationDelay: '5s' }} />
-      </div>
-
       {/* Hero Section */}
       <header className="relative z-10 mb-8 sm:mb-12 flex flex-col items-center justify-center pt-2 sm:pt-6 md:pt-8 text-center animate-fade-in-soft">
         <div className="space-y-4 sm:space-y-5 max-w-3xl mx-auto px-4">
